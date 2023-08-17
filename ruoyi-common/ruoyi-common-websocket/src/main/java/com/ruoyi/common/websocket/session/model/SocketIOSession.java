@@ -1,12 +1,12 @@
 package com.ruoyi.common.websocket.session.model;
 
+import com.corundumstudio.socketio.SocketIOClient;
 import lombok.Builder;
 import lombok.Data;
-import org.yeauty.pojo.Session;
 
 @Data
 @Builder
-public class ClientSession {
+public class SocketIOSession {
 
     /**
      * create time
@@ -34,7 +34,7 @@ public class ClientSession {
     /**
      * 会话
      */
-    private Session session;
+    private SocketIOClient client;
 
     /**
      * 销毁会话
@@ -42,14 +42,14 @@ public class ClientSession {
     public void destroy() {
         this.heartbeatTime = -1;
         this.topic = null;
-        if (this.session.isActive()) {
-            this.session.close();
+        if (this.client.isChannelOpen()) {
+            this.client.disconnect();
         }
-        this.session = null;
+        this.client = null;
     }
 
     public boolean isDeath() {
-        if (this.session == null || !this.session.isActive()) {
+        if (this.client == null || !this.client.isChannelOpen()) {
             return true;
         }
         return System.currentTimeMillis() - this.heartbeatTime > this.survivalTime;
