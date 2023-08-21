@@ -3,6 +3,7 @@ package com.ruoyi.common.websocket.handler;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.annotation.OnConnect;
+import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ruoyi.common.core.constant.TokenConstants;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
@@ -24,8 +25,14 @@ public class SocketIOServerHandler {
 
     @OnConnect
     public void onConnect(SocketIOClient socketIOClient) {
-        socketIOClient.sendEvent("connect", "成功");
+        log.info("连接成功：{}", socketIOClient.getSessionId());
         sessionPool.createSession(SocketIOSession.builder().client(socketIOClient).build());
+    }
+
+    @OnDisconnect
+    public void onDisconnect(SocketIOClient socketIOClient) {
+        log.info("连接断开：{}", socketIOClient.getSessionId());
+        sessionPool.closeSession(socketIOClient.getSessionId().toString());
     }
 
     @OnEvent("heartbeat")

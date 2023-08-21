@@ -19,16 +19,16 @@ public class DefaultSocketIOServer implements InitializingBean {
     @Resource
     private SocketIOServerHandler socketIOServerHandler;
 
-    @Value("${socket.io.host:localhost}")
+    @Value("${socket.io.host:0.0.0.0}")
     private String host;
 
     @Value("${socket.io.port:9001}")
     private Integer port;
 
-    @Value("${socket.io.bossCount:1}")
+    @Value("${socket.io.bossCount:20}")
     private int bossCount;
 
-    @Value("${socket.io.workCount:10}")
+    @Value("${socket.io.workCount:100}")
     private int workCount;
 
     @Value("${socket.io.allowCustomRequests:true}")
@@ -65,8 +65,9 @@ public class DefaultSocketIOServer implements InitializingBean {
         configuration.setPingTimeout(pingTimeout);
         // Ping消息间隔（毫秒），默认25秒。客户端向服务器发送一条心跳消息间隔
         configuration.setPingInterval(pingInterval);
-        configuration.setTransports(Transport.POLLING, Transport.WEBSOCKET);
-        configuration.setOrigin(":*:");
+
+        configuration.setTransports(Transport.WEBSOCKET);
+        //configuration.setOrigin(":*:");
         SocketIOServer socketIOServer = new SocketIOServer(configuration);
         socketIOServer.addListeners(socketIOServerHandler);
         socketIOServer.start();
