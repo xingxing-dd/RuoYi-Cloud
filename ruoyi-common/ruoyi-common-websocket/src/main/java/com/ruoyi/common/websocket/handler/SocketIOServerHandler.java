@@ -38,7 +38,12 @@ public class SocketIOServerHandler {
     @OnEvent("heartbeat")
     public void onHeartbeat(SocketIOClient socketIOClient, AckRequest ackRequest) {
         log.info("接受到心跳信息");
-        socketIOClient.sendEvent("heartbeat", "ok");
+        socketIOClient.sendEvent("message", "ok");
+    }
+
+    @OnEvent("onRegistry")
+    public void onRegistry(SocketIOClient socketIOClient, String registry) {
+
     }
 
 }

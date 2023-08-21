@@ -1,7 +1,9 @@
 package com.ruoyi.market.job;
 
+import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
+import com.ruoyi.market.mapper.ProductPriceMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,11 +20,17 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class CrawlerJob {
+public class ProductCrawlerJob {
 
     private static WebDriver webDriver;
 
     private static String lastPrice;
+
+    @Resource
+    private RedisService redisService;
+
+    @Resource
+    private ProductPriceMapper productPriceMapper;
 
     @Resource
     private SocketIOSessionPool sessionPool;
