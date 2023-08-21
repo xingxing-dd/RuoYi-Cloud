@@ -25,7 +25,7 @@ public class DefaultSocketIOServer implements InitializingBean {
     @Value("${socket.io.port:9001}")
     private Integer port;
 
-    @Value("${socket.io.bossCount:100}")
+    @Value("${socket.io.bossCount:50}")
     private int bossCount;
 
     @Value("${socket.io.workCount:100}")
