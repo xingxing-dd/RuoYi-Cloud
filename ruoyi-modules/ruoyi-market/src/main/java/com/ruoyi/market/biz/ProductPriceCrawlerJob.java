@@ -1,51 +1,55 @@
-package com.ruoyi.market.job;
+package com.ruoyi.market.biz;
 
-import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
-import com.ruoyi.market.domain.ProductPrice;
-import com.ruoyi.market.mapper.ProductPriceMapper;
+import com.ruoyi.market.biz.core.helper.ProductPriceHelper;
+import com.ruoyi.market.domain.ProductInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
-public class ProductCrawlerJob {
+public class ProductPriceCrawlerJob {
 
-    private static WebDriver webDriver;
+    private RemoteWebDriver webDriver;
 
-    private static String lastPrice;
+    private List<ProductInfo> productInfos;
 
-    @Resource
-    private RedisService redisService;
-
-    @Resource
-    private ProductPriceMapper productPriceMapper;
+    private List<String> windowHandlerList;
 
     @Resource
     private SocketIOSessionPool sessionPool;
 
-    private ProductPrice productPrice;
+    @Resource
+    private ProductPriceHelper productPriceHelper;
 
-    //@Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 5000)
     public void crawler() throws Exception {
         try {
             createWebDriver();
             if (webDriver == null) {
                 throw new RuntimeException("获取浏览器驱动失败");
             }
-            doCrawler();
+            for (int index = 0; index < windowHandlerList.size(); index++) {
+                webDriver.switchTo().window(windowHandlerList.get(index));
+                ProductInfo productInfo = productInfos.get(index);
+                doCrawler(productInfo.getProductCode());
+            }
         } catch (Throwable e) {
             log.error("浏览器崩溃，重新构建驱动", e);
             if (webDriver != null) {
@@ -60,31 +64,38 @@ public class ProductCrawlerJob {
         if (webDriver != null) {
             return;
         }
+        productInfos = productPriceHelper.getValidProduct();
+        windowHandlerList = new ArrayList<>();
         log.info("开始构建web驱动");
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         webDriver = new RemoteWebDriver(new URL("http://134.122.188.80:4444/wd/hub"), firefoxOptions);
-        webDriver.get("https://cn.tradingview.com/symbols/BNBUSD/?exchange=CRYPTO");
+        String blankPageWindow = webDriver.getWindowHandle();
+        for(int index = 0; index < productInfos.size(); index++) {
+            webDriver.switchTo().newWindow(WindowType.WINDOW).get(productInfos.get(index).getSource());
+            windowHandlerList.add(webDriver.getWindowHandle());
+        }
+        webDriver.switchTo().window(blankPageWindow);
+        webDriver.close();
         log.info("构建驱动成功");
     }
 
-    private void doCrawler() {
+    private void doCrawler(String productCode) {
         WebElement element = webDriver.findElement(By.className("last-JWoJqCpY"));
         if (element == null) {
             return;
         }
         String currentPrice = element.getText();
-        if (currentPrice == null || currentPrice.equals(lastPrice)) {
+        if (currentPrice == null) {
             return;
         }
-        String message = String.format("时间戳：%s,产品：%s,波动前价格：%s,当前价格：%s", System.nanoTime(), "BNBUSD", lastPrice, currentPrice);
-        log.info("{}", message);
-        lastPrice = currentPrice;
+        productPriceHelper.doRefreshPrice(productCode, new BigDecimal(currentPrice), new Date((System.currentTimeMillis() / 60000) * 60000));
         if (sessionPool.sessionCount() <= 0) {
             return;
         }
         for (Map.Entry<String, SocketIOSession> entry: sessionPool.getSessions().entrySet()) {
-            entry.getValue().getClient().sendEvent("message", message);
+            entry.getValue().getClient().sendEvent("message", "");
         }
     }
+
 
 }

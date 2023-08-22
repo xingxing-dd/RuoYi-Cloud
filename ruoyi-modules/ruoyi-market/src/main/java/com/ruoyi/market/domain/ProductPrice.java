@@ -1,6 +1,8 @@
 package com.ruoyi.market.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -10,7 +12,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 大盘价格数据源对象 mk_product_price
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-21
  */
 public class ProductPrice extends BaseEntity
 {
@@ -20,8 +22,9 @@ public class ProductPrice extends BaseEntity
     private Long id;
 
     /** 时间戳 */
-    @Excel(name = "时间戳")
-    private String timestamp;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "时间戳", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date timestamp;
 
     /** 产品编号 */
     @Excel(name = "产品编号")
@@ -43,6 +46,10 @@ public class ProductPrice extends BaseEntity
     @Excel(name = "最低价")
     private BigDecimal low;
 
+    /** 变化幅度 */
+    @Excel(name = "变化幅度")
+    private BigDecimal range;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -52,12 +59,12 @@ public class ProductPrice extends BaseEntity
     {
         return id;
     }
-    public void setTimestamp(String timestamp) 
+    public void setTimestamp(Date timestamp) 
     {
         this.timestamp = timestamp;
     }
 
-    public String getTimestamp() 
+    public Date getTimestamp() 
     {
         return timestamp;
     }
@@ -106,6 +113,15 @@ public class ProductPrice extends BaseEntity
     {
         return low;
     }
+    public void setRange(BigDecimal range) 
+    {
+        this.range = range;
+    }
+
+    public BigDecimal getRange() 
+    {
+        return range;
+    }
 
     @Override
     public String toString() {
@@ -117,6 +133,7 @@ public class ProductPrice extends BaseEntity
             .append("close", getClose())
             .append("high", getHigh())
             .append("low", getLow())
+            .append("range", getRange())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .toString();

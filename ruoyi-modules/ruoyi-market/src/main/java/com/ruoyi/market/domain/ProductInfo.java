@@ -9,7 +9,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 产品信息对象 mk_product_info
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-21
  */
 public class ProductInfo extends BaseEntity
 {
@@ -37,6 +37,10 @@ public class ProductInfo extends BaseEntity
     /** 产品描述 */
     @Excel(name = "产品描述")
     private String description;
+
+    /** 数据源 */
+    @Excel(name = "数据源")
+    private String source;
 
     /** 状态（close/open） */
     @Excel(name = "状态", readConverterExp = "c=lose/open")
@@ -96,6 +100,15 @@ public class ProductInfo extends BaseEntity
     {
         return description;
     }
+    public void setSource(String source) 
+    {
+        this.source = source;
+    }
+
+    public String getSource() 
+    {
+        return source;
+    }
     public void setStatus(String status) 
     {
         this.status = status;
@@ -115,6 +128,7 @@ public class ProductInfo extends BaseEntity
             .append("productName", getProductName())
             .append("productIcon", getProductIcon())
             .append("description", getDescription())
+            .append("source", getSource())
             .append("status", getStatus())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())
