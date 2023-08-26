@@ -17,4 +17,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+
+        <!-- RuoYi Common Core-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-common-core</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>

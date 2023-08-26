@@ -1,4 +1,4 @@
-package com.ruoyi.market.biz.core.model;
+package com.ruoyi.market.crawler.core.model;
 
 import lombok.Data;
 import lombok.ToString;

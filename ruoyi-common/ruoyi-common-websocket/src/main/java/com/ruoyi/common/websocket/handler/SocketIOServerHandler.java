@@ -27,6 +27,7 @@ public class SocketIOServerHandler {
     public void onConnect(SocketIOClient socketIOClient) {
         log.info("连接成功：{}", socketIOClient.getSessionId());
         sessionPool.createSession(SocketIOSession.builder().client(socketIOClient).build());
+        socketIOClient.sendEvent("message", "connection success");
     }
 
     @OnDisconnect
@@ -38,12 +39,23 @@ public class SocketIOServerHandler {
     @OnEvent("heartbeat")
     public void onHeartbeat(SocketIOClient socketIOClient, AckRequest ackRequest) {
         log.info("接受到心跳信息");
+        SocketIOSession socketIOSession = sessionPool.getSession(socketIOClient.getSessionId().toString());
+        if (socketIOSession == null) {
+            return;
+        }
+        socketIOSession.setHeartbeatTime(System.currentTimeMillis());
         socketIOClient.sendEvent("message", "ok");
     }
 
-    @OnEvent("onRegistry")
+    @OnEvent("registry")
     public void onRegistry(SocketIOClient socketIOClient, String registry) {
-
+        SocketIOSession socketIOSession = sessionPool.getSession(socketIOClient.getSessionId().toString());
+        if (socketIOSession == null) {
+            return;
+        }
+        socketIOSession.setTopic(registry);
+        socketIOSession.setHeartbeatTime(System.currentTimeMillis());
+        socketIOClient.sendEvent("message", "ok");
     }
 
 }

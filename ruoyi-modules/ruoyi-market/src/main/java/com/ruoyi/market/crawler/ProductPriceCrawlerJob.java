@@ -1,9 +1,10 @@
-package com.ruoyi.market.biz;
+package com.ruoyi.market.crawler;
 
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
-import com.ruoyi.market.biz.core.helper.ProductPriceHelper;
+import com.ruoyi.market.crawler.core.helper.ProductPriceHelper;
 import com.ruoyi.market.domain.ProductInfo;
+import com.ruoyi.market.websocket.WebSocketMessageSender;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -37,6 +38,9 @@ public class ProductPriceCrawlerJob {
 
     @Resource
     private ProductPriceHelper productPriceHelper;
+
+    @Resource
+    private WebSocketMessageSender webSocketMessageSender;
 
     @Scheduled(fixedDelay = 5000)
     public void crawler() throws Exception {
@@ -88,12 +92,13 @@ public class ProductPriceCrawlerJob {
         if (currentPrice == null) {
             return;
         }
-        productPriceHelper.doRefreshPrice(productCode, new BigDecimal(currentPrice), new Date((System.currentTimeMillis() / 60000) * 60000));
-        if (sessionPool.sessionCount() <= 0) {
+        boolean hasPriceChange = true;//productPriceHelper.doRefreshPrice(productCode, new BigDecimal(currentPrice), new Date((System.currentTimeMillis() / 60000) * 60000));
+        log.info("产品价格波动:{},准备发送通知,当前会话数量{}", productCode, sessionPool.sessionCount());
+        if (!hasPriceChange || sessionPool.sessionCount() <= 0) {
             return;
         }
         for (Map.Entry<String, SocketIOSession> entry: sessionPool.getSessions().entrySet()) {
-            entry.getValue().getClient().sendEvent("message", "");
+            webSocketMessageSender.send(entry.getValue(), productCode);
         }
     }
 

@@ -1,13 +1,11 @@
-package com.ruoyi.market.biz.core.model;
+package com.ruoyi.market.crawler.core.model;
 
 
-import com.ruoyi.common.core.annotation.Excel;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @ToString

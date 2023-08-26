@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 /**
  * spring redis 工具类
@@ -140,6 +141,35 @@ public class RedisService
     {
         Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
         return count == null ? 0 : count;
+    }
+
+    public <T> T popLastObject(final String key) {
+        JSONObject object = (JSONObject) redisTemplate.opsForList().rightPop(key);
+        if (object == null) {
+            return null;
+        }
+        return object.to(new TypeReference<T>() {});
+    }
+
+    public <T> T getLastObject(final String key, Class<T> type) {
+        ListOperations<String, T> operations = redisTemplate.opsForList();
+        if (operations == null || operations.size(key) == 0) {
+            return null;
+        }
+        JSONObject value = (JSONObject) operations.index(key, operations.size(key)- 1);
+        return value.to(type);
+    }
+
+    public void pushLastObject(final String key, Object value) {
+        List<Object> result = getCacheList(key);
+        if (result != null && result.size() > 60) {
+            redisTemplate.opsForList().leftPop(key);
+        }
+        redisTemplate.opsForList().rightPush(key, value);
+    }
+
+    public Object popFirstObject(final String key) {
+        return redisTemplate.opsForList().leftPop(key);
     }
 
     /**

@@ -29,7 +29,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * @date 2023-08-20
  */
 @RestController
-@RequestMapping("/info")
+@RequestMapping("/product")
 public class ProductInfoController extends BaseController
 {
     @Autowired

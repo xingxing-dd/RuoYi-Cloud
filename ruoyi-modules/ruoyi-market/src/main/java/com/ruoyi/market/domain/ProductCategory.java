@@ -28,7 +28,7 @@ public class ProductCategory extends BaseEntity
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long status;
+    private String status;
 
     /** 扩展字段 */
     @Excel(name = "扩展字段")
@@ -61,12 +61,12 @@ public class ProductCategory extends BaseEntity
     {
         return categoryName;
     }
-    public void setStatus(Long status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public String getStatus()
     {
         return status;
     }
