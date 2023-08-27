@@ -1,7 +1,7 @@
 package com.ruoyi.client.service;
 
 import java.util.List;
-import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.system.api.domain.ClientUser;
 
 /**
  * 账户信息Service接口

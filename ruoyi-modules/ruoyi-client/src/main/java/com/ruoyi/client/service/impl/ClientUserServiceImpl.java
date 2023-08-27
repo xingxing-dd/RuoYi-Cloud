@@ -1,10 +1,12 @@
 package com.ruoyi.client.service.impl;
 
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.client.mapper.ClientUserMapper;
-import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.system.api.domain.ClientUser;
 import com.ruoyi.client.service.IClientUserService;
 
 /**
@@ -89,5 +91,16 @@ public class ClientUserServiceImpl implements IClientUserService
     public int deleteClientUserByUserId(Long userId)
     {
         return clientUserMapper.deleteClientUserByUserId(userId);
+    }
+
+    @Override
+    public ClientUser selectUserByUserName(String username) {
+        ClientUser clientUser = new ClientUser();
+        clientUser.setUserName(username);
+        List<ClientUser> clientUsers = clientUserMapper.selectClientUserList(clientUser);
+        if (CollectionUtils.isEmpty(clientUsers)) {
+            return null;
+        }
+        return clientUsers.get(0);
     }
 }

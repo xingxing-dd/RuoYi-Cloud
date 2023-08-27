@@ -1,13 +1,13 @@
 package com.ruoyi.auth.service;
 
-import com.ruoyi.client.RemoteClientUserService;
-import com.ruoyi.client.domain.ClientUser;
-import com.ruoyi.client.model.LoginUser;
+import com.ruoyi.system.api.RemoteClientUserService;
+import com.ruoyi.system.api.domain.ClientUser;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.enums.UserStatus;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,7 +41,7 @@ public class ClientLoginService {
             throw new ServiceException(userResult.getMsg());
         }
         LoginUser userInfo = userResult.getData();
-        ClientUser user = userResult.getData().getSysUser();
+        ClientUser user = userResult.getData().getClientUser();
         if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
         {
             throw new ServiceException("对不起，您的账号：" + username + " 已被删除");

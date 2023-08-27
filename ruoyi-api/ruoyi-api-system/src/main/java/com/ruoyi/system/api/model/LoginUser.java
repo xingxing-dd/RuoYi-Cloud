@@ -2,6 +2,8 @@ package com.ruoyi.system.api.model;
 
 import java.io.Serializable;
 import java.util.Set;
+
+import com.ruoyi.system.api.domain.ClientUser;
 import com.ruoyi.system.api.domain.SysUser;
 
 /**
@@ -57,6 +59,8 @@ public class LoginUser implements Serializable
      * 用户信息
      */
     private SysUser sysUser;
+
+    private ClientUser clientUser;
 
     public String getToken()
     {
@@ -146,5 +150,13 @@ public class LoginUser implements Serializable
     public void setSysUser(SysUser sysUser)
     {
         this.sysUser = sysUser;
+    }
+
+    public ClientUser getClientUser() {
+        return clientUser;
+    }
+
+    public void setClientUser(ClientUser clientUser) {
+        this.clientUser = clientUser;
     }
 }

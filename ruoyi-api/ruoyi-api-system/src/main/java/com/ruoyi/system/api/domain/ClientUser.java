@@ -1,4 +1,4 @@
-package com.ruoyi.client.domain;
+package com.ruoyi.system.api.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

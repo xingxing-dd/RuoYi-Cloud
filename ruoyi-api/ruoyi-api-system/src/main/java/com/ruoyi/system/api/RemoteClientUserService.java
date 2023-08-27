@@ -1,11 +1,11 @@
-package com.ruoyi.client;
+package com.ruoyi.system.api;
 
-import com.ruoyi.client.domain.ClientUser;
-import com.ruoyi.client.factory.RemoteClientUserFallbackFactory;
-import com.ruoyi.client.model.LoginUser;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.system.api.domain.ClientUser;
+import com.ruoyi.system.api.factory.RemoteClientUserFallbackFactory;
+import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

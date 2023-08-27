@@ -1,7 +1,7 @@
 package com.ruoyi.client.service;
 
 import java.util.List;
-import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.system.api.domain.ClientUser;
 
 /**
  * 账户信息Service接口
@@ -58,4 +58,6 @@ public interface IClientUserService
      * @return 结果
      */
     public int deleteClientUserByUserId(Long userId);
+
+    public ClientUser selectUserByUserName(String username);
 }

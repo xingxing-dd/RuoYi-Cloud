@@ -5,7 +5,7 @@ import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.client.mapper.ClientUserMapper;
-import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.system.api.domain.ClientUser;
 import com.ruoyi.client.service.IClientUserService;
 
 /**

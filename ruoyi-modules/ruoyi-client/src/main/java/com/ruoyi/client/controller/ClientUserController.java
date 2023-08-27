@@ -1,21 +1,21 @@
 package com.ruoyi.client.controller;
 
 import java.util.List;
-import java.io.IOException;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.security.annotation.InnerAuth;
+import com.ruoyi.system.api.domain.SysUser;
+import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.system.api.domain.ClientUser;
 import com.ruoyi.client.service.IClientUserService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -29,7 +29,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * @date 2023-08-13
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/client/user")
 public class ClientUserController extends BaseController
 {
     @Autowired
@@ -101,6 +101,20 @@ public class ClientUserController extends BaseController
     public AjaxResult remove(@PathVariable Long[] userIds)
     {
         return toAjax(clientUserService.deleteClientUserByUserIds(userIds));
+    }
+
+
+    @InnerAuth
+    @GetMapping("/info/{username}")
+    public R<LoginUser> getUserInfo(@PathVariable("username") String username, @RequestHeader(SecurityConstants.FROM_SOURCE) String source) {
+        ClientUser clientUser = clientUserService.selectUserByUserName(username);
+        if (StringUtils.isNull(clientUser))
+        {
+            return R.fail("用户名或密码错误");
+        }
+        LoginUser sysUserVo = new LoginUser();
+        sysUserVo.setClientUser(clientUser);
+        return R.ok(sysUserVo);
     }
 
 }
