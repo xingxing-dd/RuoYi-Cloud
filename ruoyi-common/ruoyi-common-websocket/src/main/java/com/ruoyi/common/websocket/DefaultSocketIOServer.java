@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketConfig;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.Transport;
+import com.ruoyi.common.websocket.adapter.SocketIoListenerAdapter;
 import com.ruoyi.common.websocket.handler.SocketIOServerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,6 +19,9 @@ public class DefaultSocketIOServer implements InitializingBean {
 
     @Resource
     private SocketIOServerHandler socketIOServerHandler;
+
+    @Resource
+    private SocketIoListenerAdapter socketIoListenerAdapter;
 
     @Value("${socket.io.host:0.0.0.0}")
     private String host;
@@ -37,7 +41,7 @@ public class DefaultSocketIOServer implements InitializingBean {
     @Value("${socket.io.upgradeTimeout:100000}")
     private int upgradeTimeout;
 
-    @Value("${socket.io.pingTimeout:600000}")
+    @Value("${socket.io.pingTimeout:10000}")
     private int pingTimeout;
 
     @Value("${socket.io.pingInterval:20000}")
@@ -66,10 +70,13 @@ public class DefaultSocketIOServer implements InitializingBean {
         // Ping消息间隔（毫秒），默认25秒。客户端向服务器发送一条心跳消息间隔
         configuration.setPingInterval(pingInterval);
 
+        configuration.setExceptionListener(socketIoListenerAdapter);
+
         configuration.setTransports(Transport.WEBSOCKET);
         configuration.setOrigin(":*:");
         SocketIOServer socketIOServer = new SocketIOServer(configuration);
         socketIOServer.addListeners(socketIOServerHandler);
+        //socketIOServer.addPingListener();
         socketIOServer.start();
         log.info("socket io server start successfully!");
     }

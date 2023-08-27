@@ -55,20 +55,4 @@ public class SocketIOSessionPool {
         return sessions.size();
     }
 
-    @Scheduled(fixedDelay = 300000)
-    public void scanSession() {
-        log.info("开始扫描系统会话信息");
-        /*Iterator<Map.Entry<String, SocketIOSession>> iterator = sessions.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, SocketIOSession> entry = iterator.next();
-            if (entry.getValue().isDeath()) {
-                return;
-            }
-            log.info("Session timed out, closing soon,{}", entry.getKey());
-            entry.getValue().destroy();
-            iterator.remove();
-        }*/
-        log.info("结束扫描系统会话信息");
-    }
-
 }
