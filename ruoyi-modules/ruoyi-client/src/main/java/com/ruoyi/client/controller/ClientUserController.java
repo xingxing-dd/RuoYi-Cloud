@@ -102,4 +102,5 @@ public class ClientUserController extends BaseController
     {
         return toAjax(clientUserService.deleteClientUserByUserIds(userIds));
     }
+
 }
