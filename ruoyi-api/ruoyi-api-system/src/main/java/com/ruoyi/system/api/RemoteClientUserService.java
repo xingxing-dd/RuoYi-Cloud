@@ -9,7 +9,7 @@ import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(contextId = "remoteClientUserService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteClientUserFallbackFactory.class)
+@FeignClient(contextId = "remoteClientUserService", value = ServiceNameConstants.MARKET_CLIENT, fallbackFactory = RemoteClientUserFallbackFactory.class)
 public interface RemoteClientUserService {
 
     @GetMapping("/client/user/info/{username}")

@@ -26,4 +26,6 @@ public class ServiceNameConstants
      * 市场服务
      */
     public static final String MARKET_SERVICE = "ruoyi-market";
+
+    public static final String MARKET_CLIENT = "ruoyi-client";
 }
