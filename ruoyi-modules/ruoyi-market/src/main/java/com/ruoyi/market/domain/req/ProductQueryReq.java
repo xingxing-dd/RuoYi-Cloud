@@ -9,4 +9,6 @@ public class ProductQueryReq {
 
     private String categoryCode;
 
+    private String productCode;
+
 }

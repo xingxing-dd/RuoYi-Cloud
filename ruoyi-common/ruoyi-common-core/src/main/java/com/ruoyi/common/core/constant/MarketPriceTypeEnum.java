@@ -1,7 +1,5 @@
 package com.ruoyi.common.core.constant;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-
 public enum MarketPriceTypeEnum {
 
     MK_1M("1m", 60000L, ""),

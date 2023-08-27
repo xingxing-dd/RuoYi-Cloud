@@ -2,7 +2,9 @@ package com.ruoyi.market.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.ProductInfoMapper;
 import com.ruoyi.market.domain.ProductInfo;
@@ -19,6 +21,9 @@ public class ProductInfoServiceImpl implements IProductInfoService
 {
     @Autowired
     private ProductInfoMapper productInfoMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 查询产品信息
@@ -41,6 +46,14 @@ public class ProductInfoServiceImpl implements IProductInfoService
     @Override
     public List<ProductInfo> selectProductInfoList(ProductInfo productInfo)
     {
+        return productInfoMapper.selectProductInfoList(productInfo);
+    }
+
+    @Override
+    @Cacheable(value = "category")
+    public List<ProductInfo> selectProductInfoByCategory(String category) {
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setCategoryCode(category);
         return productInfoMapper.selectProductInfoList(productInfo);
     }
 

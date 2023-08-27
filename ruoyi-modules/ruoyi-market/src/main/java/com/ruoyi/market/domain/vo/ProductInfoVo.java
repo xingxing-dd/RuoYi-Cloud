@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @ToString
-public class IndexProductInfoVo {
+public class ProductInfoVo {
 
     /**
      * 产品code

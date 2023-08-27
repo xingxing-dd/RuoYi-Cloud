@@ -12,6 +12,8 @@ public class MarketConstant {
 
     public static final String PRODUCT_PRICE_INFO_KEY = "ruoyi-market:product:price:%s:%s";
 
+    public static final String PRODUCT_CATEGORY_KEY = "ruoyi-market:product:category:%s";
+
     public static final String PRODUCT_PRICE_1M = "1m";
 
     public static final String PRODUCT_PRICE_5M = "5m";
