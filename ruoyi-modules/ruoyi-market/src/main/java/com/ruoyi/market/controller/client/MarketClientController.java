@@ -59,4 +59,15 @@ public class MarketClientController {
         return AjaxResult.success(marketClientService.selectProductPrice(req.getProductCode()));
     }
 
+    @PostMapping("/k-line/{productCode}/{type}")
+    public AjaxResult productPriceDetail(@PathVariable("productCode") String productCode, @PathVariable("type") String type) {
+        if (StringUtils.isAllBlank(productCode, type)) {
+            return AjaxResult.error("params is null!");
+        }
+        if (MarketPriceTypeEnum.getPriceType(type) == null) {
+            return AjaxResult.error("params is error!");
+        }
+        return AjaxResult.success(marketClientService.selectProductPrice(productCode, type));
+    }
+
 }

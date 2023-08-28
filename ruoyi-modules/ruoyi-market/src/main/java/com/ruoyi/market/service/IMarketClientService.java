@@ -1,7 +1,6 @@
 package com.ruoyi.market.service;
 
 import com.ruoyi.market.domain.ProductCategory;
-import com.ruoyi.market.domain.ProductInfo;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
 
 import java.util.List;
@@ -27,5 +26,9 @@ public interface IMarketClientService {
      * @return
      */
     ProductInfoVo selectProductPrice(String productCode);
+
+
+    ProductInfoVo selectProductPrice(String productCode, String priceType);
+
 
 }

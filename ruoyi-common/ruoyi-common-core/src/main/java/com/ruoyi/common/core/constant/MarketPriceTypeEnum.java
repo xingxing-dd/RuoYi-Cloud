@@ -32,4 +32,13 @@ public enum MarketPriceTypeEnum {
     public String getDesc() {
         return desc;
     }
+
+    public static MarketPriceTypeEnum getPriceType(String key) {
+        for (MarketPriceTypeEnum value: MarketPriceTypeEnum.values()) {
+            if (value.key.equals(key)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

@@ -60,13 +60,18 @@ public class MarketClientServiceImpl implements IMarketClientService {
         }
         List<ProductInfoVo> productInfoVos = new ArrayList<>();
         for (ProductInfo productInfo: productInfos) {
-            productInfoVos.add(buildProductInfoVo(productInfo));
+            productInfoVos.add(buildProductInfoVo(productInfo, MarketPriceTypeEnum.MK_1M.getKey()));
         }
         return productInfoVos;
     }
 
     @Override
     public ProductInfoVo selectProductPrice(String productCode) {
+        return selectProductPrice(productCode, MarketPriceTypeEnum.MK_1M.getKey());
+    }
+
+    @Override
+    public ProductInfoVo selectProductPrice(String productCode, String priceType) {
         ProductInfo params = new ProductInfo();
         params.setProductCode(productCode);
         params.setStatus(VALID);
@@ -74,10 +79,10 @@ public class MarketClientServiceImpl implements IMarketClientService {
         if (CollectionUtils.isEmpty(productInfos)) {
             return null;
         }
-        return buildProductInfoVo(productInfos.get(0));
+        return buildProductInfoVo(productInfos.get(0), priceType);
     }
 
-    private ProductInfoVo buildProductInfoVo(ProductInfo productInfo) {
+    private ProductInfoVo buildProductInfoVo(ProductInfo productInfo, String priceTypeEnum) {
         ProductInfoVo productInfoVo = new ProductInfoVo();
         productInfoVo.setProductCode(productInfo.getProductCode());
         productInfoVo.setProductName(productInfo.getProductName());
@@ -89,7 +94,7 @@ public class MarketClientServiceImpl implements IMarketClientService {
             productInfoVo.setRange(productPriceCache.getRange());
         }
         assert productPriceCache != null;
-        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productPriceCache.getProductCode(), MarketPriceTypeEnum.MK_1M.getKey());
+        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productPriceCache.getProductCode(), priceTypeEnum);
         List<ProductKLineCache> productPriceCaches = redisService.getCacheList(productPriceKey);
         if (productPriceCaches != null && productPriceCaches.size() > 60) {
             productPriceCaches = productPriceCaches.subList(productPriceCaches.size() - 60, productPriceCaches.size());
