@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.ProductInfo;
  * 产品信息Service接口
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public interface IProductInfoService 
 {
@@ -26,13 +26,6 @@ public interface IProductInfoService
      * @return 产品信息集合
      */
     public List<ProductInfo> selectProductInfoList(ProductInfo productInfo);
-
-    /**
-     * 查询产品信息
-     * @param category
-     * @return
-     */
-    public List<ProductInfo> selectProductInfoByCategory(String category);
 
     /**
      * 新增产品信息

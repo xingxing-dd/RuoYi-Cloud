@@ -24,10 +24,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectProductCategoryList" parameterType="com.ruoyi.market.domain.ProductCategory" resultMap="ProductCategoryResult">
         <include refid="selectProductCategoryVo"/>
         <where>  
-            <if test="categoryCode != null  and categoryCode != ''"> and category_code = #{categoryCode}</if>
+            <if test="categoryCode != null  and categoryCode != ''"> and category_code like concat('%', #{categoryCode}, '%')</if>
             <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="ext != null  and ext != ''"> and ext = #{ext}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
     

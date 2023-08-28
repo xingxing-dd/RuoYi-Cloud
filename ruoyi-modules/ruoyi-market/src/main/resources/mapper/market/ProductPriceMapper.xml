@@ -12,23 +12,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="close"    column="close"    />
         <result property="high"    column="high"    />
         <result property="low"    column="low"    />
+        <result property="range"    column="range"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectProductPriceVo">
-        select id, timestamp, product_code, open, close, high, low, create_time, update_time from mk_product_price
+        select id, timestamp, product_code, open, close, high, low, range, create_time, update_time from mk_product_price
     </sql>
 
     <select id="selectProductPriceList" parameterType="com.ruoyi.market.domain.ProductPrice" resultMap="ProductPriceResult">
         <include refid="selectProductPriceVo"/>
         <where>  
-            <if test="timestamp != null  and timestamp != ''"> and timestamp = #{timestamp}</if>
+            <if test="timestamp != null "> and timestamp = #{timestamp}</if>
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
             <if test="open != null "> and open = #{open}</if>
             <if test="close != null "> and close = #{close}</if>
             <if test="high != null "> and high = #{high}</if>
             <if test="low != null "> and low = #{low}</if>
+            <if test="range != null "> and range = #{range}</if>
         </where>
     </select>
     
@@ -47,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="close != null">close,</if>
             <if test="high != null">high,</if>
             <if test="low != null">low,</if>
+            <if test="range != null">range,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
          </trim>
@@ -58,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="close != null">#{close},</if>
             <if test="high != null">#{high},</if>
             <if test="low != null">#{low},</if>
+            <if test="range != null">#{range},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
          </trim>
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="close != null">close = #{close},</if>
             <if test="high != null">high = #{high},</if>
             <if test="low != null">low = #{low},</if>
+            <if test="range != null">range = #{range},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>

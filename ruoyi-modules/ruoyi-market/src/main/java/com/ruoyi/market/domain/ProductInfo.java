@@ -9,7 +9,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 产品信息对象 mk_product_info
  * 
  * @author ruoyi
- * @date 2023-08-21
+ * @date 2023-08-28
  */
 public class ProductInfo extends BaseEntity
 {

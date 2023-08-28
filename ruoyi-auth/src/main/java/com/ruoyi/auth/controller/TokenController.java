@@ -34,7 +34,7 @@ public class TokenController
     private ClientLoginService clientLoginService;
 
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginBody form, @RequestHeader("from") String from)
+    public R<?> login(@RequestBody LoginBody form, @RequestHeader(value = "from", required = false) String from)
     {
         // 用户登录
         LoginUser userInfo;
@@ -76,7 +76,7 @@ public class TokenController
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody, @RequestHeader("from") String from)
+    public R<?> register(@RequestBody RegisterBody registerBody, @RequestHeader(value = "from", required = false) String from)
     {
         // 用户注册
         if (StringUtils.equals(from, "client")) {

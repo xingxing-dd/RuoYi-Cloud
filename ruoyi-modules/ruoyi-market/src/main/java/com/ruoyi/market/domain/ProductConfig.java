@@ -10,7 +10,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 产品配置对象 mk_product_config
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public class ProductConfig extends BaseEntity
 {

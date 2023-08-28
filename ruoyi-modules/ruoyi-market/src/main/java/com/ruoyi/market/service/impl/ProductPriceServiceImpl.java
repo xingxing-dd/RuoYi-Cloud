@@ -12,7 +12,7 @@ import com.ruoyi.market.service.IProductPriceService;
  * 大盘价格数据源Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 @Service
 public class ProductPriceServiceImpl implements IProductPriceService 

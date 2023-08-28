@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.ProductConfig;
  * 产品配置Service接口
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public interface IProductConfigService 
 {

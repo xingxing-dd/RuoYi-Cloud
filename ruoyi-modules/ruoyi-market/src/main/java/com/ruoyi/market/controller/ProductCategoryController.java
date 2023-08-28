@@ -26,7 +26,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 产品类别Controller
  * 
  * @author ruoyi
- * @date 2023-08-22
+ * @date 2023-08-28
  */
 @RestController
 @RequestMapping("/category")
@@ -38,7 +38,7 @@ public class ProductCategoryController extends BaseController
     /**
      * 查询产品类别列表
      */
-    //@RequiresPermissions("market:category:list")
+    @RequiresPermissions("market:category:list")
     @GetMapping("/list")
     public TableDataInfo list(ProductCategory productCategory)
     {

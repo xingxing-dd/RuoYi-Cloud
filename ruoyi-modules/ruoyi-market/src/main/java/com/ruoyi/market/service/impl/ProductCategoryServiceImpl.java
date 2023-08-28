@@ -12,7 +12,7 @@ import com.ruoyi.market.service.IProductCategoryService;
  * 产品类别Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 @Service
 public class ProductCategoryServiceImpl implements IProductCategoryService 

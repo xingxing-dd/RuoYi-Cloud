@@ -9,7 +9,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 产品类别对象 mk_product_category
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public class ProductCategory extends BaseEntity
 {
@@ -31,7 +31,6 @@ public class ProductCategory extends BaseEntity
     private String status;
 
     /** 扩展字段 */
-    @Excel(name = "扩展字段")
     private String ext;
 
     public void setId(Long id) 
@@ -61,12 +60,12 @@ public class ProductCategory extends BaseEntity
     {
         return categoryName;
     }
-    public void setStatus(String status)
+    public void setStatus(String status) 
     {
         this.status = status;
     }
 
-    public String getStatus()
+    public String getStatus() 
     {
         return status;
     }

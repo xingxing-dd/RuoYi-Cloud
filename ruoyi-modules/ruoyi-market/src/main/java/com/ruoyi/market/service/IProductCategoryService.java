@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.ProductCategory;
  * 产品类别Service接口
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public interface IProductCategoryService 
 {

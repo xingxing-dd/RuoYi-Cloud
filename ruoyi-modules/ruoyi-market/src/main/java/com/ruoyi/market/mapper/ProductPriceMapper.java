@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.ProductPrice;
  * 大盘价格数据源Mapper接口
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 public interface ProductPriceMapper 
 {

@@ -26,7 +26,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 产品信息Controller
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 @RestController
 @RequestMapping("/product")
@@ -38,7 +38,7 @@ public class ProductInfoController extends BaseController
     /**
      * 查询产品信息列表
      */
-    @RequiresPermissions("market:info:list")
+    @RequiresPermissions("market:product:list")
     @GetMapping("/list")
     public TableDataInfo list(ProductInfo productInfo)
     {
@@ -50,7 +50,7 @@ public class ProductInfoController extends BaseController
     /**
      * 导出产品信息列表
      */
-    @RequiresPermissions("market:info:export")
+    @RequiresPermissions("market:product:export")
     @Log(title = "产品信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ProductInfo productInfo)
@@ -63,7 +63,7 @@ public class ProductInfoController extends BaseController
     /**
      * 获取产品信息详细信息
      */
-    @RequiresPermissions("market:info:query")
+    @RequiresPermissions("market:product:query")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -73,7 +73,7 @@ public class ProductInfoController extends BaseController
     /**
      * 新增产品信息
      */
-    @RequiresPermissions("market:info:add")
+    @RequiresPermissions("market:product:add")
     @Log(title = "产品信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ProductInfo productInfo)
@@ -84,7 +84,7 @@ public class ProductInfoController extends BaseController
     /**
      * 修改产品信息
      */
-    @RequiresPermissions("market:info:edit")
+    @RequiresPermissions("market:product:edit")
     @Log(title = "产品信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ProductInfo productInfo)
@@ -95,7 +95,7 @@ public class ProductInfoController extends BaseController
     /**
      * 删除产品信息
      */
-    @RequiresPermissions("market:info:remove")
+    @RequiresPermissions("market:product:remove")
     @Log(title = "产品信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

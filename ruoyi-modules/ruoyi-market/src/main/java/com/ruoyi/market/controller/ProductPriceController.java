@@ -26,7 +26,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 大盘价格数据源Controller
  * 
  * @author ruoyi
- * @date 2023-08-20
+ * @date 2023-08-28
  */
 @RestController
 @RequestMapping("/price")

@@ -12,7 +12,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 大盘价格数据源对象 mk_product_price
  * 
  * @author ruoyi
- * @date 2023-08-21
+ * @date 2023-08-28
  */
 public class ProductPrice extends BaseEntity
 {
