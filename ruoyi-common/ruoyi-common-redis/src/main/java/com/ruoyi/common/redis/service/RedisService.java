@@ -1,18 +1,11 @@
 package com.ruoyi.common.redis.service;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * spring redis 工具类
@@ -144,11 +137,7 @@ public class RedisService
     }
 
     public <T> T popLastObject(final String key) {
-        JSONObject object = (JSONObject) redisTemplate.opsForList().rightPop(key);
-        if (object == null) {
-            return null;
-        }
-        return object.to(new TypeReference<T>() {});
+        return (T) redisTemplate.opsForList().rightPop(key);
     }
 
     public <T> T getLastObject(final String key, Class<T> type) {
@@ -156,8 +145,7 @@ public class RedisService
         if (operations == null || operations.size(key) == 0) {
             return null;
         }
-        JSONObject value = (JSONObject) operations.index(key, operations.size(key)- 1);
-        return value.to(type);
+        return operations.index(key, operations.size(key)- 1);
     }
 
     public void pushLastObject(final String key, Object value) {

@@ -42,8 +42,7 @@ public class WebSocketMessageSender {
             return;
         }
         String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
-        JSONObject json = redisService.getCacheObject(productPriceCacheKey);
-        ProductPriceCache productPriceCache = json.to(ProductPriceCache.class);
+        ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
         if (productPriceCache == null) {
             return;
         }
