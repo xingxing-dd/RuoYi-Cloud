@@ -28,6 +28,13 @@ public interface IProductInfoService
     public List<ProductInfo> selectProductInfoList(ProductInfo productInfo);
 
     /**
+     * 查询产品信息
+     * @param category
+     * @return
+     */
+    public List<ProductInfo> selectProductInfoByCategory(String category);
+
+    /**
      * 新增产品信息
      * 
      * @param productInfo 产品信息
