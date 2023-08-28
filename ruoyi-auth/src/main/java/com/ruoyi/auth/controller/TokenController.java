@@ -1,11 +1,10 @@
 package com.ruoyi.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.auth.service.ClientLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.auth.form.LoginBody;
 import com.ruoyi.auth.form.RegisterBody;
 import com.ruoyi.auth.service.SysLoginService;
@@ -23,7 +22,7 @@ import com.ruoyi.system.api.model.LoginUser;
  * @author ruoyi
  */
 @RestController
-public class SystemTokenController
+public class TokenController
 {
     @Autowired
     private TokenService tokenService;
@@ -31,11 +30,19 @@ public class SystemTokenController
     @Autowired
     private SysLoginService sysLoginService;
 
+    @Autowired
+    private ClientLoginService clientLoginService;
+
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginBody form)
+    public R<?> login(@RequestBody LoginBody form, @RequestHeader("from") String from)
     {
         // 用户登录
-        LoginUser userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
+        LoginUser userInfo;
+        if (StringUtils.equals(from, "client")) {
+            userInfo = clientLoginService.login(form.getUsername(), form.getPassword());
+        } else {
+            userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
+        }
         // 获取登录token
         return R.ok(tokenService.createToken(userInfo));
     }
@@ -69,10 +76,14 @@ public class SystemTokenController
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody)
+    public R<?> register(@RequestBody RegisterBody registerBody, @RequestHeader("from") String from)
     {
         // 用户注册
-        sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+        if (StringUtils.equals(from, "client")) {
+            clientLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+        } else {
+            sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+        }
         return R.ok();
     }
 }

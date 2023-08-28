@@ -53,4 +53,8 @@ public class ClientLoginService {
         return userInfo;
     }
 
+    public void register(String username, String password) {
+
+    }
+
 }
