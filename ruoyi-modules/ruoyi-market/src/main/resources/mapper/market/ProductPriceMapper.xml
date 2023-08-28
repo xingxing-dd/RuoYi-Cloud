@@ -18,19 +18,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductPriceVo">
-        select id, timestamp, product_code, open, close, high, low, range, create_time, update_time from mk_product_price
+        select id, `timestamp`, product_code, `open`, `close`, high, low, `range`, create_time, update_time from mk_product_price
     </sql>
 
     <select id="selectProductPriceList" parameterType="com.ruoyi.market.domain.ProductPrice" resultMap="ProductPriceResult">
         <include refid="selectProductPriceVo"/>
         <where>  
-            <if test="timestamp != null "> and timestamp = #{timestamp}</if>
+            <if test="timestamp != null "> and `timestamp` = #{timestamp}</if>
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
-            <if test="open != null "> and open = #{open}</if>
-            <if test="close != null "> and close = #{close}</if>
+            <if test="open != null "> and `open` = #{open}</if>
+            <if test="close != null "> and `close` = #{close}</if>
             <if test="high != null "> and high = #{high}</if>
             <if test="low != null "> and low = #{low}</if>
-            <if test="range != null "> and range = #{range}</if>
+            <if test="range != null "> and `range` = #{range}</if>
         </where>
     </select>
     
@@ -43,13 +43,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into mk_product_price
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="timestamp != null">timestamp,</if>
+            <if test="timestamp != null">`timestamp`,</if>
             <if test="productCode != null">product_code,</if>
-            <if test="open != null">open,</if>
-            <if test="close != null">close,</if>
+            <if test="open != null">`open`,</if>
+            <if test="close != null">`close`,</if>
             <if test="high != null">high,</if>
             <if test="low != null">low,</if>
-            <if test="range != null">range,</if>
+            <if test="range != null">`range`,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
          </trim>
@@ -70,10 +70,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateProductPrice" parameterType="com.ruoyi.market.domain.ProductPrice">
         update mk_product_price
         <trim prefix="SET" suffixOverrides=",">
-            <if test="timestamp != null">timestamp = #{timestamp},</if>
+            <if test="timestamp != null">`timestamp` = #{timestamp},</if>
             <if test="productCode != null">product_code = #{productCode},</if>
-            <if test="open != null">open = #{open},</if>
-            <if test="close != null">close = #{close},</if>
+            <if test="open != null">`open` = #{open},</if>
+            <if test="close != null">`close` = #{close},</if>
             <if test="high != null">high = #{high},</if>
             <if test="low != null">low = #{low},</if>
             <if test="range != null">range = #{range},</if>

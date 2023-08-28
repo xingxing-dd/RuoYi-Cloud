@@ -29,6 +29,7 @@ import static com.ruoyi.common.core.constant.MarketConstant.VALID;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/client")
 public class MarketClientController {
 
     private final IMarketClientService marketClientService;
