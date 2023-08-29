@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.RechargeNetworkMapper">
+    
+    <resultMap type="RechargeNetwork" id="RechargeNetworkResult">
+        <result property="id"    column="id"    />
+        <result property="currency"    column="currency"    />
+        <result property="protocol"    column="protocol"    />
+        <result property="address"    column="address"    />
+        <result property="rate"    column="rate"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectRechargeNetworkVo">
+        select id, currency, protocol, address, rate, status, del_flag, create_time, create_by, update_time, update_by from recharge_network
+    </sql>
+
+    <select id="selectRechargeNetworkList" parameterType="RechargeNetwork" resultMap="RechargeNetworkResult">
+        <include refid="selectRechargeNetworkVo"/>
+        <where>  
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="protocol != null  and protocol != ''"> and protocol = #{protocol}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectRechargeNetworkById" parameterType="Long" resultMap="RechargeNetworkResult">
+        <include refid="selectRechargeNetworkVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRechargeNetwork" parameterType="RechargeNetwork" useGeneratedKeys="true" keyProperty="id">
+        insert into recharge_network
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="currency != null and currency != ''">currency,</if>
+            <if test="protocol != null and protocol != ''">protocol,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="rate != null">rate,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="currency != null and currency != ''">#{currency},</if>
+            <if test="protocol != null and protocol != ''">#{protocol},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRechargeNetwork" parameterType="RechargeNetwork">
+        update recharge_network
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="currency != null and currency != ''">currency = #{currency},</if>
+            <if test="protocol != null and protocol != ''">protocol = #{protocol},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRechargeNetworkById" parameterType="Long">
+        delete from recharge_network where id = #{id}
+    </delete>
+
+    <delete id="deleteRechargeNetworkByIds" parameterType="String">
+        delete from recharge_network where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
