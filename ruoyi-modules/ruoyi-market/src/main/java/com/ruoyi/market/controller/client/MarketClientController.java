@@ -10,6 +10,7 @@ import com.ruoyi.market.crawler.core.model.ProductKLineCache;
 import com.ruoyi.market.crawler.core.model.ProductPriceCache;
 import com.ruoyi.market.domain.ProductCategory;
 import com.ruoyi.market.domain.ProductInfo;
+import com.ruoyi.market.domain.req.KLineQueryReq;
 import com.ruoyi.market.domain.req.ProductQueryReq;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
 import com.ruoyi.market.domain.vo.ProductPriceVo;
@@ -59,15 +60,15 @@ public class MarketClientController {
         return AjaxResult.success(marketClientService.selectProductPrice(req.getProductCode()));
     }
 
-    @PostMapping("/k-line/{productCode}/{type}")
-    public AjaxResult productPriceDetail(@PathVariable("productCode") String productCode, @PathVariable("type") String type) {
-        if (StringUtils.isAllBlank(productCode, type)) {
+    @PostMapping("/k-line")
+    public AjaxResult productPriceDetail(@RequestBody KLineQueryReq req) {
+        if (req == null || StringUtils.isAllBlank(req.getProductCode(), req.getType())) {
             return AjaxResult.error("params is null!");
         }
-        if (MarketPriceTypeEnum.getPriceType(type) == null) {
+        if (MarketPriceTypeEnum.getPriceType(req.getType()) == null) {
             return AjaxResult.error("params is error!");
         }
-        return AjaxResult.success(marketClientService.selectProductPrice(productCode, type));
+        return AjaxResult.success(marketClientService.selectProductPrice(req.getProductCode(), req.getType()));
     }
 
 }

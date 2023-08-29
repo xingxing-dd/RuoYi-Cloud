@@ -3,12 +3,13 @@ package com.ruoyi.market.domain.vo;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @ToString
-public class ProductInfoVo {
+public class ProductInfoVo implements Serializable {
 
     /**
      * 产品code
@@ -34,6 +35,11 @@ public class ProductInfoVo {
      * 涨跌幅
      */
     private BigDecimal range;
+
+    /**
+     * 状态
+     */
+    private String status;
 
     /**
      * 价格图
