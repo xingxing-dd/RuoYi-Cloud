@@ -2,6 +2,7 @@ package com.ruoyi.client.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.core.utils.DateUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.client.mapper.ClientUserWalletMapper;
@@ -30,6 +31,17 @@ public class ClientUserWalletServiceImpl implements IClientUserWalletService
     public ClientUserWallet selectClientUserWalletById(Long id)
     {
         return clientUserWalletMapper.selectClientUserWalletById(id);
+    }
+
+    @Override
+    public ClientUserWallet selectClientUserWalletByUserId(Long userId) {
+        ClientUserWallet params = new ClientUserWallet();
+        params.setUserId(userId);
+        List<ClientUserWallet> clientUserWallets = clientUserWalletMapper.selectClientUserWalletList(params);
+        if (CollectionUtils.isEmpty(clientUserWallets)) {
+            return null;
+        }
+        return clientUserWallets.get(0);
     }
 
     /**

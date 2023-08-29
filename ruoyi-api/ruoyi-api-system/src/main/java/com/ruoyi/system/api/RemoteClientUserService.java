@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(contextId = "remoteClientUserService", value = ServiceNameConstants.MARKET_CLIENT, fallbackFactory = RemoteClientUserFallbackFactory.class)
 public interface RemoteClientUserService {
 
-    @GetMapping("/client/user/info/{username}")
+    @GetMapping("/user/info/{username}")
     public R<LoginUser> getUserInfo(@PathVariable("username") String username, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
     /**
@@ -22,7 +22,7 @@ public interface RemoteClientUserService {
      * @param source 请求来源
      * @return 结果
      */
-    @PostMapping("/client/user/register")
+    @PostMapping("/user/register")
     public R<Boolean> registerUserInfo(@RequestBody ClientUser clientUser, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
 }

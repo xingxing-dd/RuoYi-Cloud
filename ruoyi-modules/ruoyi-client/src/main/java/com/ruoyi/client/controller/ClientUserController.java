@@ -4,7 +4,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.client.domain.ClientUserWallet;
+import com.ruoyi.client.domain.vo.ClientUserInfoVo;
+import com.ruoyi.client.service.IClientUserWalletService;
 import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.annotation.InnerAuth;
@@ -33,6 +37,9 @@ public class ClientUserController extends BaseController
 {
     @Autowired
     private IClientUserService clientUserService;
+
+    @Autowired
+    private IClientUserWalletService clientUserWalletService;
 
     /**
      * 查询账户信息列表
@@ -116,6 +123,26 @@ public class ClientUserController extends BaseController
         BeanUtils.copyProperties(user, clientUser);
         sysUserVo.setClientUser(user);
         return R.ok(sysUserVo);
+    }
+
+    @PostMapping("/detail")
+    public R<ClientUserInfoVo> getClientUserInfo() {
+        Long userId = SecurityContextHolder.getUserId();
+        if (userId == null) {
+            return R.fail("Not login!");
+        }
+        ClientUser clientUser = clientUserService.selectClientUserByUserId(userId);
+        if (StringUtils.isNull(clientUser))
+        {
+            return R.fail("User is not exists!");
+        }
+        ClientUserWallet clientUserWallet = clientUserWalletService.selectClientUserWalletByUserId(clientUser.getUserId());
+        ClientUserInfoVo clientUserInfoVo = new ClientUserInfoVo();
+        BeanUtils.copyProperties(clientUserInfoVo, clientUser);
+        if (clientUserWallet != null) {
+            BeanUtils.copyProperties(clientUserInfoVo, clientUserWallet);
+        }
+        return R.ok(clientUserInfoVo);
     }
 
 }

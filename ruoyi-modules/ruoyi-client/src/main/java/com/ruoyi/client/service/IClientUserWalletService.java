@@ -19,6 +19,8 @@ public interface IClientUserWalletService
      */
     public ClientUserWallet selectClientUserWalletById(Long id);
 
+    public ClientUserWallet selectClientUserWalletByUserId(Long id);
+
     /**
      * 查询用户资产列表
      * 
