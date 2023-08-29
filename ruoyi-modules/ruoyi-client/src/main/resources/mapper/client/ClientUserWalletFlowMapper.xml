@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.client.mapper.ClientUserWalletFlowMapper">
     
-    <resultMap type="ClientUserWalletFlow" id="ClientUserWalletFlowResult">
+    <resultMap type="com.ruoyi.client.domain.ClientUserWalletFlow" id="ClientUserWalletFlowResult">
         <result property="id"    column="id"    />
         <result property="walletId"    column="wallet_id"    />
         <result property="userId"    column="user_id"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, wallet_id, user_id, biz_order_id, type, direct, amount, currency, remark, ext, del_flag, create_time, create_by, update_time, update_by from client_user_wallet_flow
     </sql>
 
-    <select id="selectClientUserWalletFlowList" parameterType="ClientUserWalletFlow" resultMap="ClientUserWalletFlowResult">
+    <select id="selectClientUserWalletFlowList" parameterType="com.ruoyi.client.domain.ClientUserWalletFlow" resultMap="ClientUserWalletFlowResult">
         <include refid="selectClientUserWalletFlowVo"/>
         <where>  
             <if test="walletId != null "> and wallet_id = #{walletId}</if>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertClientUserWalletFlow" parameterType="ClientUserWalletFlow" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertClientUserWalletFlow" parameterType="com.ruoyi.client.domain.ClientUserWalletFlow" useGeneratedKeys="true" keyProperty="id">
         insert into client_user_wallet_flow
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="walletId != null">wallet_id,</if>
@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateClientUserWalletFlow" parameterType="ClientUserWalletFlow">
+    <update id="updateClientUserWalletFlow" parameterType="com.ruoyi.client.domain.ClientUserWalletFlow">
         update client_user_wallet_flow
         <trim prefix="SET" suffixOverrides=",">
             <if test="walletId != null">wallet_id = #{walletId},</if>

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 查询用户钱包流水列表
-export function listWallet-flow(query) {
+export function listWalletFlow(query) {
   return request({
     url: '/client/wallet-flow/list',
     method: 'get',
@@ -10,7 +10,7 @@ export function listWallet-flow(query) {
 }
 
 // 查询用户钱包流水详细
-export function getWallet-flow(id) {
+export function getWalletFlow(id) {
   return request({
     url: '/client/wallet-flow/' + id,
     method: 'get'
@@ -18,7 +18,7 @@ export function getWallet-flow(id) {
 }
 
 // 新增用户钱包流水
-export function addWallet-flow(data) {
+export function addWalletFlow(data) {
   return request({
     url: '/client/wallet-flow',
     method: 'post',
@@ -27,7 +27,7 @@ export function addWallet-flow(data) {
 }
 
 // 修改用户钱包流水
-export function updateWallet-flow(data) {
+export function updateWalletflow(data) {
   return request({
     url: '/client/wallet-flow',
     method: 'put',
@@ -36,7 +36,7 @@ export function updateWallet-flow(data) {
 }
 
 // 删除用户钱包流水
-export function delWallet-flow(id) {
+export function delWalletFlow(id) {
   return request({
     url: '/client/wallet-flow/' + id,
     method: 'delete'

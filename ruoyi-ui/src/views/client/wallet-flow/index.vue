@@ -113,7 +113,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="wallet-flowList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="walletFlowList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="钱包id" align="center" prop="walletId" />
@@ -151,7 +151,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -214,7 +214,7 @@
 </template>
 
 <script>
-import { listWallet-flow, getWallet-flow, delWallet-flow, addWallet-flow, updateWallet-flow } from "@/api/client/wallet-flow";
+import { listWalletFlow, getWalletFlow, delWalletFlow, addWalletFlow, updateWalletflow } from "@/api/client/wallet-flow";
 
 export default {
   name: "Wallet-flow",
@@ -234,7 +234,7 @@ export default {
       // 总条数
       total: 0,
       // 用户钱包流水表格数据
-      wallet-flowList: [],
+      walletFlowList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -286,8 +286,8 @@ export default {
     /** 查询用户钱包流水列表 */
     getList() {
       this.loading = true;
-      listWallet-flow(this.queryParams).then(response => {
-        this.wallet-flowList = response.rows;
+      listWalletFlow(this.queryParams).then(response => {
+        this.walletFlowList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -344,7 +344,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getWallet-flow(id).then(response => {
+      getWalletFlow(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改用户钱包流水";
@@ -355,13 +355,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateWallet-flow(this.form).then(response => {
+            updateWalletflow(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addWallet-flow(this.form).then(response => {
+            addWalletFlow(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -374,7 +374,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除用户钱包流水编号为"' + ids + '"的数据项？').then(function() {
-        return delWallet-flow(ids);
+        return delWalletFlow(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
