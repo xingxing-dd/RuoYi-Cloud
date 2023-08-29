@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.client.mapper.RechargeNetworkMapper">
     
-    <resultMap type="RechargeNetwork" id="RechargeNetworkResult">
+    <resultMap type="com.ruoyi.client.domain.RechargeNetwork" id="RechargeNetworkResult">
         <result property="id"    column="id"    />
         <result property="currency"    column="currency"    />
         <result property="protocol"    column="protocol"    />
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, currency, protocol, address, rate, status, del_flag, create_time, create_by, update_time, update_by from recharge_network
     </sql>
 
-    <select id="selectRechargeNetworkList" parameterType="RechargeNetwork" resultMap="RechargeNetworkResult">
+    <select id="selectRechargeNetworkList" parameterType="com.ruoyi.client.domain.RechargeNetwork" resultMap="RechargeNetworkResult">
         <include refid="selectRechargeNetworkVo"/>
         <where>  
             <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertRechargeNetwork" parameterType="RechargeNetwork" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertRechargeNetwork" parameterType="com.ruoyi.client.domain.RechargeNetwork" useGeneratedKeys="true" keyProperty="id">
         insert into recharge_network
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="currency != null and currency != ''">currency,</if>
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateRechargeNetwork" parameterType="RechargeNetwork">
+    <update id="updateRechargeNetwork" parameterType="com.ruoyi.client.domain.RechargeNetwork">
         update recharge_network
         <trim prefix="SET" suffixOverrides=",">
             <if test="currency != null and currency != ''">currency = #{currency},</if>

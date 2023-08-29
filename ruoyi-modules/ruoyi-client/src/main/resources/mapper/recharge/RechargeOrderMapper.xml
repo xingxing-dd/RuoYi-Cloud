@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.client.mapper.RechargeOrderMapper">
     
-    <resultMap type="RechargeOrder" id="RechargeOrderResult">
+    <resultMap type="com.ruoyi.client.domain.RechargeOrder" id="RechargeOrderResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
         <result property="userName"    column="user_name"    />
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, user_id, user_name, recharge_type, recharge_amount, recharge_currency, receive_amount, receive_currency, recharge_invoice, remark, status, del_flag, create_time, create_by, update_time, update_by from recharge_order
     </sql>
 
-    <select id="selectRechargeOrderList" parameterType="RechargeOrder" resultMap="RechargeOrderResult">
+    <select id="selectRechargeOrderList" parameterType="com.ruoyi.client.domain.RechargeOrder" resultMap="RechargeOrderResult">
         <include refid="selectRechargeOrderVo"/>
         <where>  
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertRechargeOrder" parameterType="RechargeOrder" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertRechargeOrder" parameterType="com.ruoyi.client.domain.RechargeOrder" useGeneratedKeys="true" keyProperty="id">
         insert into recharge_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateRechargeOrder" parameterType="RechargeOrder">
+    <update id="updateRechargeOrder" parameterType="com.ruoyi.client.domain.RechargeOrder">
         update recharge_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
