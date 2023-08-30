@@ -120,7 +120,7 @@ public class ClientUserController extends BaseController
         }
         LoginUser sysUserVo = new LoginUser();
         com.ruoyi.system.api.domain.ClientUser user = new com.ruoyi.system.api.domain.ClientUser();
-        BeanUtils.copyProperties(user, clientUser);
+        BeanUtils.copyProperties(clientUser, user);
         sysUserVo.setClientUser(user);
         return R.ok(sysUserVo);
     }
@@ -138,9 +138,9 @@ public class ClientUserController extends BaseController
         }
         ClientUserWallet clientUserWallet = clientUserWalletService.selectClientUserWalletByUserId(clientUser.getUserId());
         ClientUserInfoVo clientUserInfoVo = new ClientUserInfoVo();
-        BeanUtils.copyProperties(clientUserInfoVo, clientUser);
+        BeanUtils.copyProperties(clientUser, clientUserInfoVo);
         if (clientUserWallet != null) {
-            BeanUtils.copyProperties(clientUserInfoVo, clientUserWallet);
+            BeanUtils.copyProperties(clientUserWallet, clientUserInfoVo);
         }
         return R.ok(clientUserInfoVo);
     }
