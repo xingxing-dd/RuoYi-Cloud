@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.FundAccountInfoMapper">
+    
+    <resultMap type="com.ruoyi.client.domain.FundAccountInfo" id="FundAccountInfoResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="accountNo"    column="account_no"    />
+        <result property="accountCurrency"    column="account_currency"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="accountUsage"    column="account_usage"    />
+        <result property="accountOwner"    column="account_owner"    />
+        <result property="accountOwnerCode"    column="account_owner_code"    />
+        <result property="accountOwnerAddr"    column="account_owner_addr"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectFundAccountInfoVo">
+        select id, user_id, user_name, account_name, account_no, account_currency, account_type, account_usage, account_owner, account_owner_code, account_owner_addr, remark, status, del_flag, create_time, create_by, update_time, update_by from fund_account_info
+    </sql>
+
+    <select id="selectFundAccountInfoList" parameterType="com.ruoyi.client.domain.FundAccountInfo" resultMap="FundAccountInfoResult">
+        <include refid="selectFundAccountInfoVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="accountNo != null  and accountNo != ''"> and account_no = #{accountNo}</if>
+            <if test="accountCurrency != null  and accountCurrency != ''"> and account_currency = #{accountCurrency}</if>
+            <if test="accountType != null  and accountType != ''"> and account_type = #{accountType}</if>
+            <if test="accountUsage != null  and accountUsage != ''"> and account_usage = #{accountUsage}</if>
+            <if test="accountOwnerCode != null  and accountOwnerCode != ''"> and account_owner_code = #{accountOwnerCode}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectFundAccountInfoById" parameterType="Long" resultMap="FundAccountInfoResult">
+        <include refid="selectFundAccountInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFundAccountInfo" parameterType="com.ruoyi.client.domain.FundAccountInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into fund_account_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="accountName != null">account_name,</if>
+            <if test="accountNo != null">account_no,</if>
+            <if test="accountCurrency != null">account_currency,</if>
+            <if test="accountType != null and accountType != ''">account_type,</if>
+            <if test="accountUsage != null and accountUsage != ''">account_usage,</if>
+            <if test="accountOwner != null">account_owner,</if>
+            <if test="accountOwnerCode != null">account_owner_code,</if>
+            <if test="accountOwnerAddr != null">account_owner_addr,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="accountName != null">#{accountName},</if>
+            <if test="accountNo != null">#{accountNo},</if>
+            <if test="accountCurrency != null">#{accountCurrency},</if>
+            <if test="accountType != null and accountType != ''">#{accountType},</if>
+            <if test="accountUsage != null and accountUsage != ''">#{accountUsage},</if>
+            <if test="accountOwner != null">#{accountOwner},</if>
+            <if test="accountOwnerCode != null">#{accountOwnerCode},</if>
+            <if test="accountOwnerAddr != null">#{accountOwnerAddr},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFundAccountInfo" parameterType="com.ruoyi.client.domain.FundAccountInfo">
+        update fund_account_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="accountNo != null">account_no = #{accountNo},</if>
+            <if test="accountCurrency != null">account_currency = #{accountCurrency},</if>
+            <if test="accountType != null and accountType != ''">account_type = #{accountType},</if>
+            <if test="accountUsage != null and accountUsage != ''">account_usage = #{accountUsage},</if>
+            <if test="accountOwner != null">account_owner = #{accountOwner},</if>
+            <if test="accountOwnerCode != null">account_owner_code = #{accountOwnerCode},</if>
+            <if test="accountOwnerAddr != null">account_owner_addr = #{accountOwnerAddr},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFundAccountInfoById" parameterType="Long">
+        delete from fund_account_info where id = #{id}
+    </delete>
+
+    <delete id="deleteFundAccountInfoByIds" parameterType="String">
+        delete from fund_account_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
