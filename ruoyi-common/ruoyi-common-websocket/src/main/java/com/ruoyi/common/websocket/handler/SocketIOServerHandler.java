@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ruoyi.common.core.constant.TokenConstants;
+import com.ruoyi.common.websocket.message.RegisterMessage;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.sun.nio.sctp.MessageInfo;
@@ -48,12 +49,14 @@ public class SocketIOServerHandler {
     }
 
     @OnEvent("registry")
-    public void onRegistry(SocketIOClient socketIOClient, String registry) {
+    public void onRegistry(SocketIOClient socketIOClient, RegisterMessage message) {
+        log.info("接收到消息注册：{}", message);
         SocketIOSession socketIOSession = sessionPool.getSession(socketIOClient.getSessionId().toString());
         if (socketIOSession == null) {
             return;
         }
-        socketIOSession.setTopic(registry);
+        socketIOSession.setTopic(message.getProduct());
+        socketIOSession.setInterval(message.getInterval());
         socketIOSession.setHeartbeatTime(System.currentTimeMillis());
         socketIOClient.sendEvent("message", "ok");
     }

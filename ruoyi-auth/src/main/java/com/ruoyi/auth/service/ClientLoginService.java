@@ -54,7 +54,14 @@ public class ClientLoginService {
     }
 
     public void register(String username, String password) {
-
+        if (StringUtils.isAnyBlank(username, password))
+        {
+            throw new ServiceException("username/password is not blank");
+        }
+        ClientUser clientUser = new ClientUser();
+        clientUser.setUserName(username);
+        clientUser.setPassword(password);
+        remoteClientUserService.registerUserInfo(clientUser, SecurityConstants.INNER);
     }
 
 }

@@ -93,7 +93,9 @@ public class ProductPriceCrawlerJob {
             return;
         }
         boolean hasPriceChange = productPriceHelper.doRefreshPrice(productCode, new BigDecimal(currentPrice), new Date((System.currentTimeMillis() / 60000) * 60000));
-        log.info("产品价格波动:{},准备发送通知,当前会话数量{}", productCode, sessionPool.sessionCount());
+        if (log.isDebugEnabled()) {
+            log.info("产品价格波动:{},准备发送通知,当前会话数量{}", productCode, sessionPool.sessionCount());
+        }
         if (!hasPriceChange || sessionPool.sessionCount() <= 0) {
             return;
         }

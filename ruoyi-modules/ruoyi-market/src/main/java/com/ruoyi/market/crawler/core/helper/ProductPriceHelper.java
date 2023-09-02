@@ -93,7 +93,9 @@ public class ProductPriceHelper {
         }
         //log.info("时间差值：{}, 时间间隔:{}", productPriceCache.getCurrentTime().getTime() - productPrice.getTimestamp(), priceType.getInterval());
         if (productPriceCache.getCurrentTime().getTime() - productPrice.getTimestamp() >= priceType.getInterval()) {
-            log.info("跨时间段，将数据重新塞回列表:{}", productPrice);
+            if (log.isDebugEnabled()) {
+                log.debug("跨时间段，将数据重新塞回列表:{}", productPrice);
+            }
             productPrice.setClose(productPriceCache.getCurrentPrice());
             productPrice.setHigh(productPrice.getHigh().compareTo(productPriceCache.getCurrentPrice()) >= 0 ? productPrice.getHigh() : productPriceCache.getCurrentPrice());
             productPrice.setLow(productPrice.getLow().compareTo(productPriceCache.getCurrentPrice()) <= 0 ? productPrice.getLow() : productPriceCache.getCurrentPrice());
@@ -111,7 +113,9 @@ public class ProductPriceHelper {
             productPrice.setLow(productPrice.getLow().compareTo(productPriceCache.getCurrentPrice()) <= 0 ? productPrice.getLow() : productPriceCache.getCurrentPrice());
             productPrice.setClose(productPriceCache.getCurrentPrice());
         }
-        log.info("刷新产品价格信息:{}", productPrice);
+        if (log.isDebugEnabled()) {
+            log.debug("刷新产品价格信息:{}", productPrice);
+        }
         redisService.pushLastObject(productPriceKey, productPrice);
         redisService.expire(productPriceKey, 1, TimeUnit.DAYS);
     }
