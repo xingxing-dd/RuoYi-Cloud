@@ -33,10 +33,10 @@ public class WebSocketMessageSender {
     private IProductInfoService productInfoService;
 
     public void send(SocketIOSession session, String productCode) {
-        if (StringUtils.isBlank(session.getTopic())) {
+        if (StringUtils.isBlank(session.getTopic()) || StringUtils.isBlank(session.getInterval())) {
             return;
         }
-        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, MarketPriceTypeEnum.MK_1M.getKey());
+        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, session.getInterval());
         ProductKLineCache productPrice = redisService.getLastObject(productPriceKey, ProductKLineCache.class);
         if (productPrice == null) {
             return;
@@ -56,7 +56,7 @@ public class WebSocketMessageSender {
         message.setHigh(productPrice.getHigh());
         message.setRange(productPriceCache.getRange());
         if (session.getTopic().equals(productCode)) {
-            session.getClient().sendEvent("message", JSON.toJSONString(message));
+            session.getClient().sendEvent("message", message);
             return;
         }
         List<ProductInfo> productInfos = productInfoService.selectProductInfoByCategory(session.getTopic());
@@ -65,7 +65,7 @@ public class WebSocketMessageSender {
         }
         boolean isRegister = productInfos.stream().map(ProductInfo::getProductCode).collect(Collectors.toSet()).contains(productCode);
         if (isRegister) {
-            session.getClient().sendEvent("message", JSON.toJSONString(message));
+            session.getClient().sendEvent("message", message);
         }
     }
 

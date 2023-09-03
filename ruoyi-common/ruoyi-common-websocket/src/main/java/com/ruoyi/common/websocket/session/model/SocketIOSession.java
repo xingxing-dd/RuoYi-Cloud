@@ -32,6 +32,11 @@ public class SocketIOSession {
     private String topic;
 
     /**
+     * 时间间隔
+     */
+    private String interval;
+
+    /**
      * 会话
      */
     private SocketIOClient client;
