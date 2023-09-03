@@ -10,7 +10,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 充值订单对象 recharge_order
  * 
  * @author ruoyi
- * @date 2023-08-29
+ * @date 2023-08-29cd ..
  */
 public class RechargeOrder extends BaseEntity
 {

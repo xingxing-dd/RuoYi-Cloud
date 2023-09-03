@@ -3,6 +3,8 @@ package com.ruoyi.client.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,5 +103,16 @@ public class RechargeOrderController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(rechargeOrderService.deleteRechargeOrderByIds(ids));
+    }
+
+
+
+    @PostMapping("/submit")
+    public AjaxResult submit(@RequestBody RechargeOrder rechargeOrder) {
+        rechargeOrder.setUserId(SecurityContextHolder.getUserId());
+        rechargeOrder.setUserName(SecurityContextHolder.getUserName());
+        rechargeOrder.setStatus(0L);
+        rechargeOrderService.insertRechargeOrder(rechargeOrder);
+        return success();
     }
 }

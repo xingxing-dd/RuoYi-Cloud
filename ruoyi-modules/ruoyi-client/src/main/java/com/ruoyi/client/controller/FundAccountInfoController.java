@@ -3,6 +3,8 @@ package com.ruoyi.client.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,4 +104,22 @@ public class FundAccountInfoController extends BaseController
     {
         return toAjax(fundAccountInfoService.deleteFundAccountInfoByIds(ids));
     }
+
+    @Log(title = "账号管理", businessType = BusinessType.DELETE)
+    @PostMapping("/recharge")
+    public AjaxResult rechargeAcct(@RequestBody FundAccountInfo fundAccountInfo) {
+        fundAccountInfo.setAccountUsage("recharge");
+        List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
+        return success(list);
+    }
+
+    @Log(title = "账号管理", businessType = BusinessType.DELETE)
+    @PostMapping("/withdraw")
+    public AjaxResult withdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
+        fundAccountInfo.setAccountUsage("withdraw");
+        fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
+        List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
+        return success(list);
+    }
+
 }
