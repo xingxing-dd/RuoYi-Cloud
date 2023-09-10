@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="用户名" prop="userName">
+        <el-input
+          v-model="queryParams.userName"
+          placeholder="请输入用户名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="订单号" prop="orderId">
         <el-input
           v-model="queryParams.orderId"
@@ -90,6 +98,8 @@
     <el-table v-loading="loading" :data="withdrawList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="用户id" align="center" prop="userId" />
+      <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="提现金额" align="center" prop="amount" />
       <el-table-column label="币种" align="center" prop="currency" />
@@ -119,7 +129,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -131,6 +141,12 @@
     <!-- 添加或修改提现订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="用户id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户id" />
+        </el-form-item>
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model="form.userName" placeholder="请输入用户名" />
+        </el-form-item>
         <el-form-item label="订单号" prop="orderId">
           <el-input v-model="form.orderId" placeholder="请输入订单号" />
         </el-form-item>
@@ -147,14 +163,13 @@
           <el-input v-model="form.feeAmount" placeholder="请输入手续费" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择状态">
-            <el-option
+          <el-radio-group v-model="form.status">
+            <el-radio
               v-for="dict in dict.type.withdraw_order_status"
               :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -195,6 +210,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        userName: null,
         orderId: null,
         currency: null,
         fundAcct: null,
@@ -232,6 +248,8 @@ export default {
     reset() {
       this.form = {
         id: null,
+        userId: null,
+        userName: null,
         orderId: null,
         amount: null,
         currency: null,

@@ -112,6 +112,8 @@ public class RechargeOrderController extends BaseController
         rechargeOrder.setUserId(SecurityContextHolder.getUserId());
         rechargeOrder.setUserName(SecurityContextHolder.getUserName());
         rechargeOrder.setStatus(0L);
+        rechargeOrder.setReceiveAmount(rechargeOrder.getRechargeAmount());
+        rechargeOrder.setReceiveCurrency(rechargeOrder.getRechargeCurrency());
         rechargeOrderService.insertRechargeOrder(rechargeOrder);
         return success();
     }

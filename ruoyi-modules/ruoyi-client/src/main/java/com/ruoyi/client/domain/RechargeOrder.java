@@ -8,9 +8,9 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 充值订单对象 recharge_order
- * 
+ *
  * @author ruoyi
- * @date 2023-08-29cd ..
+ * @date 2023-09-04
  */
 public class RechargeOrder extends BaseEntity
 {
@@ -30,6 +30,10 @@ public class RechargeOrder extends BaseEntity
     /** 充值方式 */
     @Excel(name = "充值方式")
     private String rechargeType;
+
+    /** 充值账号 */
+    @Excel(name = "充值账号")
+    private String rechargeAcct;
 
     /** 充值金额 */
     @Excel(name = "充值金额")
@@ -58,102 +62,111 @@ public class RechargeOrder extends BaseEntity
     /** 删除标识 */
     private Long delFlag;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }
-    public void setUserName(String userName) 
+    public void setUserName(String userName)
     {
         this.userName = userName;
     }
 
-    public String getUserName() 
+    public String getUserName()
     {
         return userName;
     }
-    public void setRechargeType(String rechargeType) 
+    public void setRechargeType(String rechargeType)
     {
         this.rechargeType = rechargeType;
     }
 
-    public String getRechargeType() 
+    public String getRechargeType()
     {
         return rechargeType;
     }
-    public void setRechargeAmount(BigDecimal rechargeAmount) 
+    public void setRechargeAcct(String rechargeAcct)
+    {
+        this.rechargeAcct = rechargeAcct;
+    }
+
+    public String getRechargeAcct()
+    {
+        return rechargeAcct;
+    }
+    public void setRechargeAmount(BigDecimal rechargeAmount)
     {
         this.rechargeAmount = rechargeAmount;
     }
 
-    public BigDecimal getRechargeAmount() 
+    public BigDecimal getRechargeAmount()
     {
         return rechargeAmount;
     }
-    public void setRechargeCurrency(String rechargeCurrency) 
+    public void setRechargeCurrency(String rechargeCurrency)
     {
         this.rechargeCurrency = rechargeCurrency;
     }
 
-    public String getRechargeCurrency() 
+    public String getRechargeCurrency()
     {
         return rechargeCurrency;
     }
-    public void setReceiveAmount(BigDecimal receiveAmount) 
+    public void setReceiveAmount(BigDecimal receiveAmount)
     {
         this.receiveAmount = receiveAmount;
     }
 
-    public BigDecimal getReceiveAmount() 
+    public BigDecimal getReceiveAmount()
     {
         return receiveAmount;
     }
-    public void setReceiveCurrency(String receiveCurrency) 
+    public void setReceiveCurrency(String receiveCurrency)
     {
         this.receiveCurrency = receiveCurrency;
     }
 
-    public String getReceiveCurrency() 
+    public String getReceiveCurrency()
     {
         return receiveCurrency;
     }
-    public void setRechargeInvoice(String rechargeInvoice) 
+    public void setRechargeInvoice(String rechargeInvoice)
     {
         this.rechargeInvoice = rechargeInvoice;
     }
 
-    public String getRechargeInvoice() 
+    public String getRechargeInvoice()
     {
         return rechargeInvoice;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Long status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Long getStatus()
     {
         return status;
     }
-    public void setDelFlag(Long delFlag) 
+    public void setDelFlag(Long delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public Long getDelFlag() 
+    public Long getDelFlag()
     {
         return delFlag;
     }
@@ -161,22 +174,23 @@ public class RechargeOrder extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("userId", getUserId())
-            .append("userName", getUserName())
-            .append("rechargeType", getRechargeType())
-            .append("rechargeAmount", getRechargeAmount())
-            .append("rechargeCurrency", getRechargeCurrency())
-            .append("receiveAmount", getReceiveAmount())
-            .append("receiveCurrency", getReceiveCurrency())
-            .append("rechargeInvoice", getRechargeInvoice())
-            .append("remark", getRemark())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("createTime", getCreateTime())
-            .append("createBy", getCreateBy())
-            .append("updateTime", getUpdateTime())
-            .append("updateBy", getUpdateBy())
-            .toString();
+                .append("id", getId())
+                .append("userId", getUserId())
+                .append("userName", getUserName())
+                .append("rechargeType", getRechargeType())
+                .append("rechargeAcct", getRechargeAcct())
+                .append("rechargeAmount", getRechargeAmount())
+                .append("rechargeCurrency", getRechargeCurrency())
+                .append("receiveAmount", getReceiveAmount())
+                .append("receiveCurrency", getReceiveCurrency())
+                .append("rechargeInvoice", getRechargeInvoice())
+                .append("remark", getRemark())
+                .append("status", getStatus())
+                .append("delFlag", getDelFlag())
+                .append("createTime", getCreateTime())
+                .append("createBy", getCreateBy())
+                .append("updateTime", getUpdateTime())
+                .append("updateBy", getUpdateBy())
+                .toString();
     }
 }

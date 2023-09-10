@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -27,18 +19,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="充值账号" prop="rechargeAcct">
+        <el-input
+          v-model="queryParams.rechargeAcct"
+          placeholder="请输入充值账号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="充值币种" prop="rechargeCurrency">
         <el-select v-model="queryParams.rechargeCurrency" placeholder="请选择充值币种" clearable>
-          <el-option
-            v-for="dict in dict.type.all_recharge_currenies"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="到账币种" prop="receiveCurrency">
-        <el-select v-model="queryParams.receiveCurrency" placeholder="请选择到账币种" clearable>
           <el-option
             v-for="dict in dict.type.all_recharge_currenies"
             :key="dict.value"
@@ -119,6 +109,7 @@
           <dict-tag :options="dict.type.recharge_type" :value="scope.row.rechargeType"/>
         </template>
       </el-table-column>
+      <el-table-column label="充值账号" align="center" prop="rechargeAcct" />
       <el-table-column label="充值金额" align="center" prop="rechargeAmount" />
       <el-table-column label="充值币种" align="center" prop="rechargeCurrency">
         <template slot-scope="scope">
@@ -136,16 +127,6 @@
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_data_status" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -167,7 +148,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -194,6 +175,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="充值账号" prop="rechargeAcct">
+          <el-input v-model="form.rechargeAcct" placeholder="请输入充值账号" />
         </el-form-item>
         <el-form-item label="充值金额" prop="rechargeAmount">
           <el-input v-model="form.rechargeAmount" placeholder="请输入充值金额" />
@@ -222,7 +206,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="充值凭证" prop="rechargeInvoice">
-          <file-upload v-model="form.rechargeInvoice"/>
+          <el-input v-model="form.rechargeInvoice" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -276,11 +260,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        userId: null,
         userName: null,
         rechargeType: null,
+        rechargeAcct: null,
         rechargeCurrency: null,
-        receiveCurrency: null,
         status: null,
       },
       // 表单参数
@@ -339,6 +322,7 @@ export default {
         userId: null,
         userName: null,
         rechargeType: null,
+        rechargeAcct: null,
         rechargeAmount: null,
         rechargeCurrency: null,
         receiveAmount: null,

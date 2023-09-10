@@ -3,6 +3,8 @@ package com.ruoyi.client.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,4 +104,14 @@ public class WithdrawOrderController extends BaseController
     {
         return toAjax(withdrawOrderService.deleteWithdrawOrderByIds(ids));
     }
+
+    @PostMapping("/submit")
+    public AjaxResult submit(@RequestBody WithdrawOrder withdrawOrder) {
+        withdrawOrder.setUserId(SecurityContextHolder.getUserId());
+        withdrawOrder.setUserName(SecurityContextHolder.getUserName());
+        withdrawOrder.setStatus(0L);
+        withdrawOrderService.insertWithdrawOrder(withdrawOrder);
+        return success();
+    }
+
 }

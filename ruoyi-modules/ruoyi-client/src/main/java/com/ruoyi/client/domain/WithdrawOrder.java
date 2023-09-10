@@ -10,9 +10,9 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 提现订单对象 withdraw_order
- * 
+ *
  * @author ruoyi
- * @date 2023-09-03
+ * @date 2023-09-04
  */
 public class WithdrawOrder extends BaseEntity
 {
@@ -20,6 +20,14 @@ public class WithdrawOrder extends BaseEntity
 
     /** 编号 */
     private Long id;
+
+    /** 用户id */
+    @Excel(name = "用户id")
+    private Long userId;
+
+    /** 用户名 */
+    @Excel(name = "用户名")
+    private String userName;
 
     /** 订单号 */
     @Excel(name = "订单号")
@@ -51,84 +59,102 @@ public class WithdrawOrder extends BaseEntity
     /** 更新时间 */
     private Date updateAt;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setOrderId(String orderId) 
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
+    }
+
+    public Long getUserId()
+    {
+        return userId;
+    }
+    public void setUserName(String userName)
+    {
+        this.userName = userName;
+    }
+
+    public String getUserName()
+    {
+        return userName;
+    }
+    public void setOrderId(String orderId)
     {
         this.orderId = orderId;
     }
 
-    public String getOrderId() 
+    public String getOrderId()
     {
         return orderId;
     }
-    public void setAmount(BigDecimal amount) 
+    public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
 
-    public BigDecimal getAmount() 
+    public BigDecimal getAmount()
     {
         return amount;
     }
-    public void setCurrency(String currency) 
+    public void setCurrency(String currency)
     {
         this.currency = currency;
     }
 
-    public String getCurrency() 
+    public String getCurrency()
     {
         return currency;
     }
-    public void setFundAcct(String fundAcct) 
+    public void setFundAcct(String fundAcct)
     {
         this.fundAcct = fundAcct;
     }
 
-    public String getFundAcct() 
+    public String getFundAcct()
     {
         return fundAcct;
     }
-    public void setFeeAmount(BigDecimal feeAmount) 
+    public void setFeeAmount(BigDecimal feeAmount)
     {
         this.feeAmount = feeAmount;
     }
 
-    public BigDecimal getFeeAmount() 
+    public BigDecimal getFeeAmount()
     {
         return feeAmount;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Long status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Long getStatus()
     {
         return status;
     }
-    public void setCreateAt(Date createAt) 
+    public void setCreateAt(Date createAt)
     {
         this.createAt = createAt;
     }
 
-    public Date getCreateAt() 
+    public Date getCreateAt()
     {
         return createAt;
     }
-    public void setUpdateAt(Date updateAt) 
+    public void setUpdateAt(Date updateAt)
     {
         this.updateAt = updateAt;
     }
 
-    public Date getUpdateAt() 
+    public Date getUpdateAt()
     {
         return updateAt;
     }
@@ -136,17 +162,19 @@ public class WithdrawOrder extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("orderId", getOrderId())
-            .append("amount", getAmount())
-            .append("currency", getCurrency())
-            .append("fundAcct", getFundAcct())
-            .append("feeAmount", getFeeAmount())
-            .append("status", getStatus())
-            .append("createAt", getCreateAt())
-            .append("createBy", getCreateBy())
-            .append("updateAt", getUpdateAt())
-            .append("updateBy", getUpdateBy())
-            .toString();
+                .append("id", getId())
+                .append("userId", getUserId())
+                .append("userName", getUserName())
+                .append("orderId", getOrderId())
+                .append("amount", getAmount())
+                .append("currency", getCurrency())
+                .append("fundAcct", getFundAcct())
+                .append("feeAmount", getFeeAmount())
+                .append("status", getStatus())
+                .append("createAt", getCreateAt())
+                .append("createBy", getCreateBy())
+                .append("updateAt", getUpdateAt())
+                .append("updateBy", getUpdateBy())
+                .toString();
     }
 }

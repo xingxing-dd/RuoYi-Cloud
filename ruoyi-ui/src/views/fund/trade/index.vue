@@ -25,8 +25,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态(挂单/已成交/已交割)" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态(挂单/已成交/已交割)" clearable>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
             v-for="dict in dict.type.trade_order_status"
             :key="dict.value"
@@ -95,10 +95,10 @@
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="产品编号" align="center" prop="productCode" />
       <el-table-column label="倍率" align="center" prop="magnification" />
-      <el-table-column label="" align="center" prop="margin" />
+      <el-table-column label="保证金" align="center" prop="margin" />
       <el-table-column label="手续费" align="center" prop="feeAmount" />
       <el-table-column label="收益" align="center" prop="income" />
-      <el-table-column label="状态(挂单/已成交/已交割)" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.trade_order_status" :value="scope.row.status"/>
         </template>
@@ -142,7 +142,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -169,8 +169,8 @@
         <el-form-item label="倍率" prop="magnification">
           <el-input v-model="form.magnification" placeholder="请输入倍率" />
         </el-form-item>
-        <el-form-item label="" prop="margin">
-          <el-input v-model="form.margin" placeholder="请输入" />
+        <el-form-item label="保证金" prop="margin">
+          <el-input v-model="form.margin" placeholder="请输入保证金" />
         </el-form-item>
         <el-form-item label="手续费" prop="feeAmount">
           <el-input v-model="form.feeAmount" placeholder="请输入手续费" />
@@ -178,8 +178,8 @@
         <el-form-item label="收益" prop="income">
           <el-input v-model="form.income" placeholder="请输入收益" />
         </el-form-item>
-        <el-form-item label="状态(挂单/已成交/已交割)" prop="status">
-          <el-select v-model="form.status" placeholder="请选择状态(挂单/已成交/已交割)">
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
               v-for="dict in dict.type.trade_order_status"
               :key="dict.value"
