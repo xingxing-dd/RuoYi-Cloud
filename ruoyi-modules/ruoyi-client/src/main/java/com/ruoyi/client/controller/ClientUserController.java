@@ -145,4 +145,12 @@ public class ClientUserController extends BaseController
         return R.ok(clientUserInfoVo);
     }
 
+    @PostMapping("/register")
+    public R<Boolean> register(@RequestBody ClientUser clientUser) {
+        if (clientUser == null || StringUtils.isAllBlank(clientUser.getUserName(), clientUser.getPassword())) {
+            return R.fail("Username or password must not blank!");
+        }
+        return R.ok(true);
+    }
+
 }

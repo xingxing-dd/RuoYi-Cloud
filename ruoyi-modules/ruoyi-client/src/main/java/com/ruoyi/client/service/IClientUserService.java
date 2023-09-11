@@ -61,4 +61,6 @@ public interface IClientUserService
     public int deleteClientUserByUserId(Long userId);
 
     public ClientUser selectUserByUserName(String username);
+
+
 }

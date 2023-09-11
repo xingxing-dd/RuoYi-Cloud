@@ -122,4 +122,13 @@ public class FundAccountInfoController extends BaseController
         return success(list);
     }
 
+    @PostMapping("/bindWithdrawAcct")
+    public AjaxResult bindWithdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
+        fundAccountInfo.setAccountType("withdraw");
+        fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
+        fundAccountInfo.setUserName(SecurityContextHolder.getUserName());
+        fundAccountInfoService.insertFundAccountInfo(fundAccountInfo);
+        return success();
+    }
+
 }
