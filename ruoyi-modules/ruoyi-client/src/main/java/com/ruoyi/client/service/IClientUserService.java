@@ -62,5 +62,10 @@ public interface IClientUserService
 
     public ClientUser selectUserByUserName(String username);
 
-
+    /**
+     * 账户注册
+     * @param clientUser
+     * @return
+     */
+    public boolean register(ClientUser clientUser);
 }

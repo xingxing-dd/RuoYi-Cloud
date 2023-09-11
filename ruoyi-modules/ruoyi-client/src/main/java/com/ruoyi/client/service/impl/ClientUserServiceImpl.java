@@ -3,10 +3,13 @@ package com.ruoyi.client.service.impl;
 import com.ruoyi.client.domain.ClientUser;
 import com.ruoyi.client.mapper.ClientUserMapper;
 import com.ruoyi.client.service.IClientUserService;
+import com.ruoyi.common.core.exception.base.BaseException;
+import com.ruoyi.common.core.utils.ExceptionUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,5 +105,14 @@ public class ClientUserServiceImpl implements IClientUserService
             return null;
         }
         return clientUsers.get(0);
+    }
+
+    @Override
+    public boolean register(ClientUser clientUser) {
+        clientUser.setCreateBy(clientUser.getUserName());
+        clientUser.setUpdateBy(clientUser.getUserName());
+        clientUser.setCreateTime(new Date());
+        clientUser.setUpdateTime(new Date());
+        return clientUserMapper.insertClientUser(clientUser) == 1;
     }
 }

@@ -60,4 +60,12 @@ public interface IClientUserWalletService
      * @return 结果
      */
     public int deleteClientUserWalletById(Long id);
+
+    /**
+     * 创建用户钱包账户
+     * @param userId
+     * @param userName
+     * @return
+     */
+    public boolean createUserWallet(long userId, String userName);
 }

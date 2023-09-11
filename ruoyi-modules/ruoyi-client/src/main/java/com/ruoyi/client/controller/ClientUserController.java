@@ -10,11 +10,13 @@ import com.ruoyi.client.service.IClientUserWalletService;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.exception.base.BaseException;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.annotation.InnerAuth;
 import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -146,9 +148,24 @@ public class ClientUserController extends BaseController
     }
 
     @PostMapping("/register")
+    @Transactional(rollbackFor = Exception.class)
     public R<Boolean> register(@RequestBody ClientUser clientUser) {
         if (clientUser == null || StringUtils.isAllBlank(clientUser.getUserName(), clientUser.getPassword())) {
             return R.fail("Username or password must not blank!");
+        }
+        ClientUser existUser = clientUserService.selectUserByUserName(clientUser.getUserName());
+        if (existUser != null) {
+            return R.fail("Username has exists!");
+        }
+        boolean registerUserResult = clientUserService.register(clientUser);
+        logger.info("注册账号结果:{}", registerUserResult);
+        if (!registerUserResult) {
+            return R.fail("Unknown exception");
+        }
+        boolean createUserWalletResult = clientUserWalletService.createUserWallet(clientUser.getUserId(), clientUser.getUserName());
+        logger.info("创建钱包账户结果:{}", createUserWalletResult);
+        if (!createUserWalletResult) {
+            return R.fail("Unknown exception");
         }
         return R.ok(true);
     }

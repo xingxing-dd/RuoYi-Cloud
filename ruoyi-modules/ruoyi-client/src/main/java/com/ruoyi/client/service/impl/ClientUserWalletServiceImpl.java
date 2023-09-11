@@ -1,5 +1,7 @@
 package com.ruoyi.client.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.core.utils.DateUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -16,7 +18,7 @@ import com.ruoyi.client.service.IClientUserWalletService;
  * @date 2023-08-29
  */
 @Service
-public class ClientUserWalletServiceImpl implements IClientUserWalletService 
+public class ClientUserWalletServiceImpl implements IClientUserWalletService
 {
     @Autowired
     private ClientUserWalletMapper clientUserWalletMapper;
@@ -104,5 +106,19 @@ public class ClientUserWalletServiceImpl implements IClientUserWalletService
     public int deleteClientUserWalletById(Long id)
     {
         return clientUserWalletMapper.deleteClientUserWalletById(id);
+    }
+
+    @Override
+    public boolean createUserWallet(long userId, String userName) {
+        ClientUserWallet clientUserWallet = new ClientUserWallet();
+        clientUserWallet.setUserId(userId);
+        clientUserWallet.setCurrency("USD");
+        clientUserWallet.setTotalAmount(BigDecimal.ZERO);
+        clientUserWallet.setStatus("normal");
+        clientUserWallet.setCreateBy(userName);
+        clientUserWallet.setUpdateBy(userName);
+        clientUserWallet.setCreateTime(new Date());
+        clientUserWallet.setUpdateTime(new Date());
+        return clientUserWalletMapper.insertClientUserWallet(clientUserWallet) == 1;
     }
 }
