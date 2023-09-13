@@ -1,11 +1,15 @@
 package com.ruoyi.client.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.domain.vo.WithdrawOrderVo;
 import com.ruoyi.common.core.context.SecurityContextHolder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -112,6 +116,22 @@ public class WithdrawOrderController extends BaseController
         withdrawOrder.setStatus(0L);
         withdrawOrderService.insertWithdrawOrder(withdrawOrder);
         return success();
+    }
+
+    @PostMapping("/withdrawRecord")
+    public AjaxResult withdrawRecord(@RequestBody WithdrawOrder withdrawOrder) {
+        withdrawOrder.setUserId(SecurityContextHolder.getUserId());
+        List<WithdrawOrder> withdrawOrders = withdrawOrderService.selectWithdrawOrderList(withdrawOrder);
+        if (CollectionUtils.isEmpty(withdrawOrders)) {
+            return AjaxResult.success();
+        }
+        List<WithdrawOrderVo> withdrawOrderVos = new ArrayList<>();
+        for (WithdrawOrder order: withdrawOrders) {
+            WithdrawOrderVo withdrawOrderVo = new WithdrawOrderVo();
+            BeanUtils.copyProperties(order, withdrawOrderVo);
+            withdrawOrderVos.add(withdrawOrderVo);
+        }
+        return AjaxResult.success(withdrawOrders);
     }
 
 }

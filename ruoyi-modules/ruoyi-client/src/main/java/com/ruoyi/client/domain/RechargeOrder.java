@@ -10,7 +10,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 充值订单对象 recharge_order
  *
  * @author ruoyi
- * @date 2023-09-04
+ * @date 2023-09-13
  */
 public class RechargeOrder extends BaseEntity
 {
@@ -20,7 +20,6 @@ public class RechargeOrder extends BaseEntity
     private Long id;
 
     /** 用户id */
-    @Excel(name = "用户id")
     private Long userId;
 
     /** 用户名 */

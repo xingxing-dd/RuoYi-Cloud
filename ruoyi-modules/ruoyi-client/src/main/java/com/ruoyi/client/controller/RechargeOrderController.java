@@ -1,11 +1,15 @@
 package com.ruoyi.client.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.domain.vo.RechargeOrderVo;
 import com.ruoyi.common.core.context.SecurityContextHolder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -117,4 +121,21 @@ public class RechargeOrderController extends BaseController
         rechargeOrderService.insertRechargeOrder(rechargeOrder);
         return success();
     }
+
+    @PostMapping("/rechargeRecord")
+    public AjaxResult rechargeRecord(@RequestBody RechargeOrder rechargeOrder) {
+        rechargeOrder.setUserId(SecurityContextHolder.getUserId());
+        List<RechargeOrder> rechargeOrders = rechargeOrderService.selectRechargeOrderList(rechargeOrder);
+        if (CollectionUtils.isEmpty(rechargeOrders)) {
+            return AjaxResult.success();
+        }
+        List<RechargeOrderVo> rechargeOrderVos = new ArrayList<>();
+        for (RechargeOrder order: rechargeOrders) {
+            RechargeOrderVo rechargeOrderVo = new RechargeOrderVo();
+            BeanUtils.copyProperties(order, rechargeOrderVo);
+            rechargeOrderVos.add(rechargeOrderVo);
+        }
+        return AjaxResult.success(rechargeOrderVos);
+    }
+
 }

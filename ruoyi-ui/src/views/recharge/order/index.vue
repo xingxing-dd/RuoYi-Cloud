@@ -102,7 +102,6 @@
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键id" align="center" prop="id" />
-      <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="充值方式" align="center" prop="rechargeType">
         <template slot-scope="scope">
@@ -122,7 +121,11 @@
           <dict-tag :options="dict.type.all_recharge_currenies" :value="scope.row.receiveCurrency"/>
         </template>
       </el-table-column>
-      <el-table-column label="充值凭证" align="center" prop="rechargeInvoice" />
+      <el-table-column label="充值凭证" align="center" prop="rechargeInvoice" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.rechargeInvoice" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -206,7 +209,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="充值凭证" prop="rechargeInvoice">
-          <el-input v-model="form.rechargeInvoice" type="textarea" placeholder="请输入内容" />
+          <image-upload v-model="form.rechargeInvoice"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
