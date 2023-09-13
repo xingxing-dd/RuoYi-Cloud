@@ -1,15 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="所属用户" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入所属用户"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所属用户名" prop="userName">
+      <el-form-item label="用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
           placeholder="请输入所属用户名"
@@ -37,16 +29,6 @@
         <el-select v-model="queryParams.accountType" placeholder="请选择账户类型" clearable>
           <el-option
             v-for="dict in dict.type.fund_account_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="账户用途" prop="accountUsage">
-        <el-select v-model="queryParams.accountUsage" placeholder="请选择账户用途" clearable>
-          <el-option
-            v-for="dict in dict.type.fund_account_usage"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -169,7 +151,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

@@ -25,8 +25,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态(normal/freeze)" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态(normal/freeze)" clearable>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
             v-for="dict in dict.type.wallet_status"
             :key="dict.value"
@@ -93,7 +93,7 @@
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="总金额" align="center" prop="totalAmount" />
       <el-table-column label="币种" align="center" prop="currency" />
-      <el-table-column label="状态(normal/freeze)" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.wallet_status" :value="scope.row.status"/>
         </template>
@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -139,7 +139,7 @@
         <el-form-item label="币种" prop="currency">
           <el-input v-model="form.currency" placeholder="请输入币种" />
         </el-form-item>
-        <el-form-item label="状态(normal/freeze)" prop="status">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.wallet_status"
@@ -212,7 +212,7 @@ export default {
           { required: true, message: "币种不能为空", trigger: "blur" }
         ],
         status: [
-          { required: true, message: "状态(normal/freeze)不能为空", trigger: "change" }
+          { required: true, message: "状态不能为空", trigger: "change" }
         ],
       }
     };

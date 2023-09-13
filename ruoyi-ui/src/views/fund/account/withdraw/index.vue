@@ -1,65 +1,49 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="钱包id" prop="walletId">
+      <el-form-item label="账号" prop="accountNo">
         <el-input
-          v-model="queryParams.walletId"
-          placeholder="请输入钱包id"
+          v-model="queryParams.accountNo"
+          placeholder="请输入账号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户号" prop="userId">
+      <el-form-item label="币种" prop="accountCurrency">
         <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户号"
+          v-model="queryParams.accountCurrency"
+          placeholder="请输入币种"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单号" prop="bizOrderId">
-        <el-input
-          v-model="queryParams.bizOrderId"
-          placeholder="请输入关联订单号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="流水类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择流水类型" clearable>
+      <el-form-item label="账户类型" prop="accountType">
+        <el-select v-model="queryParams.accountType" placeholder="请选择账户类型" clearable>
           <el-option
-            v-for="dict in dict.type.wallet_flow_type"
+            v-for="dict in dict.type.fund_account_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="交易方向" prop="direct">
-        <el-select v-model="queryParams.direct" placeholder="请选择方向(+/-)" clearable>
+      <el-form-item label="账号机构号码" prop="accountOwnerCode">
+        <el-input
+          v-model="queryParams.accountOwnerCode"
+          placeholder="请输入账号机构号码"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
-            v-for="dict in dict.type.wallet_flow_direct"
+            v-for="dict in dict.type.sys_data_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="变化金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入变化金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="交易币种" prop="currency">
-        <el-input
-          v-model="queryParams.currency"
-          placeholder="请输入交易币种"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -75,7 +59,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['client:wallet-flow:add']"
+          v-hasPermi="['fund:account:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -86,7 +70,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['client:wallet-flow:edit']"
+          v-hasPermi="['fund:account:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -97,7 +81,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['client:wallet-flow:remove']"
+          v-hasPermi="['fund:account:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -107,31 +91,37 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['client:wallet-flow:export']"
+          v-hasPermi="['fund:account:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="walletFlowList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
-      <el-table-column label="钱包id" align="center" prop="walletId" />
-      <el-table-column label="用户号" align="center" prop="userId" />
-      <el-table-column label="订单号" align="center" prop="bizOrderId" />
-      <el-table-column label="流水类型" align="center" prop="type">
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="账户名" align="center" prop="accountName" />
+      <el-table-column label="账号" align="center" prop="accountNo" />
+      <el-table-column label="币种" align="center" prop="accountCurrency" />
+      <el-table-column label="账户类型" align="center" prop="accountType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.wallet_flow_type" :value="scope.row.type"/>
+          <dict-tag :options="dict.type.fund_account_type" :value="scope.row.accountType"/>
         </template>
       </el-table-column>
-      <el-table-column label="交易方向" align="center" prop="direct">
+      <el-table-column label="账户用途" align="center" prop="accountUsage">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.wallet_flow_direct" :value="scope.row.direct"/>
+          <dict-tag :options="dict.type.fund_account_usage" :value="scope.row.accountUsage"/>
         </template>
       </el-table-column>
-      <el-table-column label="变化金额" align="center" prop="amount" />
-      <el-table-column label="交易币种" align="center" prop="currency" />
+      <el-table-column label="账户所属机构" align="center" prop="accountOwner" />
+      <el-table-column label="账号机构号码" align="center" prop="accountOwnerCode" />
+      <el-table-column label="账号机构地址" align="center" prop="accountOwnerAddr" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -139,14 +129,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['client:wallet-flow:edit']"
+            v-hasPermi="['fund:account:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['client:wallet-flow:remove']"
+            v-hasPermi="['fund:account:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -160,49 +150,59 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用户钱包流水对话框 -->
+    <!-- 添加或修改充值帐号对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="钱包id" prop="walletId">
-          <el-input v-model="form.walletId" placeholder="请输入钱包id" />
+        <el-form-item label="账户名" prop="accountName">
+          <el-input v-model="form.accountName" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="用户号" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户号" />
+        <el-form-item label="账号" prop="accountNo">
+          <el-input v-model="form.accountNo" placeholder="请输入账号" />
         </el-form-item>
-        <el-form-item label="订单号" prop="bizOrderId">
-          <el-input v-model="form.bizOrderId" placeholder="请输入关联订单号" />
+        <el-form-item label="币种" prop="accountCurrency">
+          <el-input v-model="form.accountCurrency" placeholder="请输入币种" />
         </el-form-item>
-        <el-form-item label="流水类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择流水类型">
+        <el-form-item label="账户类型" prop="accountType">
+          <el-select v-model="form.accountType" placeholder="请选择账户类型">
             <el-option
-              v-for="dict in dict.type.wallet_flow_type"
+              v-for="dict in dict.type.fund_account_type"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="交易方向" prop="direct">
-          <el-select v-model="form.direct" placeholder="请选择方向(+/-)">
+        <el-form-item label="账户用途" prop="accountUsage">
+          <el-select v-model="form.accountUsage" placeholder="请选择账户用途">
             <el-option
-              v-for="dict in dict.type.wallet_flow_direct"
+              v-for="dict in dict.type.fund_account_usage"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="变化金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入变化金额" />
+        <el-form-item label="账户所属机构" prop="accountOwner">
+          <el-input v-model="form.accountOwner" placeholder="请输入账户所属机构" />
         </el-form-item>
-        <el-form-item label="交易币种" prop="currency">
-          <el-input v-model="form.currency" placeholder="请输入交易币种" />
+        <el-form-item label="账号机构号码" prop="accountOwnerCode">
+          <el-input v-model="form.accountOwnerCode" placeholder="请输入账号机构号码" />
+        </el-form-item>
+        <el-form-item label="账号机构地址" prop="accountOwnerAddr">
+          <el-input v-model="form.accountOwnerAddr" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="扩展字段" prop="ext">
-          <el-input v-model="form.ext" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择状态">
+            <el-option
+              v-for="dict in dict.type.sys_data_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -214,11 +214,11 @@
 </template>
 
 <script>
-import { listWalletFlow, getWalletFlow, delWalletFlow, addWalletFlow, updateWalletflow } from "@/api/client/wallet-flow";
+import { listAccount, getAccount, delAccount, addAccount, updateAccount } from "@/api/fund/account";
 
 export default {
-  name: "Wallet-flow",
-  dicts: ['wallet_flow_type', 'wallet_flow_direct'],
+  name: "Account",
+  dicts: ['sys_data_status', 'fund_account_type', 'fund_account_usage'],
   data() {
     return {
       // 遮罩层
@@ -233,8 +233,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户钱包流水表格数据
-      walletFlowList: [],
+      // 充值帐号表格数据
+      accountList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -243,38 +243,23 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        walletId: null,
-        userId: null,
-        bizOrderId: null,
-        type: null,
-        direct: null,
-        amount: null,
-        currency: null,
+        accountName: null,
+        accountNo: null,
+        accountCurrency: null,
+        accountType: null,
+        accountUsage: "withdraw",
+        accountOwnerCode: null,
+        status: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        walletId: [
-          { required: true, message: "钱包id不能为空", trigger: "blur" }
+        accountType: [
+          { required: true, message: "账户类型不能为空", trigger: "change" }
         ],
-        userId: [
-          { required: true, message: "用户号不能为空", trigger: "blur" }
-        ],
-        bizOrderId: [
-          { required: true, message: "关联订单号不能为空", trigger: "blur" }
-        ],
-        type: [
-          { required: true, message: "流水类型不能为空", trigger: "change" }
-        ],
-        direct: [
-          { required: true, message: "方向(+/-)不能为空", trigger: "change" }
-        ],
-        amount: [
-          { required: true, message: "变化金额不能为空", trigger: "blur" }
-        ],
-        currency: [
-          { required: true, message: "交易币种不能为空", trigger: "blur" }
+        accountUsage: [
+          { required: true, message: "账户用途不能为空", trigger: "change" }
         ],
       }
     };
@@ -283,11 +268,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询用户钱包流水列表 */
+    /** 查询充值帐号列表 */
     getList() {
       this.loading = true;
-      listWalletFlow(this.queryParams).then(response => {
-        this.walletFlowList = response.rows;
+      listAccount(this.queryParams).then(response => {
+        this.accountList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -301,15 +286,18 @@ export default {
     reset() {
       this.form = {
         id: null,
-        walletId: null,
         userId: null,
-        bizOrderId: null,
-        type: null,
-        direct: null,
-        amount: null,
-        currency: null,
+        userName: null,
+        accountName: null,
+        accountNo: null,
+        accountCurrency: null,
+        accountType: null,
+        accountUsage: null,
+        accountOwner: null,
+        accountOwnerCode: null,
+        accountOwnerAddr: null,
         remark: null,
-        ext: null,
+        status: null,
         delFlag: null,
         createTime: null,
         createBy: null,
@@ -338,16 +326,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户钱包流水";
+      this.title = "添加充值帐号";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getWalletFlow(id).then(response => {
+      getAccount(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用户钱包流水";
+        this.title = "修改充值帐号";
       });
     },
     /** 提交按钮 */
@@ -355,13 +343,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateWalletflow(this.form).then(response => {
+            updateAccount(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addWalletFlow(this.form).then(response => {
+            addAccount(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -373,8 +361,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户钱包流水编号为"' + ids + '"的数据项？').then(function() {
-        return delWalletFlow(ids);
+      this.$modal.confirm('是否确认删除充值帐号编号为"' + ids + '"的数据项？').then(function() {
+        return delAccount(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -382,9 +370,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('client/wallet-flow/export', {
+      this.download('fund/account/export', {
         ...this.queryParams
-      }, `wallet-flow_${new Date().getTime()}.xlsx`)
+      }, `account_${new Date().getTime()}.xlsx`)
     }
   }
 };
