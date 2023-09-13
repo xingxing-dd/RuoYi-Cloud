@@ -128,7 +128,6 @@ public class ClientUserController extends BaseController
         return R.ok(sysUserVo);
     }
 
-    @InnerAuth
     @PostMapping("/detail")
     public R<ClientUserInfoVo> getClientUserInfo() {
         Long userId = SecurityContextHolder.getUserId();
