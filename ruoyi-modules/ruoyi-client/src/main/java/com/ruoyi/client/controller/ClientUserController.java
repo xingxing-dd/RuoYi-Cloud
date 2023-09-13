@@ -120,6 +120,7 @@ public class ClientUserController extends BaseController
         {
             return R.fail("用户名或密码错误");
         }
+
         LoginUser sysUserVo = new LoginUser();
         com.ruoyi.system.api.domain.ClientUser user = new com.ruoyi.system.api.domain.ClientUser();
         BeanUtils.copyProperties(clientUser, user);
@@ -127,6 +128,7 @@ public class ClientUserController extends BaseController
         return R.ok(sysUserVo);
     }
 
+    @InnerAuth
     @PostMapping("/detail")
     public R<ClientUserInfoVo> getClientUserInfo() {
         Long userId = SecurityContextHolder.getUserId();
@@ -147,6 +149,7 @@ public class ClientUserController extends BaseController
         return R.ok(clientUserInfoVo);
     }
 
+    @InnerAuth
     @PostMapping("/register")
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> register(@RequestBody ClientUser clientUser) {

@@ -3,6 +3,8 @@ package com.ruoyi.auth.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ruoyi.auth.service.ClientLoginService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.auth.form.LoginBody;
@@ -32,6 +34,8 @@ public class TokenController
 
     @Autowired
     private ClientLoginService clientLoginService;
+
+    private final Logger logger = LoggerFactory.getLogger(TokenController.class);
 
     @PostMapping("login")
     public R<?> login(@RequestBody LoginBody form, @RequestHeader(value = "from", required = false) String from)

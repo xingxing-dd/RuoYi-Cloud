@@ -109,6 +109,8 @@ public class ClientUserServiceImpl implements IClientUserService
 
     @Override
     public boolean register(ClientUser clientUser) {
+        clientUser.setStatus(0L);
+        clientUser.setDelFlag(0L);
         clientUser.setCreateBy(clientUser.getUserName());
         clientUser.setUpdateBy(clientUser.getUserName());
         clientUser.setCreateTime(new Date());

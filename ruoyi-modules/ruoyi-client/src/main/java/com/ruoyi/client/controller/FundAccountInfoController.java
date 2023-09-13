@@ -1,9 +1,9 @@
 package com.ruoyi.client.controller;
 
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.console.FundAccountInfoTypeEnum;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,7 +108,7 @@ public class FundAccountInfoController extends BaseController
     @Log(title = "账号管理", businessType = BusinessType.DELETE)
     @PostMapping("/recharge")
     public AjaxResult rechargeAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountUsage("recharge");
+        fundAccountInfo.setAccountUsage(FundAccountInfoTypeEnum.RECHARGE.getCode());
         List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
         return success(list);
     }
@@ -116,7 +116,7 @@ public class FundAccountInfoController extends BaseController
     @Log(title = "账号管理", businessType = BusinessType.DELETE)
     @PostMapping("/withdraw")
     public AjaxResult withdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountUsage("withdraw");
+        fundAccountInfo.setAccountUsage(FundAccountInfoTypeEnum.WITHDRAW.getCode());
         fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
         List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
         return success(list);
@@ -124,7 +124,7 @@ public class FundAccountInfoController extends BaseController
 
     @PostMapping("/bindWithdrawAcct")
     public AjaxResult bindWithdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountType("withdraw");
+        fundAccountInfo.setAccountType(FundAccountInfoTypeEnum.WITHDRAW.getCode());
         fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
         fundAccountInfo.setUserName(SecurityContextHolder.getUserName());
         fundAccountInfoService.insertFundAccountInfo(fundAccountInfo);
