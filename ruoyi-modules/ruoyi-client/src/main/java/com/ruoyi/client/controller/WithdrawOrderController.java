@@ -113,8 +113,7 @@ public class WithdrawOrderController extends BaseController
     public AjaxResult submit(@RequestBody WithdrawOrder withdrawOrder) {
         withdrawOrder.setUserId(SecurityContextHolder.getUserId());
         withdrawOrder.setUserName(SecurityContextHolder.getUserName());
-        withdrawOrder.setStatus(0L);
-        withdrawOrderService.insertWithdrawOrder(withdrawOrder);
+        withdrawOrderService.submitWithdrawOrder(withdrawOrder);
         return success();
     }
 

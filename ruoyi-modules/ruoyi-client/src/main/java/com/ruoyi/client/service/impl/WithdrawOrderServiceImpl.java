@@ -1,6 +1,10 @@
 package com.ruoyi.client.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.ruoyi.common.core.utils.uuid.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.client.mapper.WithdrawOrderMapper;
@@ -13,6 +17,7 @@ import com.ruoyi.client.service.IWithdrawOrderService;
  * @author ruoyi
  * @date 2023-09-03
  */
+@Slf4j
 @Service
 public class WithdrawOrderServiceImpl implements IWithdrawOrderService 
 {
@@ -89,5 +94,19 @@ public class WithdrawOrderServiceImpl implements IWithdrawOrderService
     public int deleteWithdrawOrderById(Long id)
     {
         return withdrawOrderMapper.deleteWithdrawOrderById(id);
+    }
+
+    /**
+     * 提交提现订单
+     * @param withdrawOrder
+     */
+    @Override
+    public void submitWithdrawOrder(WithdrawOrder withdrawOrder) {
+        String orderId = UUID.fastUUID().toString();
+        log.info("生成订单号:{}", orderId);
+        withdrawOrder.setOrderId(orderId);
+        withdrawOrder.setStatus(0L);
+        withdrawOrder.setFeeAmount(BigDecimal.ZERO);
+        withdrawOrderMapper.insertWithdrawOrder(withdrawOrder);
     }
 }

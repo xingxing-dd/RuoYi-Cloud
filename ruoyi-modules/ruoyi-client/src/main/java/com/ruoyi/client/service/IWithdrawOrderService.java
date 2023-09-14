@@ -58,4 +58,10 @@ public interface IWithdrawOrderService
      * @return 结果
      */
     public int deleteWithdrawOrderById(Long id);
+
+    /**
+     * 提交提现订单
+     * @param withdrawOrder
+     */
+    public void submitWithdrawOrder(WithdrawOrder withdrawOrder);
 }
