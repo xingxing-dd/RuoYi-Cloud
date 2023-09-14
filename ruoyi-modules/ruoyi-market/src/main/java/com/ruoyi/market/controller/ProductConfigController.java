@@ -26,7 +26,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 产品配置Controller
  * 
  * @author ruoyi
- * @date 2023-08-28
+ * @date 2023-09-14
  */
 @RestController
 @RequestMapping("/config")

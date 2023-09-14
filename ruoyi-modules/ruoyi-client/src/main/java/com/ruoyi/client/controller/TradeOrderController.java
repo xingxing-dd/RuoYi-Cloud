@@ -102,4 +102,10 @@ public class TradeOrderController extends BaseController
     {
         return toAjax(tradeOrderService.deleteTradeOrderByIds(ids));
     }
+
+    public AjaxResult submit(@RequestBody TradeOrder tradeOrder) {
+
+        return AjaxResult.success();
+    }
+
 }

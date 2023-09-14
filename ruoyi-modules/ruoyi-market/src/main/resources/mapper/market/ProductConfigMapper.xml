@@ -8,10 +8,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="productCode"    column="product_code"    />
         <result property="feeRate"    column="fee_rate"    />
+        <result property="spreadRate"    column="spread_rate"    />
+        <result property="eachSheetPrice"    column="each_sheet_price"    />
         <result property="minimumSheet"    column="minimum_sheet"    />
         <result property="maximunSheet"    column="maximun_sheet"    />
         <result property="marginRate"    column="margin_rate"    />
         <result property="marginType"    column="margin_type"    />
+        <result property="stepSize"    column="step_size"    />
         <result property="tradePeriod"    column="trade_period"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -20,19 +23,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductConfigVo">
-        select id, product_code, fee_rate, minimum_sheet, maximun_sheet, margin_rate, margin_type, trade_period, create_time, create_by, update_time, update_by from mk_product_config
+        select id, product_code, fee_rate, spread_rate, each_sheet_price, minimum_sheet, maximun_sheet, margin_rate, margin_type, step_size, trade_period, create_time, create_by, update_time, update_by from mk_product_config
     </sql>
 
     <select id="selectProductConfigList" parameterType="com.ruoyi.market.domain.ProductConfig" resultMap="ProductConfigResult">
         <include refid="selectProductConfigVo"/>
         <where>  
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
-            <if test="feeRate != null "> and fee_rate = #{feeRate}</if>
-            <if test="minimumSheet != null "> and minimum_sheet = #{minimumSheet}</if>
-            <if test="maximunSheet != null "> and maximun_sheet = #{maximunSheet}</if>
-            <if test="marginRate != null "> and margin_rate = #{marginRate}</if>
-            <if test="marginType != null  and marginType != ''"> and margin_type = #{marginType}</if>
-            <if test="tradePeriod != null  and tradePeriod != ''"> and trade_period = #{tradePeriod}</if>
         </where>
     </select>
     
@@ -41,16 +38,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertProductConfig" parameterType="com.ruoyi.market.domain.ProductConfig">
+    <insert id="insertProductConfig" parameterType="com.ruoyi.market.domain.ProductConfig" useGeneratedKeys="true" keyProperty="id">
         insert into mk_product_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="productCode != null">product_code,</if>
             <if test="feeRate != null">fee_rate,</if>
+            <if test="spreadRate != null">spread_rate,</if>
+            <if test="eachSheetPrice != null">each_sheet_price,</if>
             <if test="minimumSheet != null">minimum_sheet,</if>
             <if test="maximunSheet != null">maximun_sheet,</if>
             <if test="marginRate != null">margin_rate,</if>
             <if test="marginType != null">margin_type,</if>
+            <if test="stepSize != null">step_size,</if>
             <if test="tradePeriod != null">trade_period,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -58,13 +57,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="productCode != null">#{productCode},</if>
             <if test="feeRate != null">#{feeRate},</if>
+            <if test="spreadRate != null">#{spreadRate},</if>
+            <if test="eachSheetPrice != null">#{eachSheetPrice},</if>
             <if test="minimumSheet != null">#{minimumSheet},</if>
             <if test="maximunSheet != null">#{maximunSheet},</if>
             <if test="marginRate != null">#{marginRate},</if>
             <if test="marginType != null">#{marginType},</if>
+            <if test="stepSize != null">#{stepSize},</if>
             <if test="tradePeriod != null">#{tradePeriod},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -78,10 +79,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="productCode != null">product_code = #{productCode},</if>
             <if test="feeRate != null">fee_rate = #{feeRate},</if>
+            <if test="spreadRate != null">spread_rate = #{spreadRate},</if>
+            <if test="eachSheetPrice != null">each_sheet_price = #{eachSheetPrice},</if>
             <if test="minimumSheet != null">minimum_sheet = #{minimumSheet},</if>
             <if test="maximunSheet != null">maximun_sheet = #{maximunSheet},</if>
             <if test="marginRate != null">margin_rate = #{marginRate},</if>
             <if test="marginType != null">margin_type = #{marginType},</if>
+            <if test="stepSize != null">step_size = #{stepSize},</if>
             <if test="tradePeriod != null">trade_period = #{tradePeriod},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

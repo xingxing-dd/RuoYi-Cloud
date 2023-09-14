@@ -9,38 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="交易费率" prop="feeRate">
-        <el-input
-          v-model="queryParams.feeRate"
-          placeholder="请输入交易费率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最小张数" prop="minimumSheet">
-        <el-input
-          v-model="queryParams.minimumSheet"
-          placeholder="请输入最小张数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最大张数" prop="maximunSheet">
-        <el-input
-          v-model="queryParams.maximunSheet"
-          placeholder="请输入最大张数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="保证金比例" prop="marginRate">
-        <el-input
-          v-model="queryParams.marginRate"
-          placeholder="请输入保证金比例"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -98,17 +66,13 @@
       <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="产品编码" align="center" prop="productCode" />
       <el-table-column label="交易费率" align="center" prop="feeRate" />
+      <el-table-column label="点差率" align="center" prop="spreadRate" />
+      <el-table-column label="每张价格" align="center" prop="eachSheetPrice" />
       <el-table-column label="最小张数" align="center" prop="minimumSheet" />
       <el-table-column label="最大张数" align="center" prop="maximunSheet" />
       <el-table-column label="保证金比例" align="center" prop="marginRate" />
       <el-table-column label="保证金类型" align="center" prop="marginType" />
-      <el-table-column label="开盘时间" align="center" prop="tradePeriod" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="步长" align="center" prop="stepSize" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -146,6 +110,12 @@
         <el-form-item label="交易费率" prop="feeRate">
           <el-input v-model="form.feeRate" placeholder="请输入交易费率" />
         </el-form-item>
+        <el-form-item label="点差率" prop="spreadRate">
+          <el-input v-model="form.spreadRate" placeholder="请输入点差率" />
+        </el-form-item>
+        <el-form-item label="每张价格" prop="eachSheetPrice">
+          <el-input v-model="form.eachSheetPrice" placeholder="请输入每张价格" />
+        </el-form-item>
         <el-form-item label="最小张数" prop="minimumSheet">
           <el-input v-model="form.minimumSheet" placeholder="请输入最小张数" />
         </el-form-item>
@@ -154,6 +124,9 @@
         </el-form-item>
         <el-form-item label="保证金比例" prop="marginRate">
           <el-input v-model="form.marginRate" placeholder="请输入保证金比例" />
+        </el-form-item>
+        <el-form-item label="步长" prop="stepSize">
+          <el-input v-model="form.stepSize" placeholder="请输入步长" />
         </el-form-item>
         <el-form-item label="开盘时间" prop="tradePeriod">
           <el-input v-model="form.tradePeriod" type="textarea" placeholder="请输入内容" />
@@ -197,12 +170,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         productCode: null,
-        feeRate: null,
-        minimumSheet: null,
-        maximunSheet: null,
-        marginRate: null,
-        marginType: null,
-        tradePeriod: null,
       },
       // 表单参数
       form: {},
@@ -235,10 +202,13 @@ export default {
         id: null,
         productCode: null,
         feeRate: null,
+        spreadRate: null,
+        eachSheetPrice: null,
         minimumSheet: null,
         maximunSheet: null,
         marginRate: null,
         marginType: null,
+        stepSize: null,
         tradePeriod: null,
         createTime: null,
         createBy: null,

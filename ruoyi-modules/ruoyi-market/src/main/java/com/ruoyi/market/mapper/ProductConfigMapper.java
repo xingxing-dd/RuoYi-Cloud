@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.ProductConfig;
  * 产品配置Mapper接口
  * 
  * @author ruoyi
- * @date 2023-08-28
+ * @date 2023-09-14
  */
 public interface ProductConfigMapper 
 {
