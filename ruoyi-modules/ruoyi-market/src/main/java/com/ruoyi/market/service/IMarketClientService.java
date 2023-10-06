@@ -1,6 +1,8 @@
 package com.ruoyi.market.service;
 
 import com.ruoyi.market.domain.ProductCategory;
+import com.ruoyi.market.domain.req.ExchangeOrderCalculateReq;
+import com.ruoyi.market.domain.vo.ExchangeOrderCalculateVo;
 import com.ruoyi.market.domain.vo.HotProductInfoVo;
 import com.ruoyi.market.domain.vo.ProductConfigVo;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
@@ -40,4 +42,6 @@ public interface IMarketClientService {
      * @return
      */
     ProductConfigVo selectProductConfig(String productCode);
+
+    ExchangeOrderCalculateVo calculate(ExchangeOrderCalculateReq req);
 }

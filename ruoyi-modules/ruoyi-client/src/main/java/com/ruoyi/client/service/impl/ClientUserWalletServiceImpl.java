@@ -176,6 +176,11 @@ public class ClientUserWalletServiceImpl implements IClientUserWalletService
         clientUserWalletFlowMapper.insertClientUserWalletFlow(clientUserWalletFlow);
     }
 
+    @Override
+    public ClientUserWallet getUserWallet(Long userId) {
+        return getUserWallet(userId, "USD");
+    }
+
     private ClientUserWallet getUserWallet(Long userId, String currency) {
         ClientUserWallet selectParams = new ClientUserWallet();
         selectParams.setUserId(userId);

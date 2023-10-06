@@ -38,7 +38,7 @@ public class ProductConfig extends BaseEntity
 
     /** 每张数量 */
     @Excel(name = "每张数量")
-    private Double eachSheetNum;
+    private BigDecimal eachSheetNum;
 
     /** 最小倍率 */
     @Excel(name = "最小倍率")
@@ -120,12 +120,12 @@ public class ProductConfig extends BaseEntity
     {
         return spreadRate;
     }
-    public void setEachSheetNum(Double eachSheetNum)
+    public void setEachSheetNum(BigDecimal eachSheetNum)
     {
         this.eachSheetNum = eachSheetNum;
     }
 
-    public Double getEachSheetNum()
+    public BigDecimal getEachSheetNum()
     {
         return eachSheetNum;
     }

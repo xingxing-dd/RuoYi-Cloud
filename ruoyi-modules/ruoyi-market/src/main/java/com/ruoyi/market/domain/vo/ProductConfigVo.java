@@ -1,14 +1,17 @@
 package com.ruoyi.market.domain.vo;
 
-import com.ruoyi.common.core.annotation.Excel;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @ToString
 public class ProductConfigVo implements Serializable {
+
+    /** 每张数量 */
+    private BigDecimal eachSheetNum;
 
     /** 最小倍率 */
     private Double minMultiplier;

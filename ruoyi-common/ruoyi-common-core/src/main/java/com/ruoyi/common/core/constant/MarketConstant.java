@@ -28,4 +28,8 @@ public class MarketConstant {
 
     public static final Long HOT_PRODUCT = 1L;
 
+    public static final String SELL = "sell";
+
+    public static final String BUY = "buy";
+
 }

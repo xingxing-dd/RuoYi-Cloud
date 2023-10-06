@@ -10,6 +10,7 @@ import com.ruoyi.market.crawler.core.model.ProductKLineCache;
 import com.ruoyi.market.crawler.core.model.ProductPriceCache;
 import com.ruoyi.market.domain.ProductCategory;
 import com.ruoyi.market.domain.ProductInfo;
+import com.ruoyi.market.domain.req.ExchangeOrderCalculateReq;
 import com.ruoyi.market.domain.req.KLineQueryReq;
 import com.ruoyi.market.domain.req.ProductQueryReq;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
@@ -79,6 +80,11 @@ public class MarketClientController {
     @PostMapping("/product/config")
     public AjaxResult productConfig(@RequestBody ProductQueryReq req) {
         return AjaxResult.success(marketClientService.selectProductConfig(req.getProductCode()));
+    }
+
+    @PostMapping("/exchange/calculate")
+    public AjaxResult calculate(@RequestBody ExchangeOrderCalculateReq req) {
+        return AjaxResult.success(marketClientService.calculate(req));
     }
 
 }

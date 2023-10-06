@@ -87,4 +87,11 @@ public interface IClientUserWalletService
      * @param bizOrderId
      */
     public void balanceRollback(Long userId, String operator, String currency, Long bizOrderId);
+
+    /**
+     * 获取用户钱包
+     * @param userId
+     * @return
+     */
+    public ClientUserWallet getUserWallet(Long userId);
 }
