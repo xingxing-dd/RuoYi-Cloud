@@ -92,4 +92,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <update id="updateWalletBalanceById">
+        update client_user_wallet set
+        total_amount = total_amount ${direct} #{amount},
+        update_time = now()
+        <if test="operator != null and operator != null">
+            , update_by = #{operator}
+        </if>
+        where id = #{id}
+    </update>
 </mapper>

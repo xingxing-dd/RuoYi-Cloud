@@ -1,6 +1,10 @@
 package com.ruoyi.client.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.client.service.IClientUserWalletService;
+import com.ruoyi.common.core.constant.ClientConstant;
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,9 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService
 {
     @Autowired
     private RechargeOrderMapper rechargeOrderMapper;
+
+    @Autowired
+    private IClientUserWalletService clientUserWalletService;
 
     /**
      * 查询充值订单
@@ -54,6 +61,9 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService
     public int insertRechargeOrder(RechargeOrder rechargeOrder)
     {
         rechargeOrder.setCreateTime(DateUtils.getNowDate());
+        rechargeOrder.setCreateBy(SecurityContextHolder.getUserName());
+        rechargeOrder.setUpdateTime(DateUtils.getNowDate());
+        rechargeOrder.setUpdateBy(SecurityContextHolder.getUserName());
         return rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
     }
 
@@ -66,6 +76,16 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService
     @Override
     public int updateRechargeOrder(RechargeOrder rechargeOrder)
     {
+        RechargeOrder existRechargeOrder = rechargeOrderMapper.selectRechargeOrderById(rechargeOrder.getId());
+        if (existRechargeOrder == null) {
+            throw new RuntimeException("Order is not exists!");
+        }
+        if (existRechargeOrder.getStatus().equals(1L) || existRechargeOrder.getStatus().equals(2L)) {
+            throw new RuntimeException("Order status is not correct!");
+        }
+        if (Long.valueOf(1L).equals(rechargeOrder.getStatus())) {
+            clientUserWalletService.balanceChange(existRechargeOrder.getUserId(), SecurityContextHolder.getUserName(), existRechargeOrder.getId(), "USD", rechargeOrder.getReceiveAmount(), ClientConstant.INCREASE);
+        }
         rechargeOrder.setUpdateTime(DateUtils.getNowDate());
         return rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
     }

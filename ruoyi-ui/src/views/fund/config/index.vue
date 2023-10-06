@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="用户id" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入用户id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -9,46 +17,30 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="充值方式" prop="rechargeType">
-        <el-select v-model="queryParams.rechargeType" placeholder="请选择充值方式" clearable>
+      <el-form-item label="交易类型" prop="tradeType">
+        <el-select v-model="queryParams.tradeType" placeholder="请选择交易类型" clearable>
           <el-option
-            v-for="dict in dict.type.fund_account_type"
+            v-for="dict in dict.type.trade_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="充值账号" prop="rechargeAcct">
-        <el-input
-          v-model="queryParams.rechargeAcct"
-          placeholder="请输入充值账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="充值币种" prop="rechargeCurrency">
-        <el-select v-model="queryParams.rechargeCurrency" placeholder="请选择充值币种" clearable>
+      <el-form-item label="配置类型" prop="configType">
+        <el-select v-model="queryParams.configType" placeholder="请选择配置类型" clearable>
           <el-option
-            v-for="dict in dict.type.all_recharge_currenies"
+            v-for="dict in dict.type.trade_config_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="到账币种" prop="receiveCurrency">
-        <el-input
-          v-model="queryParams.receiveCurrency"
-          placeholder="请输入到账币种"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择订单状态" clearable>
+      <el-form-item label="费用类型" prop="feeType">
+        <el-select v-model="queryParams.feeType" placeholder="请选择费用类型" clearable>
           <el-option
-            v-for="dict in dict.type.recharge_order_status"
+            v-for="dict in dict.type.fee_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -69,7 +61,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['recharge:order:add']"
+          v-hasPermi="['fund:config:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -80,7 +72,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['recharge:order:edit']"
+          v-hasPermi="['fund:config:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -91,7 +83,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['recharge:order:remove']"
+          v-hasPermi="['fund:config:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,40 +93,33 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['recharge:order:export']"
+          v-hasPermi="['fund:config:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="充值方式" align="center" prop="rechargeType">
+      <el-table-column label="交易类型" align="center" prop="tradeType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.fund_account_type" :value="scope.row.rechargeType"/>
+          <dict-tag :options="dict.type.trade_type" :value="scope.row.tradeType"/>
         </template>
       </el-table-column>
-      <el-table-column label="充值账号" align="center" prop="rechargeAcct" />
-      <el-table-column label="充值金额" align="center" prop="rechargeAmount" />
-      <el-table-column label="充值币种" align="center" prop="rechargeCurrency">
+      <el-table-column label="配置类型" align="center" prop="configType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.all_recharge_currenies" :value="scope.row.rechargeCurrency"/>
+          <dict-tag :options="dict.type.trade_config_type" :value="scope.row.configType"/>
         </template>
       </el-table-column>
-      <el-table-column label="到账金额" align="center" prop="receiveAmount" />
-      <el-table-column label="到账币种" align="center" prop="receiveCurrency" />
-      <el-table-column label="充值凭证" align="center" prop="rechargeInvoice" width="100">
+      <el-table-column label="费用类型" align="center" prop="feeType">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.rechargeInvoice" :width="50" :height="50"/>
+          <dict-tag :options="dict.type.fee_type" :value="scope.row.feeType"/>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="订单状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.recharge_order_status" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="配置项" align="center" prop="content" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -142,19 +127,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['recharge:order:edit']"
+            v-hasPermi="['fund:config:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['recharge:order:remove']"
+            v-hasPermi="['fund:config:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -163,7 +148,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改充值订单对话框 -->
+    <!-- 添加或修改费用配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户id" prop="userId">
@@ -172,53 +157,44 @@
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="充值方式" prop="rechargeType">
-          <el-select v-model="form.rechargeType" placeholder="请选择充值方式">
+        <el-form-item label="交易类型" prop="tradeType">
+          <el-select v-model="form.tradeType" placeholder="请选择交易类型">
             <el-option
-              v-for="dict in dict.type.fund_account_type"
+              v-for="dict in dict.type.trade_type"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="充值账号" prop="rechargeAcct">
-          <el-input v-model="form.rechargeAcct" placeholder="请输入充值账号" />
-        </el-form-item>
-        <el-form-item label="充值金额" prop="rechargeAmount">
-          <el-input v-model="form.rechargeAmount" placeholder="请输入充值金额" />
-        </el-form-item>
-        <el-form-item label="充值币种" prop="rechargeCurrency">
-          <el-select v-model="form.rechargeCurrency" placeholder="请选择充值币种">
+        <el-form-item label="配置类型" prop="configType">
+          <el-select v-model="form.configType" placeholder="请选择配置类型">
             <el-option
-              v-for="dict in dict.type.all_recharge_currenies"
+              v-for="dict in dict.type.trade_config_type"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="到账金额" prop="receiveAmount">
-          <el-input v-model="form.receiveAmount" placeholder="请输入到账金额" />
+        <el-form-item label="费用类型" prop="feeType">
+          <el-select v-model="form.feeType" placeholder="请选择费用类型">
+            <el-option
+              v-for="dict in dict.type.fee_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="到账币种" prop="receiveCurrency">
-          <el-input v-model="form.receiveCurrency" placeholder="请输入到账币种" />
+        <el-form-item label="配置项" prop="content">
+          <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="充值凭证" prop="rechargeInvoice">
-          <image-upload v-model="form.rechargeInvoice"/>
+        <el-form-item label="扩展字段" prop="ext">
+          <el-input v-model="form.ext" placeholder="请输入扩展字段" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="订单状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择订单状态">
-            <el-option
-              v-for="dict in dict.type.recharge_order_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -230,11 +206,11 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/recharge/order";
+import { listConfig, getConfig, delConfig, addConfig, updateConfig } from "@/api/fund/config";
 
 export default {
-  name: "Order",
-  dicts: ['all_recharge_currenies', 'fund_account_type', 'recharge_order_status'],
+  name: "Config",
+  dicts: ['trade_config_type', 'fee_type', 'trade_type'],
   data() {
     return {
       // 遮罩层
@@ -249,8 +225,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 充值订单表格数据
-      orderList: [],
+      // 费用配置表格数据
+      configList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -259,38 +235,16 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        userId: null,
         userName: null,
-        rechargeType: null,
-        rechargeAcct: null,
-        rechargeCurrency: null,
-        receiveCurrency: null,
-        status: null,
+        tradeType: null,
+        configType: null,
+        feeType: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        userName: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
-        ],
-        rechargeType: [
-          { required: true, message: "充值方式不能为空", trigger: "change" }
-        ],
-        rechargeAmount: [
-          { required: true, message: "充值金额不能为空", trigger: "blur" }
-        ],
-        rechargeCurrency: [
-          { required: true, message: "充值币种不能为空", trigger: "change" }
-        ],
-        receiveAmount: [
-          { required: true, message: "到账金额不能为空", trigger: "blur" }
-        ],
-        receiveCurrency: [
-          { required: true, message: "到账币种不能为空", trigger: "blur" }
-        ],
-        status: [
-          { required: true, message: "订单状态不能为空", trigger: "change" }
-        ],
       }
     };
   },
@@ -298,11 +252,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询充值订单列表 */
+    /** 查询费用配置列表 */
     getList() {
       this.loading = true;
-      listOrder(this.queryParams).then(response => {
-        this.orderList = response.rows;
+      listConfig(this.queryParams).then(response => {
+        this.configList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -318,20 +272,16 @@ export default {
         id: null,
         userId: null,
         userName: null,
-        rechargeType: null,
-        rechargeAcct: null,
-        rechargeAmount: null,
-        rechargeCurrency: null,
-        receiveAmount: null,
-        receiveCurrency: null,
-        rechargeInvoice: null,
+        tradeType: null,
+        configType: null,
+        feeType: null,
+        content: null,
+        ext: null,
         remark: null,
-        status: null,
-        delFlag: null,
-        createTime: null,
         createBy: null,
-        updateTime: null,
-        updateBy: null
+        createTime: null,
+        updateBy: null,
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -355,16 +305,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加充值订单";
+      this.title = "添加费用配置";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getOrder(id).then(response => {
+      getConfig(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改充值订单";
+        this.title = "修改费用配置";
       });
     },
     /** 提交按钮 */
@@ -372,13 +322,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateOrder(this.form).then(response => {
+            updateConfig(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addOrder(this.form).then(response => {
+            addConfig(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -390,8 +340,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除充值订单编号为"' + ids + '"的数据项？').then(function() {
-        return delOrder(ids);
+      this.$modal.confirm('是否确认删除费用配置编号为"' + ids + '"的数据项？').then(function() {
+        return delConfig(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -399,9 +349,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('recharge/order/export', {
+      this.download('fund/config/export', {
         ...this.queryParams
-      }, `order_${new Date().getTime()}.xlsx`)
+      }, `config_${new Date().getTime()}.xlsx`)
     }
   }
 };

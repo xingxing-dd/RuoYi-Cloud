@@ -1,6 +1,10 @@
 package com.ruoyi.client.service;
 
 import java.util.List;
+
+import com.ruoyi.client.controller.req.FundAccountInfoReq;
+import com.ruoyi.client.controller.resp.RechargeAccountInfoResp;
+import com.ruoyi.client.controller.resp.WithdrawAccountInfoResp;
 import com.ruoyi.client.domain.FundAccountInfo;
 
 /**
@@ -58,4 +62,19 @@ public interface IFundAccountInfoService
      * @return 结果
      */
     public int deleteFundAccountInfoById(Long id);
+
+    /**
+     * 查询充值账号
+     * @param req
+     * @return
+     */
+    public RechargeAccountInfoResp selectRechargeAcct(FundAccountInfoReq req);
+
+    /**
+     * 查询提现账号
+     * @param req
+     * @return
+     */
+    public List<WithdrawAccountInfoResp> selectWithdrawAccts(FundAccountInfoReq req);
+
 }
