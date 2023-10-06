@@ -26,4 +26,6 @@ public class MarketConstant {
 
     public static final String PRODUCT_PRICE_1D = "1d";
 
+    public static final Long HOT_PRODUCT = 1L;
+
 }

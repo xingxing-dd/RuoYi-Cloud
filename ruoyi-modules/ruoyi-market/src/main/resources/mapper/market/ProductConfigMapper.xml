@@ -9,12 +9,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productCode"    column="product_code"    />
         <result property="feeRate"    column="fee_rate"    />
         <result property="spreadRate"    column="spread_rate"    />
-        <result property="eachSheetPrice"    column="each_sheet_price"    />
-        <result property="minimumSheet"    column="minimum_sheet"    />
-        <result property="maximunSheet"    column="maximun_sheet"    />
-        <result property="marginRate"    column="margin_rate"    />
+        <result property="eachSheetNum"    column="each_sheet_num"    />
+        <result property="minMultiplier"    column="min_multiplier"    />
+        <result property="maxMultiplier"    column="max_multiplier"    />
+        <result property="multiplierStepSize"    column="multiplier_step_size"    />
+        <result property="minSheetNum"    column="min_sheet_num"    />
+        <result property="maxSheetNum"    column="max_sheet_num"    />
+        <result property="sheetStepSize"    column="sheet_step_size"    />
+        <result property="marginValue"    column="margin_value"    />
         <result property="marginType"    column="margin_type"    />
-        <result property="stepSize"    column="step_size"    />
+        <result property="priceStepSize"    column="price_step_size"    />
+        <result property="priceUnit"    column="price_unit"    />
         <result property="tradePeriod"    column="trade_period"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -23,69 +28,84 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductConfigVo">
-        select id, product_code, fee_rate, spread_rate, each_sheet_price, minimum_sheet, maximun_sheet, margin_rate, margin_type, step_size, trade_period, create_time, create_by, update_time, update_by from mk_product_config
+        select id, product_code, fee_rate, spread_rate, each_sheet_num, min_multiplier, max_multiplier, multiplier_step_size, min_sheet_num, max_sheet_num, sheet_step_size, margin_value, margin_type, price_step_size, price_unit, trade_period, create_time, create_by, update_time, update_by from mk_product_config
     </sql>
 
     <select id="selectProductConfigList" parameterType="com.ruoyi.market.domain.ProductConfig" resultMap="ProductConfigResult">
         <include refid="selectProductConfigVo"/>
-        <where>  
+        <where>
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
         </where>
     </select>
-    
+
     <select id="selectProductConfigById" parameterType="Long" resultMap="ProductConfigResult">
         <include refid="selectProductConfigVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertProductConfig" parameterType="com.ruoyi.market.domain.ProductConfig" useGeneratedKeys="true" keyProperty="id">
         insert into mk_product_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="productCode != null">product_code,</if>
+            <if test="productCode != null and productCode != ''">product_code,</if>
             <if test="feeRate != null">fee_rate,</if>
             <if test="spreadRate != null">spread_rate,</if>
-            <if test="eachSheetPrice != null">each_sheet_price,</if>
-            <if test="minimumSheet != null">minimum_sheet,</if>
-            <if test="maximunSheet != null">maximun_sheet,</if>
-            <if test="marginRate != null">margin_rate,</if>
-            <if test="marginType != null">margin_type,</if>
-            <if test="stepSize != null">step_size,</if>
+            <if test="eachSheetNum != null">each_sheet_num,</if>
+            <if test="minMultiplier != null">min_multiplier,</if>
+            <if test="maxMultiplier != null">max_multiplier,</if>
+            <if test="multiplierStepSize != null">multiplier_step_size,</if>
+            <if test="minSheetNum != null">min_sheet_num,</if>
+            <if test="maxSheetNum != null">max_sheet_num,</if>
+            <if test="sheetStepSize != null">sheet_step_size,</if>
+            <if test="marginValue != null">margin_value,</if>
+            <if test="marginType != null and marginType != ''">margin_type,</if>
+            <if test="priceStepSize != null">price_step_size,</if>
+            <if test="priceUnit != null">price_unit,</if>
             <if test="tradePeriod != null">trade_period,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="productCode != null">#{productCode},</if>
+            <if test="productCode != null and productCode != ''">#{productCode},</if>
             <if test="feeRate != null">#{feeRate},</if>
             <if test="spreadRate != null">#{spreadRate},</if>
-            <if test="eachSheetPrice != null">#{eachSheetPrice},</if>
-            <if test="minimumSheet != null">#{minimumSheet},</if>
-            <if test="maximunSheet != null">#{maximunSheet},</if>
-            <if test="marginRate != null">#{marginRate},</if>
-            <if test="marginType != null">#{marginType},</if>
-            <if test="stepSize != null">#{stepSize},</if>
+            <if test="eachSheetNum != null">#{eachSheetNum},</if>
+            <if test="minMultiplier != null">#{minMultiplier},</if>
+            <if test="maxMultiplier != null">#{maxMultiplier},</if>
+            <if test="multiplierStepSize != null">#{multiplierStepSize},</if>
+            <if test="minSheetNum != null">#{minSheetNum},</if>
+            <if test="maxSheetNum != null">#{maxSheetNum},</if>
+            <if test="sheetStepSize != null">#{sheetStepSize},</if>
+            <if test="marginValue != null">#{marginValue},</if>
+            <if test="marginType != null and marginType != ''">#{marginType},</if>
+            <if test="priceStepSize != null">#{priceStepSize},</if>
+            <if test="priceUnit != null">#{priceUnit},</if>
             <if test="tradePeriod != null">#{tradePeriod},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateProductConfig" parameterType="com.ruoyi.market.domain.ProductConfig">
         update mk_product_config
         <trim prefix="SET" suffixOverrides=",">
-            <if test="productCode != null">product_code = #{productCode},</if>
+            <if test="productCode != null and productCode != ''">product_code = #{productCode},</if>
             <if test="feeRate != null">fee_rate = #{feeRate},</if>
             <if test="spreadRate != null">spread_rate = #{spreadRate},</if>
-            <if test="eachSheetPrice != null">each_sheet_price = #{eachSheetPrice},</if>
-            <if test="minimumSheet != null">minimum_sheet = #{minimumSheet},</if>
-            <if test="maximunSheet != null">maximun_sheet = #{maximunSheet},</if>
-            <if test="marginRate != null">margin_rate = #{marginRate},</if>
-            <if test="marginType != null">margin_type = #{marginType},</if>
-            <if test="stepSize != null">step_size = #{stepSize},</if>
+            <if test="eachSheetNum != null">each_sheet_num = #{eachSheetNum},</if>
+            <if test="minMultiplier != null">min_multiplier = #{minMultiplier},</if>
+            <if test="maxMultiplier != null">max_multiplier = #{maxMultiplier},</if>
+            <if test="multiplierStepSize != null">multiplier_step_size = #{multiplierStepSize},</if>
+            <if test="minSheetNum != null">min_sheet_num = #{minSheetNum},</if>
+            <if test="maxSheetNum != null">max_sheet_num = #{maxSheetNum},</if>
+            <if test="sheetStepSize != null">sheet_step_size = #{sheetStepSize},</if>
+            <if test="marginValue != null">margin_value = #{marginValue},</if>
+            <if test="marginType != null and marginType != ''">margin_type = #{marginType},</if>
+            <if test="priceStepSize != null">price_step_size = #{priceStepSize},</if>
+            <if test="priceUnit != null">price_unit = #{priceUnit},</if>
             <if test="tradePeriod != null">trade_period = #{tradePeriod},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -100,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductConfigByIds" parameterType="String">
-        delete from mk_product_config where id in 
+        delete from mk_product_config where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

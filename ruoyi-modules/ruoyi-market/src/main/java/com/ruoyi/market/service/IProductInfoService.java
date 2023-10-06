@@ -27,6 +27,8 @@ public interface IProductInfoService
      */
     public List<ProductInfo> selectProductInfoList(ProductInfo productInfo);
 
+    public List<ProductInfo> selectProductInfoListOrderByPriority(ProductInfo productInfo);
+
     /**
      * 查询产品信息
      * @param category

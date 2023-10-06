@@ -8,11 +8,15 @@ import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.market.crawler.core.model.ProductKLineCache;
 import com.ruoyi.market.crawler.core.model.ProductPriceCache;
 import com.ruoyi.market.domain.ProductCategory;
+import com.ruoyi.market.domain.ProductConfig;
 import com.ruoyi.market.domain.ProductInfo;
+import com.ruoyi.market.domain.vo.HotProductInfoVo;
+import com.ruoyi.market.domain.vo.ProductConfigVo;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
 import com.ruoyi.market.domain.vo.ProductPriceVo;
 import com.ruoyi.market.service.IMarketClientService;
 import com.ruoyi.market.service.IProductCategoryService;
+import com.ruoyi.market.service.IProductConfigService;
 import com.ruoyi.market.service.IProductInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,8 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ruoyi.common.core.constant.MarketConstant.PRODUCT_PRICE_INFO_KEY;
-import static com.ruoyi.common.core.constant.MarketConstant.VALID;
+import static com.ruoyi.common.core.constant.MarketConstant.*;
 
 @Service
 public class MarketClientServiceImpl implements IMarketClientService {
@@ -34,6 +37,9 @@ public class MarketClientServiceImpl implements IMarketClientService {
 
     @Resource
     private IProductInfoService productInfoService;
+
+    @Resource
+    private IProductConfigService iProductConfigService;
 
     @Resource
     private RedisService redisService;
@@ -54,7 +60,7 @@ public class MarketClientServiceImpl implements IMarketClientService {
         ProductInfo params = new ProductInfo();
         params.setCategoryCode(category);
         params.setStatus(VALID);
-        List<ProductInfo> productInfos = productInfoService.selectProductInfoList(params);
+        List<ProductInfo> productInfos = productInfoService.selectProductInfoListOrderByPriority(params);
         if (CollectionUtils.isEmpty(productInfos)) {
             return Collections.emptyList();
         }
@@ -63,6 +69,29 @@ public class MarketClientServiceImpl implements IMarketClientService {
             productInfoVos.add(buildProductInfoVo(productInfo, MarketPriceTypeEnum.MK_1M.getKey()));
         }
         return productInfoVos;
+    }
+
+    @Override
+    public List<HotProductInfoVo> selectHotProducts() {
+        ProductInfo params = new ProductInfo();
+        params.setStatus(VALID);
+        params.setHot(HOT_PRODUCT);
+        List<ProductInfo> productInfos = productInfoService.selectProductInfoListOrderByPriority(params);
+        if (CollectionUtils.isEmpty(productInfos)) {
+            return Collections.emptyList();
+        }
+        List<HotProductInfoVo> hotProductInfoVos = new ArrayList<>();
+        for (ProductInfo productInfo: productInfos) {
+            HotProductInfoVo hotProductInfoVo = new HotProductInfoVo();
+            BeanUtils.copyProperties(productInfo, hotProductInfoVo);
+            String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productInfo.getProductCode(), DateUtils.dateTime());
+            ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
+            if (productPriceCache != null) {
+                hotProductInfoVo.setCurrentPrice(productPriceCache.getCurrentPrice());
+            }
+            hotProductInfoVos.add(hotProductInfoVo);
+        }
+        return hotProductInfoVos;
     }
 
     @Override
@@ -80,6 +109,19 @@ public class MarketClientServiceImpl implements IMarketClientService {
             return null;
         }
         return buildProductInfoVo(productInfos.get(0), priceType);
+    }
+
+    @Override
+    public ProductConfigVo selectProductConfig(String productCode) {
+        ProductConfig productConfig = new ProductConfig();
+        productConfig.setProductCode(productCode);
+        List<ProductConfig> productConfigs = iProductConfigService.selectProductConfigList(productConfig);
+        if (CollectionUtils.isEmpty(productConfigs)) {
+            return null;
+        }
+        ProductConfigVo productConfigVo = new ProductConfigVo();
+        org.springframework.beans.BeanUtils.copyProperties(productConfigs.get(0), productConfigVo);
+        return productConfigVo;
     }
 
     private ProductInfoVo buildProductInfoVo(ProductInfo productInfo, String priceTypeEnum) {

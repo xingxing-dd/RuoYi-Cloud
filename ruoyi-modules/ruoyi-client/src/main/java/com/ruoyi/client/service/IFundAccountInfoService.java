@@ -64,6 +64,12 @@ public interface IFundAccountInfoService
     public int deleteFundAccountInfoById(Long id);
 
     /**
+     * 绑定提现卡
+     * @param fundAccountInfo
+     */
+    public void bindWithdrawAcct(FundAccountInfo fundAccountInfo);
+
+    /**
      * 查询充值账号
      * @param req
      * @return

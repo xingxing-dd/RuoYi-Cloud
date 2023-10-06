@@ -12,6 +12,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productIcon"    column="product_icon"    />
         <result property="description"    column="description"    />
         <result property="source"    column="source"    />
+        <result property="hot"    column="hot"    />
+        <result property="priority"    column="priority"    />
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -20,54 +22,69 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductInfoVo">
-        select id, category_code, product_code, product_name, product_icon, description, source, status, create_time, create_by, update_time, update_by from mk_product_info
+        select id, category_code, product_code, product_name, product_icon, description, source, hot, priority, status, create_time, create_by, update_time, update_by from mk_product_info
     </sql>
 
     <select id="selectProductInfoList" parameterType="com.ruoyi.market.domain.ProductInfo" resultMap="ProductInfoResult">
         <include refid="selectProductInfoVo"/>
-        <where>  
+        <where>
             <if test="categoryCode != null  and categoryCode != ''"> and category_code = #{categoryCode}</if>
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="hot != null "> and hot = #{hot}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
+    <select id="selectProductInfoListOrderByPriority" parameterType="com.ruoyi.market.domain.ProductInfo" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        <where>
+            <if test="categoryCode != null  and categoryCode != ''"> and category_code = #{categoryCode}</if>
+            <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="hot != null "> and hot = #{hot}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by priority desc
+    </select>
+
     <select id="selectProductInfoById" parameterType="Long" resultMap="ProductInfoResult">
         <include refid="selectProductInfoVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertProductInfo" parameterType="com.ruoyi.market.domain.ProductInfo">
+
+    <insert id="insertProductInfo" parameterType="com.ruoyi.market.domain.ProductInfo" useGeneratedKeys="true" keyProperty="id">
         insert into mk_product_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="categoryCode != null">category_code,</if>
             <if test="productCode != null">product_code,</if>
             <if test="productName != null">product_name,</if>
             <if test="productIcon != null">product_icon,</if>
             <if test="description != null">description,</if>
             <if test="source != null">source,</if>
+            <if test="hot != null">hot,</if>
+            <if test="priority != null">priority,</if>
             <if test="status != null">status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="categoryCode != null">#{categoryCode},</if>
             <if test="productCode != null">#{productCode},</if>
             <if test="productName != null">#{productName},</if>
             <if test="productIcon != null">#{productIcon},</if>
             <if test="description != null">#{description},</if>
             <if test="source != null">#{source},</if>
+            <if test="hot != null">#{hot},</if>
+            <if test="priority != null">#{priority},</if>
             <if test="status != null">#{status},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateProductInfo" parameterType="com.ruoyi.market.domain.ProductInfo">
@@ -79,6 +96,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productIcon != null">product_icon = #{productIcon},</if>
             <if test="description != null">description = #{description},</if>
             <if test="source != null">source = #{source},</if>
+            <if test="hot != null">hot = #{hot},</if>
+            <if test="priority != null">priority = #{priority},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -93,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductInfoByIds" parameterType="String">
-        delete from mk_product_info where id in 
+        delete from mk_product_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

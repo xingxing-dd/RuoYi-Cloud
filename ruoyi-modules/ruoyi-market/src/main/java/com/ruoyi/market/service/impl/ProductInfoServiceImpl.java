@@ -50,6 +50,11 @@ public class ProductInfoServiceImpl implements IProductInfoService
     }
 
     @Override
+    public List<ProductInfo> selectProductInfoListOrderByPriority(ProductInfo productInfo) {
+        return productInfoMapper.selectProductInfoListOrderByPriority(productInfo);
+    }
+
+    @Override
     @Cacheable(value = "category")
     public List<ProductInfo> selectProductInfoByCategory(String category) {
         ProductInfo productInfo = new ProductInfo();

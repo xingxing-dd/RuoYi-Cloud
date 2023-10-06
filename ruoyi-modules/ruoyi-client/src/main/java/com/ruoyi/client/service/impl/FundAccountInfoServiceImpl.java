@@ -1,5 +1,6 @@
 package com.ruoyi.client.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,6 +107,42 @@ public class FundAccountInfoServiceImpl implements IFundAccountInfoService
     public int deleteFundAccountInfoById(Long id)
     {
         return fundAccountInfoMapper.deleteFundAccountInfoById(id);
+    }
+
+    @Override
+    public void bindWithdrawAcct(FundAccountInfo fundAccountInfo) {
+        if (checkAccountIsRepeat(SecurityContextHolder.getUserId(), fundAccountInfo.getAccountNo())) {
+            throw new RuntimeException("Account is repeat!");
+        }
+        if (StringUtils.equals(fundAccountInfo.getAccountType(), ClientConstant.VIRTUAL_CURRENCY)) {
+            fundAccountInfo.setAccountOwner(fundAccountInfo.getAccountOwnerCode());
+            fundAccountInfo.setAccountName(fundAccountInfo.getAccountOwnerCode());
+            if (fundAccountInfo.getAccountOwnerCode().contains("-")) {
+                fundAccountInfo.setAccountCurrency(fundAccountInfo.getAccountOwnerCode().substring(0, fundAccountInfo.getAccountOwnerCode().indexOf("-")));
+            } else {
+                fundAccountInfo.setAccountCurrency(fundAccountInfo.getAccountOwnerCode());
+            }
+        }
+        fundAccountInfo.setAccountUsage(FundAccountInfoTypeEnum.WITHDRAW.getCode());
+        fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
+        fundAccountInfo.setUserName(SecurityContextHolder.getUserName());
+        fundAccountInfo.setCreateBy(SecurityContextHolder.getUserName());
+        fundAccountInfo.setUpdateBy(SecurityContextHolder.getUserName());
+        fundAccountInfo.setStatus(0L);
+        fundAccountInfo.setDelFlag(0L);
+        fundAccountInfo.setCreateTime(new Date());
+        fundAccountInfo.setUpdateTime(new Date());
+        log.info("生成提现账号数据:{}", fundAccountInfo);
+        fundAccountInfoMapper.insertFundAccountInfo(fundAccountInfo);
+    }
+
+    private boolean checkAccountIsRepeat(Long userId, String accountNo) {
+        FundAccountInfo fundAccountInfo = new FundAccountInfo();
+        fundAccountInfo.setUserId(userId);
+        fundAccountInfo.setAccountNo(accountNo);
+        fundAccountInfo.setDelFlag(0L);
+        List<FundAccountInfo> fundAccountInfos = fundAccountInfoMapper.selectFundAccountInfoList(fundAccountInfo);
+        return !CollectionUtils.isEmpty(fundAccountInfos);
     }
 
     @Override

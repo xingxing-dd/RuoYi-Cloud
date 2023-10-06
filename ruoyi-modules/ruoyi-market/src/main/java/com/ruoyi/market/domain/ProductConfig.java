@@ -1,4 +1,9 @@
 package com.ruoyi.market.domain;
+import java.math.BigDecimal;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.core.annotation.Excel;
+import com.ruoyi.common.core.web.domain.BaseEntity;
 
 import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,7 +15,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 产品配置对象 mk_product_config
  *
  * @author ruoyi
- * @date 2023-09-14
+ * @date 2023-10-06
  */
 public class ProductConfig extends BaseEntity
 {
@@ -31,29 +36,49 @@ public class ProductConfig extends BaseEntity
     @Excel(name = "点差率")
     private BigDecimal spreadRate;
 
-    /** 每张价格 */
-    @Excel(name = "每张价格")
-    private BigDecimal eachSheetPrice;
+    /** 每张数量 */
+    @Excel(name = "每张数量")
+    private Double eachSheetNum;
+
+    /** 最小倍率 */
+    @Excel(name = "最小倍率")
+    private Double minMultiplier;
+
+    /** 最大倍率 */
+    @Excel(name = "最大倍率")
+    private Double maxMultiplier;
+
+    /** 倍率步长 */
+    @Excel(name = "倍率步长")
+    private Double multiplierStepSize;
 
     /** 最小张数 */
     @Excel(name = "最小张数")
-    private BigDecimal minimumSheet;
+    private Double minSheetNum;
 
     /** 最大张数 */
     @Excel(name = "最大张数")
-    private BigDecimal maximunSheet;
+    private Double maxSheetNum;
 
-    /** 保证金比例 */
-    @Excel(name = "保证金比例")
-    private BigDecimal marginRate;
+    /** 张数步长 */
+    @Excel(name = "张数步长")
+    private Double sheetStepSize;
+
+    /** 保证金 */
+    @Excel(name = "保证金")
+    private BigDecimal marginValue;
 
     /** 保证金类型 */
     @Excel(name = "保证金类型")
     private String marginType;
 
-    /** 步长 */
-    @Excel(name = "步长")
-    private BigDecimal stepSize;
+    /** 价格步长 */
+    @Excel(name = "价格步长")
+    private Double priceStepSize;
+
+    /** 价格小数位 */
+    @Excel(name = "价格小数位")
+    private Integer priceUnit;
 
     /** 开盘时间 */
     @Excel(name = "开盘时间")
@@ -95,41 +120,77 @@ public class ProductConfig extends BaseEntity
     {
         return spreadRate;
     }
-    public void setEachSheetPrice(BigDecimal eachSheetPrice)
+    public void setEachSheetNum(Double eachSheetNum)
     {
-        this.eachSheetPrice = eachSheetPrice;
+        this.eachSheetNum = eachSheetNum;
     }
 
-    public BigDecimal getEachSheetPrice()
+    public Double getEachSheetNum()
     {
-        return eachSheetPrice;
+        return eachSheetNum;
     }
-    public void setMinimumSheet(BigDecimal minimumSheet)
+    public void setMinMultiplier(Double minMultiplier)
     {
-        this.minimumSheet = minimumSheet;
-    }
-
-    public BigDecimal getMinimumSheet()
-    {
-        return minimumSheet;
-    }
-    public void setMaximunSheet(BigDecimal maximunSheet)
-    {
-        this.maximunSheet = maximunSheet;
+        this.minMultiplier = minMultiplier;
     }
 
-    public BigDecimal getMaximunSheet()
+    public Double getMinMultiplier()
     {
-        return maximunSheet;
+        return minMultiplier;
     }
-    public void setMarginRate(BigDecimal marginRate)
+    public void setMaxMultiplier(Double maxMultiplier)
     {
-        this.marginRate = marginRate;
+        this.maxMultiplier = maxMultiplier;
     }
 
-    public BigDecimal getMarginRate()
+    public Double getMaxMultiplier()
     {
-        return marginRate;
+        return maxMultiplier;
+    }
+    public void setMultiplierStepSize(Double multiplierStepSize)
+    {
+        this.multiplierStepSize = multiplierStepSize;
+    }
+
+    public Double getMultiplierStepSize()
+    {
+        return multiplierStepSize;
+    }
+    public void setMinSheetNum(Double minSheetNum)
+    {
+        this.minSheetNum = minSheetNum;
+    }
+
+    public Double getMinSheetNum()
+    {
+        return minSheetNum;
+    }
+    public void setMaxSheetNum(Double maxSheetNum)
+    {
+        this.maxSheetNum = maxSheetNum;
+    }
+
+    public Double getMaxSheetNum()
+    {
+        return maxSheetNum;
+    }
+    public void setSheetStepSize(Double sheetStepSize)
+    {
+        this.sheetStepSize = sheetStepSize;
+    }
+
+    public Double getSheetStepSize()
+    {
+        return sheetStepSize;
+    }
+    public void setMarginValue(BigDecimal marginValue)
+    {
+        this.marginValue = marginValue;
+    }
+
+    public BigDecimal getMarginValue()
+    {
+        return marginValue;
     }
     public void setMarginType(String marginType)
     {
@@ -140,14 +201,23 @@ public class ProductConfig extends BaseEntity
     {
         return marginType;
     }
-    public void setStepSize(BigDecimal stepSize)
+    public void setPriceStepSize(Double priceStepSize)
     {
-        this.stepSize = stepSize;
+        this.priceStepSize = priceStepSize;
     }
 
-    public BigDecimal getStepSize()
+    public Double getPriceStepSize()
     {
-        return stepSize;
+        return priceStepSize;
+    }
+    public void setPriceUnit(Integer priceUnit)
+    {
+        this.priceUnit = priceUnit;
+    }
+
+    public Integer getPriceUnit()
+    {
+        return priceUnit;
     }
     public void setTradePeriod(String tradePeriod)
     {
@@ -166,12 +236,17 @@ public class ProductConfig extends BaseEntity
                 .append("productCode", getProductCode())
                 .append("feeRate", getFeeRate())
                 .append("spreadRate", getSpreadRate())
-                .append("eachSheetPrice", getEachSheetPrice())
-                .append("minimumSheet", getMinimumSheet())
-                .append("maximunSheet", getMaximunSheet())
-                .append("marginRate", getMarginRate())
+                .append("eachSheetNum", getEachSheetNum())
+                .append("minMultiplier", getMinMultiplier())
+                .append("maxMultiplier", getMaxMultiplier())
+                .append("multiplierStepSize", getMultiplierStepSize())
+                .append("minSheetNum", getMinSheetNum())
+                .append("maxSheetNum", getMaxSheetNum())
+                .append("sheetStepSize", getSheetStepSize())
+                .append("marginValue", getMarginValue())
                 .append("marginType", getMarginType())
-                .append("stepSize", getStepSize())
+                .append("priceStepSize", getPriceStepSize())
+                .append("priceUnit", getPriceUnit())
                 .append("tradePeriod", getTradePeriod())
                 .append("createTime", getCreateTime())
                 .append("createBy", getCreateBy())

@@ -52,6 +52,11 @@ public class MarketClientController {
         return AjaxResult.success(marketClientService.selectCategoryProductPrices(req.getCategoryCode()));
     }
 
+    @PostMapping("/hot/products")
+    public AjaxResult hotProducts() {
+        return AjaxResult.success(marketClientService.selectHotProducts());
+    }
+
     @PostMapping("/product")
     public AjaxResult product(@RequestBody ProductQueryReq req) {
         if (req == null || StringUtils.isBlank(req.getCategoryCode())) {
@@ -69,6 +74,11 @@ public class MarketClientController {
             return AjaxResult.error("params is error!");
         }
         return AjaxResult.success(marketClientService.selectProductPrice(req.getProductCode(), req.getType()));
+    }
+
+    @PostMapping("/product/config")
+    public AjaxResult productConfig(@RequestBody ProductQueryReq req) {
+        return AjaxResult.success(marketClientService.selectProductConfig(req.getProductCode()));
     }
 
 }
