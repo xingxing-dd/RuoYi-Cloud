@@ -1,6 +1,10 @@
 package com.ruoyi.client.service;
 
 import java.util.List;
+
+import com.ruoyi.client.controller.req.WithdrawCalculateReq;
+import com.ruoyi.client.controller.req.WithdrawOrderSubmitReq;
+import com.ruoyi.client.controller.resp.WithdrawCalculateResp;
 import com.ruoyi.client.domain.WithdrawOrder;
 
 /**
@@ -60,8 +64,14 @@ public interface IWithdrawOrderService
     public int deleteWithdrawOrderById(Long id);
 
     /**
-     * 提交提现订单
-     * @param withdrawOrder
+     * 计算提现费用
+     * @param withdrawCalculateReq
      */
-    public void submitWithdrawOrder(WithdrawOrder withdrawOrder);
+    public WithdrawCalculateResp calculate(WithdrawCalculateReq withdrawCalculateReq);
+
+    /**
+     * 提交提现订单
+     * @param withdrawOrderSubmitReq
+     */
+    public void submitWithdrawOrder(WithdrawOrderSubmitReq withdrawOrderSubmitReq);
 }

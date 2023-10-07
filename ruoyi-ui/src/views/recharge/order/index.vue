@@ -12,7 +12,7 @@
       <el-form-item label="充值方式" prop="rechargeType">
         <el-select v-model="queryParams.rechargeType" placeholder="请选择充值方式" clearable>
           <el-option
-            v-for="dict in dict.type.recharge_type"
+            v-for="dict in dict.type.fund_account_type"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -37,10 +37,18 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="到账币种" prop="receiveCurrency">
+        <el-input
+          v-model="queryParams.receiveCurrency"
+          placeholder="请输入到账币种"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="订单状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择订单状态" clearable>
           <el-option
-            v-for="dict in dict.type.sys_data_status"
+            v-for="dict in dict.type.recharge_order_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -101,11 +109,10 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="充值方式" align="center" prop="rechargeType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.recharge_type" :value="scope.row.rechargeType"/>
+          <dict-tag :options="dict.type.fund_account_type" :value="scope.row.rechargeType"/>
         </template>
       </el-table-column>
       <el-table-column label="充值账号" align="center" prop="rechargeAcct" />
@@ -116,11 +123,7 @@
         </template>
       </el-table-column>
       <el-table-column label="到账金额" align="center" prop="receiveAmount" />
-      <el-table-column label="到账币种" align="center" prop="receiveCurrency">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.all_recharge_currenies" :value="scope.row.receiveCurrency"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="到账币种" align="center" prop="receiveCurrency" />
       <el-table-column label="充值凭证" align="center" prop="rechargeInvoice" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.rechargeInvoice" :width="50" :height="50"/>
@@ -129,7 +132,7 @@
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="订单状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.recharge_order_status" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -172,7 +175,7 @@
         <el-form-item label="充值方式" prop="rechargeType">
           <el-select v-model="form.rechargeType" placeholder="请选择充值方式">
             <el-option
-              v-for="dict in dict.type.recharge_type"
+              v-for="dict in dict.type.fund_account_type"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
@@ -199,14 +202,7 @@
           <el-input v-model="form.receiveAmount" placeholder="请输入到账金额" />
         </el-form-item>
         <el-form-item label="到账币种" prop="receiveCurrency">
-          <el-select v-model="form.receiveCurrency" placeholder="请选择到账币种">
-            <el-option
-              v-for="dict in dict.type.all_recharge_currenies"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
+          <el-input v-model="form.receiveCurrency" placeholder="请输入到账币种" />
         </el-form-item>
         <el-form-item label="充值凭证" prop="rechargeInvoice">
           <image-upload v-model="form.rechargeInvoice"/>
@@ -217,7 +213,7 @@
         <el-form-item label="订单状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择订单状态">
             <el-option
-              v-for="dict in dict.type.sys_data_status"
+              v-for="dict in dict.type.recharge_order_status"
               :key="dict.value"
               :label="dict.label"
               :value="parseInt(dict.value)"
@@ -238,7 +234,7 @@ import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/rech
 
 export default {
   name: "Order",
-  dicts: ['all_recharge_currenies', 'sys_data_status', 'recharge_type'],
+  dicts: ['all_recharge_currenies', 'fund_account_type', 'recharge_order_status'],
   data() {
     return {
       // 遮罩层
@@ -267,15 +263,13 @@ export default {
         rechargeType: null,
         rechargeAcct: null,
         rechargeCurrency: null,
+        receiveCurrency: null,
         status: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        userId: [
-          { required: true, message: "用户id不能为空", trigger: "blur" }
-        ],
         userName: [
           { required: true, message: "用户名不能为空", trigger: "blur" }
         ],
@@ -292,7 +286,7 @@ export default {
           { required: true, message: "到账金额不能为空", trigger: "blur" }
         ],
         receiveCurrency: [
-          { required: true, message: "到账币种不能为空", trigger: "change" }
+          { required: true, message: "到账币种不能为空", trigger: "blur" }
         ],
         status: [
           { required: true, message: "订单状态不能为空", trigger: "change" }

@@ -25,6 +25,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="热门产品" prop="hot">
+        <el-select v-model="queryParams.hot" placeholder="请选择热门产品" clearable>
+          <el-option
+            v-for="dict in dict.type.hot_product"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
@@ -89,6 +99,7 @@
 
     <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="类别编号" align="center" prop="categoryCode" />
       <el-table-column label="产品编号" align="center" prop="productCode" />
       <el-table-column label="产品名称" align="center" prop="productName" />
@@ -99,19 +110,15 @@
       </el-table-column>
       <el-table-column label="产品描述" align="center" prop="description" />
       <el-table-column label="数据源" align="center" prop="source" />
+      <el-table-column label="热门产品" align="center" prop="hot">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.hot_product" :value="scope.row.hot"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="优先级" align="center" prop="priority" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.market_close_or_open_status" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -133,7 +140,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -161,17 +168,28 @@
           <el-input v-model="form.description" placeholder="请输入产品描述" />
         </el-form-item>
         <el-form-item label="数据源" prop="source">
-          <el-input v-model="form.source" placeholder="请输入数据源" />
+          <el-input v-model="form.source" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="热门产品" prop="hot">
+          <el-radio-group v-model="form.hot">
+            <el-radio
+              v-for="dict in dict.type.hot_product"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="优先级" prop="priority">
+          <el-input v-model="form.priority" placeholder="请输入优先级" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择状态">
-            <el-option
+          <el-radio-group v-model="form.status">
+            <el-radio
               v-for="dict in dict.type.market_close_or_open_status"
               :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -187,7 +205,7 @@ import { listProduct, getProduct, delProduct, addProduct, updateProduct } from "
 
 export default {
   name: "Product",
-  dicts: ['market_close_or_open_status'],
+  dicts: ['hot_product', 'market_close_or_open_status'],
   data() {
     return {
       // 遮罩层
@@ -215,6 +233,7 @@ export default {
         categoryCode: null,
         productCode: null,
         productName: null,
+        hot: null,
         status: null,
       },
       // 表单参数
@@ -252,6 +271,8 @@ export default {
         productIcon: null,
         description: null,
         source: null,
+        hot: null,
+        priority: null,
         status: null,
         createTime: null,
         createBy: null,

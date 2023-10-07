@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.TradeFeeConfigMapper">
+    
+    <resultMap type="com.ruoyi.client.domain.TradeFeeConfig" id="TradeFeeConfigResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="tradeType"    column="trade_type"    />
+        <result property="configType"    column="config_type"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="content"    column="content"    />
+        <result property="ext"    column="ext"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTradeFeeConfigVo">
+        select id, user_id, user_name, trade_type, config_type, fee_type, content, ext, remark, create_by, create_time, update_by, update_time from trade_fee_config
+    </sql>
+
+    <select id="selectTradeFeeConfigList" parameterType="com.ruoyi.client.domain.TradeFeeConfig" resultMap="TradeFeeConfigResult">
+        <include refid="selectTradeFeeConfigVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="tradeType != null  and tradeType != ''"> and trade_type = #{tradeType}</if>
+            <if test="configType != null  and configType != ''"> and config_type = #{configType}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+        </where>
+    </select>
+    
+    <select id="selectTradeFeeConfigById" parameterType="Long" resultMap="TradeFeeConfigResult">
+        <include refid="selectTradeFeeConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTradeFeeConfig" parameterType="com.ruoyi.client.domain.TradeFeeConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into trade_fee_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="tradeType != null">trade_type,</if>
+            <if test="configType != null">config_type,</if>
+            <if test="feeType != null">fee_type,</if>
+            <if test="content != null">content,</if>
+            <if test="ext != null">ext,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="tradeType != null">#{tradeType},</if>
+            <if test="configType != null">#{configType},</if>
+            <if test="feeType != null">#{feeType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="ext != null">#{ext},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTradeFeeConfig" parameterType="com.ruoyi.client.domain.TradeFeeConfig">
+        update trade_fee_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="tradeType != null">trade_type = #{tradeType},</if>
+            <if test="configType != null">config_type = #{configType},</if>
+            <if test="feeType != null">fee_type = #{feeType},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="ext != null">ext = #{ext},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTradeFeeConfigById" parameterType="Long">
+        delete from trade_fee_config where id = #{id}
+    </delete>
+
+    <delete id="deleteTradeFeeConfigByIds" parameterType="String">
+        delete from trade_fee_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

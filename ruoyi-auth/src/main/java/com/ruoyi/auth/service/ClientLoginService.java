@@ -46,6 +46,7 @@ public class ClientLoginService {
             throw new ServiceException(userResult.getMsg());
         }
         LoginUser userInfo = userResult.getData();
+        logger.info("获取到登录用户信息:{}", userInfo);
         ClientUser user = userResult.getData().getClientUser();
         if (UserStatus.DELETED.getCode().equals(user.getDelFlag())) {
             throw new ServiceException("Sorry, your account has delete!");

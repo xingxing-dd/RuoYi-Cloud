@@ -7,9 +7,9 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 产品信息对象 mk_product_info
- * 
+ *
  * @author ruoyi
- * @date 2023-08-28
+ * @date 2023-10-06
  */
 public class ProductInfo extends BaseEntity
 {
@@ -42,79 +42,105 @@ public class ProductInfo extends BaseEntity
     @Excel(name = "数据源")
     private String source;
 
+    /** 热门产品 */
+    @Excel(name = "热门产品")
+    private Long hot;
+
+    /** 优先级 */
+    @Excel(name = "优先级")
+    private Long priority;
+
     /** 状态（close/open） */
     @Excel(name = "状态", readConverterExp = "c=lose/open")
     private String status;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setCategoryCode(String categoryCode) 
+    public void setCategoryCode(String categoryCode)
     {
         this.categoryCode = categoryCode;
     }
 
-    public String getCategoryCode() 
+    public String getCategoryCode()
     {
         return categoryCode;
     }
-    public void setProductCode(String productCode) 
+    public void setProductCode(String productCode)
     {
         this.productCode = productCode;
     }
 
-    public String getProductCode() 
+    public String getProductCode()
     {
         return productCode;
     }
-    public void setProductName(String productName) 
+    public void setProductName(String productName)
     {
         this.productName = productName;
     }
 
-    public String getProductName() 
+    public String getProductName()
     {
         return productName;
     }
-    public void setProductIcon(String productIcon) 
+    public void setProductIcon(String productIcon)
     {
         this.productIcon = productIcon;
     }
 
-    public String getProductIcon() 
+    public String getProductIcon()
     {
         return productIcon;
     }
-    public void setDescription(String description) 
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return description;
     }
-    public void setSource(String source) 
+    public void setSource(String source)
     {
         this.source = source;
     }
 
-    public String getSource() 
+    public String getSource()
     {
         return source;
     }
-    public void setStatus(String status) 
+    public void setHot(Long hot)
+    {
+        this.hot = hot;
+    }
+
+    public Long getHot()
+    {
+        return hot;
+    }
+    public void setPriority(Long priority)
+    {
+        this.priority = priority;
+    }
+
+    public Long getPriority()
+    {
+        return priority;
+    }
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public String getStatus()
     {
         return status;
     }
@@ -122,18 +148,20 @@ public class ProductInfo extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("categoryCode", getCategoryCode())
-            .append("productCode", getProductCode())
-            .append("productName", getProductName())
-            .append("productIcon", getProductIcon())
-            .append("description", getDescription())
-            .append("source", getSource())
-            .append("status", getStatus())
-            .append("createTime", getCreateTime())
-            .append("createBy", getCreateBy())
-            .append("updateTime", getUpdateTime())
-            .append("updateBy", getUpdateBy())
-            .toString();
+                .append("id", getId())
+                .append("categoryCode", getCategoryCode())
+                .append("productCode", getProductCode())
+                .append("productName", getProductName())
+                .append("productIcon", getProductIcon())
+                .append("description", getDescription())
+                .append("source", getSource())
+                .append("hot", getHot())
+                .append("priority", getPriority())
+                .append("status", getStatus())
+                .append("createTime", getCreateTime())
+                .append("createBy", getCreateBy())
+                .append("updateTime", getUpdateTime())
+                .append("updateBy", getUpdateBy())
+                .toString();
     }
 }

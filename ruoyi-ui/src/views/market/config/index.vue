@@ -9,38 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="交易费率" prop="feeRate">
-        <el-input
-          v-model="queryParams.feeRate"
-          placeholder="请输入交易费率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最小张数" prop="minimumSheet">
-        <el-input
-          v-model="queryParams.minimumSheet"
-          placeholder="请输入最小张数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最大张数" prop="maximunSheet">
-        <el-input
-          v-model="queryParams.maximunSheet"
-          placeholder="请输入最大张数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="保证金比例" prop="marginRate">
-        <el-input
-          v-model="queryParams.marginRate"
-          placeholder="请输入保证金比例"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -98,17 +66,23 @@
       <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="产品编码" align="center" prop="productCode" />
       <el-table-column label="交易费率" align="center" prop="feeRate" />
-      <el-table-column label="最小张数" align="center" prop="minimumSheet" />
-      <el-table-column label="最大张数" align="center" prop="maximunSheet" />
-      <el-table-column label="保证金比例" align="center" prop="marginRate" />
-      <el-table-column label="保证金类型" align="center" prop="marginType" />
-      <el-table-column label="开盘时间" align="center" prop="tradePeriod" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="点差率" align="center" prop="spreadRate" />
+      <el-table-column label="每张数量" align="center" prop="eachSheetNum" />
+      <el-table-column label="最小倍率" align="center" prop="minMultiplier" />
+      <el-table-column label="最大倍率" align="center" prop="maxMultiplier" />
+      <el-table-column label="倍率步长" align="center" prop="multiplierStepSize" />
+      <el-table-column label="最小张数" align="center" prop="minSheetNum" />
+      <el-table-column label="最大张数" align="center" prop="maxSheetNum" />
+      <el-table-column label="张数步长" align="center" prop="sheetStepSize" />
+      <el-table-column label="保证金" align="center" prop="marginValue" />
+      <el-table-column label="保证金类型" align="center" prop="marginType">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.fee_type" :value="scope.row.marginType"/>
         </template>
       </el-table-column>
+      <el-table-column label="价格步长" align="center" prop="priceStepSize" />
+      <el-table-column label="价格小数位" align="center" prop="priceUnit" />
+      <el-table-column label="开盘时间" align="center" prop="tradePeriod" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -128,7 +102,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -146,14 +120,48 @@
         <el-form-item label="交易费率" prop="feeRate">
           <el-input v-model="form.feeRate" placeholder="请输入交易费率" />
         </el-form-item>
-        <el-form-item label="最小张数" prop="minimumSheet">
-          <el-input v-model="form.minimumSheet" placeholder="请输入最小张数" />
+        <el-form-item label="点差率" prop="spreadRate">
+          <el-input v-model="form.spreadRate" placeholder="请输入点差率" />
         </el-form-item>
-        <el-form-item label="最大张数" prop="maximunSheet">
-          <el-input v-model="form.maximunSheet" placeholder="请输入最大张数" />
+        <el-form-item label="每张数量" prop="eachSheetNum">
+          <el-input v-model="form.eachSheetNum" placeholder="请输入每张数量" />
         </el-form-item>
-        <el-form-item label="保证金比例" prop="marginRate">
-          <el-input v-model="form.marginRate" placeholder="请输入保证金比例" />
+        <el-form-item label="最小倍率" prop="minMultiplier">
+          <el-input v-model="form.minMultiplier" placeholder="请输入最小倍率" />
+        </el-form-item>
+        <el-form-item label="最大倍率" prop="maxMultiplier">
+          <el-input v-model="form.maxMultiplier" placeholder="请输入最大倍率" />
+        </el-form-item>
+        <el-form-item label="倍率步长" prop="multiplierStepSize">
+          <el-input v-model="form.multiplierStepSize" placeholder="请输入倍率步长" />
+        </el-form-item>
+        <el-form-item label="最小张数" prop="minSheetNum">
+          <el-input v-model="form.minSheetNum" placeholder="请输入最小张数" />
+        </el-form-item>
+        <el-form-item label="最大张数" prop="maxSheetNum">
+          <el-input v-model="form.maxSheetNum" placeholder="请输入最大张数" />
+        </el-form-item>
+        <el-form-item label="张数步长" prop="sheetStepSize">
+          <el-input v-model="form.sheetStepSize" placeholder="请输入张数步长" />
+        </el-form-item>
+        <el-form-item label="保证金" prop="marginValue">
+          <el-input v-model="form.marginValue" placeholder="请输入保证金" />
+        </el-form-item>
+        <el-form-item label="保证金类型" prop="marginType">
+          <el-select v-model="form.marginType" placeholder="请选择保证金类型">
+            <el-option
+              v-for="dict in dict.type.fee_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="价格步长" prop="priceStepSize">
+          <el-input v-model="form.priceStepSize" placeholder="请输入价格步长" />
+        </el-form-item>
+        <el-form-item label="价格小数位" prop="priceUnit">
+          <el-input v-model="form.priceUnit" placeholder="请输入价格小数位" />
         </el-form-item>
         <el-form-item label="开盘时间" prop="tradePeriod">
           <el-input v-model="form.tradePeriod" type="textarea" placeholder="请输入内容" />
@@ -172,6 +180,7 @@ import { listConfig, getConfig, delConfig, addConfig, updateConfig } from "@/api
 
 export default {
   name: "Config",
+  dicts: ['fee_type'],
   data() {
     return {
       // 遮罩层
@@ -197,17 +206,53 @@ export default {
         pageNum: 1,
         pageSize: 10,
         productCode: null,
-        feeRate: null,
-        minimumSheet: null,
-        maximunSheet: null,
-        marginRate: null,
-        marginType: null,
-        tradePeriod: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        productCode: [
+          { required: true, message: "产品编码不能为空", trigger: "blur" }
+        ],
+        feeRate: [
+          { required: true, message: "交易费率不能为空", trigger: "blur" }
+        ],
+        spreadRate: [
+          { required: true, message: "点差率不能为空", trigger: "blur" }
+        ],
+        eachSheetNum: [
+          { required: true, message: "每张数量不能为空", trigger: "blur" }
+        ],
+        minMultiplier: [
+          { required: true, message: "最小倍率不能为空", trigger: "blur" }
+        ],
+        maxMultiplier: [
+          { required: true, message: "最大倍率不能为空", trigger: "blur" }
+        ],
+        multiplierStepSize: [
+          { required: true, message: "倍率步长不能为空", trigger: "blur" }
+        ],
+        minSheetNum: [
+          { required: true, message: "最小张数不能为空", trigger: "blur" }
+        ],
+        maxSheetNum: [
+          { required: true, message: "最大张数不能为空", trigger: "blur" }
+        ],
+        sheetStepSize: [
+          { required: true, message: "张数步长不能为空", trigger: "blur" }
+        ],
+        marginValue: [
+          { required: true, message: "保证金不能为空", trigger: "blur" }
+        ],
+        marginType: [
+          { required: true, message: "保证金类型不能为空", trigger: "change" }
+        ],
+        priceStepSize: [
+          { required: true, message: "价格步长不能为空", trigger: "blur" }
+        ],
+        priceUnit: [
+          { required: true, message: "价格小数位不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -235,10 +280,18 @@ export default {
         id: null,
         productCode: null,
         feeRate: null,
-        minimumSheet: null,
-        maximunSheet: null,
-        marginRate: null,
+        spreadRate: null,
+        eachSheetNum: null,
+        minMultiplier: null,
+        maxMultiplier: null,
+        multiplierStepSize: null,
+        minSheetNum: null,
+        maxSheetNum: null,
+        sheetStepSize: null,
+        marginValue: null,
         marginType: null,
+        priceStepSize: null,
+        priceUnit: null,
         tradePeriod: null,
         createTime: null,
         createBy: null,

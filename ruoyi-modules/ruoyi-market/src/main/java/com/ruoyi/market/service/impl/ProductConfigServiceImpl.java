@@ -12,7 +12,7 @@ import com.ruoyi.market.service.IProductConfigService;
  * 产品配置Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-08-28
+ * @date 2023-09-14
  */
 @Service
 public class ProductConfigServiceImpl implements IProductConfigService 

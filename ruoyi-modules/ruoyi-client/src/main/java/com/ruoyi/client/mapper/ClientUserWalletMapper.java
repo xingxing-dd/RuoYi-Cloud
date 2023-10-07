@@ -1,7 +1,9 @@
 package com.ruoyi.client.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.client.domain.ClientUserWallet;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 用户资产Mapper接口
@@ -58,4 +60,13 @@ public interface ClientUserWalletMapper
      * @return 结果
      */
     public int deleteClientUserWalletByIds(Long[] ids);
+
+    /**
+     * 更新钱包余额
+     * @param id
+     * @param amount
+     * @param direct
+     * @return
+     */
+    public int updateWalletBalanceById(@Param("id") Long id, @Param("amount")BigDecimal amount, @Param("direct") String direct, @Param("operator") String operator);
 }

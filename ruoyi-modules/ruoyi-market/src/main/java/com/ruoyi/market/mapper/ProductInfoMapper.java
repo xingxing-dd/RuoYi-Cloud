@@ -28,6 +28,13 @@ public interface ProductInfoMapper
     public List<ProductInfo> selectProductInfoList(ProductInfo productInfo);
 
     /**
+     * 查询产品信息列表
+     * @param productInfo
+     * @return
+     */
+    public List<ProductInfo> selectProductInfoListOrderByPriority(ProductInfo productInfo);
+
+    /**
      * 新增产品信息
      * 
      * @param productInfo 产品信息

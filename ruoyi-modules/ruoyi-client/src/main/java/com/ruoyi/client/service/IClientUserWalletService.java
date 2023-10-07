@@ -1,5 +1,6 @@
 package com.ruoyi.client.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.client.domain.ClientUserWallet;
 
@@ -68,4 +69,29 @@ public interface IClientUserWalletService
      * @return
      */
     public boolean createUserWallet(long userId, String userName);
+
+    /**
+     * 余额变化
+     * @param userId
+     * @param currency
+     * @param amount
+     * @param direct
+     * @return
+     */
+    public void balanceChange(Long userId, String operator, Long bizOrderId, String currency, BigDecimal amount, String direct);
+
+    /**
+     * 余额回滚
+     * @param userId
+     * @param operator
+     * @param bizOrderId
+     */
+    public void balanceRollback(Long userId, String operator, String currency, Long bizOrderId);
+
+    /**
+     * 获取用户钱包
+     * @param userId
+     * @return
+     */
+    public ClientUserWallet getUserWallet(Long userId);
 }

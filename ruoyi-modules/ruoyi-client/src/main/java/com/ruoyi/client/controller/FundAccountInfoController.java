@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.client.console.FundAccountInfoTypeEnum;
+import com.ruoyi.client.controller.req.FundAccountInfoReq;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,29 +106,27 @@ public class FundAccountInfoController extends BaseController
         return toAjax(fundAccountInfoService.deleteFundAccountInfoByIds(ids));
     }
 
-    @Log(title = "账号管理", businessType = BusinessType.DELETE)
+    @Log(title = "账号管理")
     @PostMapping("/recharge")
-    public AjaxResult rechargeAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountUsage(FundAccountInfoTypeEnum.RECHARGE.getCode());
-        List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
-        return success(list);
+    public AjaxResult rechargeAcct(@RequestBody FundAccountInfoReq fundAccountInfoReq) {
+        return success(fundAccountInfoService.selectRechargeAcct(fundAccountInfoReq));
     }
 
-    @Log(title = "账号管理", businessType = BusinessType.DELETE)
+    @Log(title = "账号管理")
     @PostMapping("/withdraw")
-    public AjaxResult withdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountUsage(FundAccountInfoTypeEnum.WITHDRAW.getCode());
-        fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
-        List<FundAccountInfo> list = fundAccountInfoService.selectFundAccountInfoList(fundAccountInfo);
-        return success(list);
+    public AjaxResult withdrawAcct(@RequestBody FundAccountInfoReq fundAccountInfoReq) {
+        return success(fundAccountInfoService.selectWithdrawAccts(fundAccountInfoReq));
     }
 
     @PostMapping("/bindWithdrawAcct")
     public AjaxResult bindWithdrawAcct(@RequestBody FundAccountInfo fundAccountInfo) {
-        fundAccountInfo.setAccountType(FundAccountInfoTypeEnum.WITHDRAW.getCode());
-        fundAccountInfo.setUserId(SecurityContextHolder.getUserId());
-        fundAccountInfo.setUserName(SecurityContextHolder.getUserName());
-        fundAccountInfoService.insertFundAccountInfo(fundAccountInfo);
+        try {
+            fundAccountInfoService.bindWithdrawAcct(fundAccountInfo);
+        } catch (RuntimeException e) {
+            return AjaxResult.error(e.getMessage());
+        } catch (Exception e) {
+            return AjaxResult.error();
+        }
         return success();
     }
 

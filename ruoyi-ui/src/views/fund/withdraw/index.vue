@@ -98,13 +98,13 @@
     <el-table v-loading="loading" :data="withdrawList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="提现金额" align="center" prop="amount" />
       <el-table-column label="币种" align="center" prop="currency" />
       <el-table-column label="提现账号" align="center" prop="fundAcct" />
       <el-table-column label="手续费" align="center" prop="feeAmount" />
+      <el-table-column label="到账金额" align="center" prop="receivedAmount" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.withdraw_order_status" :value="scope.row.status"/>
@@ -129,7 +129,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -161,6 +161,9 @@
         </el-form-item>
         <el-form-item label="手续费" prop="feeAmount">
           <el-input v-model="form.feeAmount" placeholder="请输入手续费" />
+        </el-form-item>
+        <el-form-item label="到账金额" prop="receivedAmount">
+          <el-input v-model="form.receivedAmount" placeholder="请输入到账金额" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -255,10 +258,11 @@ export default {
         currency: null,
         fundAcct: null,
         feeAmount: null,
+        receivedAmount: null,
         status: null,
-        createAt: null,
+        createTime: null,
         createBy: null,
-        updateAt: null,
+        updateTime: null,
         updateBy: null
       };
       this.resetForm("form");

@@ -37,6 +37,7 @@
             <if test="rechargeCurrency != null  and rechargeCurrency != ''"> and recharge_currency = #{rechargeCurrency}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">

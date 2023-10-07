@@ -5,6 +5,7 @@ import com.ruoyi.client.mapper.ClientUserMapper;
 import com.ruoyi.client.service.IClientUserService;
 import com.ruoyi.common.core.exception.base.BaseException;
 import com.ruoyi.common.core.utils.ExceptionUtil;
+import com.ruoyi.common.redis.service.RedisService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class ClientUserServiceImpl implements IClientUserService
 {
     @Resource
     private ClientUserMapper clientUserMapper;
+
+    @Resource
+    private RedisService redisService;
 
     /**
      * 查询账户信息
@@ -109,6 +113,12 @@ public class ClientUserServiceImpl implements IClientUserService
 
     @Override
     public boolean register(ClientUser clientUser) {
+        Integer userSequence = redisService.getCacheObject("ruoyi-client:user:sequence");
+        if (userSequence == null) {
+            userSequence = 1;
+        }
+        String userId = String.format("1%06d", userSequence);
+        clientUser.setUserId(Long.valueOf(userId));
         clientUser.setEmail(clientUser.getEmail());
         clientUser.setStatus(0L);
         clientUser.setDelFlag(0L);

@@ -115,7 +115,9 @@ public class ClientUserController extends BaseController
     @InnerAuth
     @GetMapping("/info/{username}")
     public R<LoginUser> getUserInfo(@PathVariable("username") String username, @RequestHeader(SecurityConstants.FROM_SOURCE) String source) {
+        logger.info("登录用户名:{}", username);
         ClientUser clientUser = clientUserService.selectUserByUserName(username);
+        logger.info("查询到账户信息:{}", clientUser);
         if (StringUtils.isNull(clientUser))
         {
             return R.fail("用户名或密码错误");

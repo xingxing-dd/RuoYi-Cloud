@@ -159,4 +159,20 @@ public class LoginUser implements Serializable
     public void setClientUser(ClientUser clientUser) {
         this.clientUser = clientUser;
     }
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "token='" + token + '\'' +
+                ", userid=" + userid +
+                ", username='" + username + '\'' +
+                ", loginTime=" + loginTime +
+                ", expireTime=" + expireTime +
+                ", ipaddr='" + ipaddr + '\'' +
+                ", permissions=" + permissions +
+                ", roles=" + roles +
+                ", sysUser=" + sysUser +
+                ", clientUser=" + clientUser +
+                '}';
+    }
 }

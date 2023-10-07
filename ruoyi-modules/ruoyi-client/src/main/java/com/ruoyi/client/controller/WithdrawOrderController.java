@@ -2,9 +2,10 @@ package com.ruoyi.client.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.controller.req.WithdrawCalculateReq;
+import com.ruoyi.client.controller.req.WithdrawOrderSubmitReq;
 import com.ruoyi.client.domain.vo.WithdrawOrderVo;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.BeanUtils;
@@ -109,11 +110,14 @@ public class WithdrawOrderController extends BaseController
         return toAjax(withdrawOrderService.deleteWithdrawOrderByIds(ids));
     }
 
+    @PostMapping("/calculate")
+    public AjaxResult calculate(@RequestBody WithdrawCalculateReq withdrawCalculateReq) {
+        return success(withdrawOrderService.calculate(withdrawCalculateReq));
+    }
+
     @PostMapping("/submit")
-    public AjaxResult submit(@RequestBody WithdrawOrder withdrawOrder) {
-        withdrawOrder.setUserId(SecurityContextHolder.getUserId());
-        withdrawOrder.setUserName(SecurityContextHolder.getUserName());
-        withdrawOrderService.submitWithdrawOrder(withdrawOrder);
+    public AjaxResult submit(@RequestBody WithdrawOrderSubmitReq withdrawOrderSubmitReq) {
+        withdrawOrderService.submitWithdrawOrder(withdrawOrderSubmitReq);
         return success();
     }
 

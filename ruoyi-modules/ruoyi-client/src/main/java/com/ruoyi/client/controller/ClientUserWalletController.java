@@ -3,6 +3,8 @@ package com.ruoyi.client.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,4 +104,15 @@ public class ClientUserWalletController extends BaseController
     {
         return toAjax(clientUserWalletService.deleteClientUserWalletByIds(ids));
     }
+
+    /**
+     * 获取用户钱包数据
+     * @param clientUserWallet
+     * @return
+     */
+    @PostMapping("/detail")
+    public R<ClientUserWallet> getUserWallet(@RequestBody ClientUserWallet clientUserWallet) {
+        return R.ok(clientUserWalletService.getUserWallet(clientUserWallet.getUserId()));
+    }
+
 }
