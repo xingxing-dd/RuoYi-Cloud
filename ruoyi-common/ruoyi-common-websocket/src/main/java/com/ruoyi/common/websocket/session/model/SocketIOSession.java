@@ -29,6 +29,11 @@ public class SocketIOSession {
     /**
      * 会话类型
      */
+    private String type;
+
+    /**
+     * 会话主题
+     */
     private String topic;
 
     /**

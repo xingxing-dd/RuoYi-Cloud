@@ -3,6 +3,8 @@ package com.ruoyi.client.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -103,9 +105,15 @@ public class TradeOrderController extends BaseController
         return toAjax(tradeOrderService.deleteTradeOrderByIds(ids));
     }
 
+    @PostMapping("/submit")
     public AjaxResult submit(@RequestBody TradeOrder tradeOrder) {
+        return AjaxResult.success(tradeOrderService.submit(tradeOrder));
+    }
 
-        return AjaxResult.success();
+    @PostMapping("/orderList")
+    public AjaxResult orderList(@RequestBody TradeOrder tradeOrder) {
+        tradeOrder.setUserId(SecurityContextHolder.getUserId());
+        return AjaxResult.success(tradeOrderService.selectTradeOrderList(tradeOrder));
     }
 
 }

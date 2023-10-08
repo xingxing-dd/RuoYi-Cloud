@@ -26,17 +26,19 @@
         />
       </el-form-item>
       <el-form-item label="交易方向" prop="tradeDirect">
-        <el-input
-          v-model="queryParams.tradeDirect"
-          placeholder="请输入交易方向"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.tradeDirect" placeholder="请选择交易方向" clearable>
+          <el-option
+            v-for="dict in dict.type.trade_direct"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
-            v-for="dict in dict.type.trade_order_status"
+            v-for="dict in dict.type.entrust_order_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -57,7 +59,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['fund:trade:add']"
+          v-hasPermi="['fund:entrust:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -68,7 +70,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['fund:trade:edit']"
+          v-hasPermi="['fund:entrust:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,7 +81,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['fund:trade:remove']"
+          v-hasPermi="['fund:entrust:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -89,13 +91,13 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['fund:trade:export']"
+          v-hasPermi="['fund:entrust:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="tradeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="entrustList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单编号" align="center" prop="id" />
       <el-table-column label="订单号" align="center" prop="orderId" />
@@ -104,23 +106,19 @@
       <el-table-column label="产品编号" align="center" prop="productCode" />
       <el-table-column label="倍率" align="center" prop="multiplier" />
       <el-table-column label="保证金" align="center" prop="margin" />
-      <el-table-column label="止损点" align="center" prop="stopLoss" />
-      <el-table-column label="止盈点" align="center" prop="stopProfit" />
       <el-table-column label="张数" align="center" prop="sheetNum" />
       <el-table-column label="交易方向" align="center" prop="tradeDirect">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.trade_direct" :value="scope.row.tradeDirect"/>
         </template>
       </el-table-column>
-      <el-table-column label="买入价格" align="center" prop="tradePrice" />
-      <el-table-column label="交易金额" align="center" prop="tradeAmount" />
-      <el-table-column label="卖出价格" align="center" prop="deliveryPrice" />
-      <el-table-column label="交割金额" align="center" prop="deliveryAmount" />
+      <el-table-column label="交易价格" align="center" prop="tradePrice" />
+      <el-table-column label="止盈点" align="center" prop="stopProfit" />
+      <el-table-column label="止损点" align="center" prop="stopLoss" />
       <el-table-column label="手续费" align="center" prop="feeAmount" />
-      <el-table-column label="收益" align="center" prop="income" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.trade_order_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.entrust_order_status" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -128,14 +126,14 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="交割时间" align="center" prop="deliveryTime" width="180">
+      <el-table-column label="完成时间" align="center" prop="completedTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.deliveryTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.completedTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新人" align="center" prop="updateBy" width="180">
+      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateBy, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -145,14 +143,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['fund:trade:edit']"
+            v-hasPermi="['fund:entrust:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['fund:trade:remove']"
+            v-hasPermi="['fund:entrust:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -166,7 +164,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改交易订单对话框 -->
+    <!-- 添加或修改委托订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="订单号" prop="orderId">
@@ -187,52 +185,47 @@
         <el-form-item label="保证金" prop="margin">
           <el-input v-model="form.margin" placeholder="请输入保证金" />
         </el-form-item>
-        <el-form-item label="止损点" prop="stopLoss">
-          <el-input v-model="form.stopLoss" placeholder="请输入止损点" />
-        </el-form-item>
-        <el-form-item label="止盈点" prop="stopProfit">
-          <el-input v-model="form.stopProfit" placeholder="请输入止盈点" />
-        </el-form-item>
         <el-form-item label="张数" prop="sheetNum">
           <el-input v-model="form.sheetNum" placeholder="请输入张数" />
         </el-form-item>
         <el-form-item label="交易方向" prop="tradeDirect">
-          <el-input v-model="form.tradeDirect" placeholder="请输入交易方向" />
+          <el-select v-model="form.tradeDirect" placeholder="请选择交易方向">
+            <el-option
+              v-for="dict in dict.type.trade_direct"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="买入价格" prop="tradePrice">
-          <el-input v-model="form.tradePrice" placeholder="请输入买入价格" />
+        <el-form-item label="交易价格" prop="tradePrice">
+          <el-input v-model="form.tradePrice" placeholder="请输入交易价格" />
         </el-form-item>
-        <el-form-item label="交易金额" prop="tradeAmount">
-          <el-input v-model="form.tradeAmount" placeholder="请输入交易金额" />
+        <el-form-item label="止盈点" prop="stopProfit">
+          <el-input v-model="form.stopProfit" placeholder="请输入止盈点" />
         </el-form-item>
-        <el-form-item label="卖出价格" prop="deliveryPrice">
-          <el-input v-model="form.deliveryPrice" placeholder="请输入卖出价格" />
-        </el-form-item>
-        <el-form-item label="交割金额" prop="deliveryAmount">
-          <el-input v-model="form.deliveryAmount" placeholder="请输入交割金额" />
+        <el-form-item label="止损点" prop="stopLoss">
+          <el-input v-model="form.stopLoss" placeholder="请输入止损点" />
         </el-form-item>
         <el-form-item label="手续费" prop="feeAmount">
           <el-input v-model="form.feeAmount" placeholder="请输入手续费" />
         </el-form-item>
-        <el-form-item label="收益" prop="income">
-          <el-input v-model="form.income" placeholder="请输入收益" />
-        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
-              v-for="dict in dict.type.trade_order_status"
+              v-for="dict in dict.type.entrust_order_status"
               :key="dict.value"
               :label="dict.label"
               :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="交割时间" prop="deliveryTime">
+        <el-form-item label="完成时间" prop="completedTime">
           <el-date-picker clearable
-                          v-model="form.deliveryTime"
+                          v-model="form.completedTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择交割时间">
+                          placeholder="请选择完成时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -245,11 +238,11 @@
 </template>
 
 <script>
-import { listTrade, getTrade, delTrade, addTrade, updateTrade } from "@/api/fund/trade";
+import { listEntrust, getEntrust, delEntrust, addEntrust, updateEntrust } from "@/api/fund/entrust";
 
 export default {
-  name: "Trade",
-  dicts: ['trade_order_status'],
+  name: "Entrust",
+  dicts: ['trade_direct', 'entrust_order_status'],
   data() {
     return {
       // 遮罩层
@@ -264,8 +257,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 交易订单表格数据
-      tradeList: [],
+      // 委托订单表格数据
+      entrustList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -300,11 +293,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询交易订单列表 */
+    /** 查询委托订单列表 */
     getList() {
       this.loading = true;
-      listTrade(this.queryParams).then(response => {
-        this.tradeList = response.rows;
+      listEntrust(this.queryParams).then(response => {
+        this.entrustList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -324,20 +317,16 @@ export default {
         productCode: null,
         multiplier: null,
         margin: null,
-        stopLoss: null,
-        stopProfit: null,
         sheetNum: null,
         tradeDirect: null,
         tradePrice: null,
-        tradeAmount: null,
-        deliveryPrice: null,
-        deliveryAmount: null,
+        stopProfit: null,
+        stopLoss: null,
         feeAmount: null,
-        income: null,
         status: null,
         createTime: null,
         createBy: null,
-        deliveryTime: null,
+        completedTime: null,
         updateTime: null,
         updateBy: null
       };
@@ -363,16 +352,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加交易订单";
+      this.title = "添加委托订单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getTrade(id).then(response => {
+      getEntrust(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改交易订单";
+        this.title = "修改委托订单";
       });
     },
     /** 提交按钮 */
@@ -380,13 +369,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateTrade(this.form).then(response => {
+            updateEntrust(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addTrade(this.form).then(response => {
+            addEntrust(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -398,8 +387,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除交易订单编号为"' + ids + '"的数据项？').then(function() {
-        return delTrade(ids);
+      this.$modal.confirm('是否确认删除委托订单编号为"' + ids + '"的数据项？').then(function() {
+        return delEntrust(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -407,9 +396,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('fund/trade/export', {
+      this.download('fund/entrust/export', {
         ...this.queryParams
-      }, `trade_${new Date().getTime()}.xlsx`)
+      }, `entrust_${new Date().getTime()}.xlsx`)
     }
   }
 };

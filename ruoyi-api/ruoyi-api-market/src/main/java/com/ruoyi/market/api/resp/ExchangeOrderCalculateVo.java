@@ -1,4 +1,4 @@
-package com.ruoyi.market.domain.vo;
+package com.ruoyi.market.api.resp;
 
 import lombok.Data;
 import lombok.ToString;

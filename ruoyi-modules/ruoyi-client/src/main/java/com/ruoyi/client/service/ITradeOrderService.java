@@ -58,4 +58,10 @@ public interface ITradeOrderService
      * @return 结果
      */
     public int deleteTradeOrderById(Long id);
+
+    /**
+     * 交易订单
+     * @param tradeOrder
+     */
+    public boolean submit(TradeOrder tradeOrder);
 }

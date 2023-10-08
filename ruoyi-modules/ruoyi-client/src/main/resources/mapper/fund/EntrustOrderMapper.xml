@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.client.mapper.TradeOrderMapper">
+<mapper namespace="com.ruoyi.client.mapper.EntrustOrderMapper">
 
-    <resultMap type="com.ruoyi.client.domain.TradeOrder" id="TradeOrderResult">
+    <resultMap type="com.ruoyi.client.domain.EntrustOrder" id="EntrustOrderResult">
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
         <result property="userId"    column="user_id"    />
@@ -12,30 +12,26 @@
         <result property="productCode"    column="product_code"    />
         <result property="multiplier"    column="multiplier"    />
         <result property="margin"    column="margin"    />
-        <result property="stopLoss"    column="stop_loss"    />
-        <result property="stopProfit"    column="stop_profit"    />
         <result property="sheetNum"    column="sheet_num"    />
         <result property="tradeDirect"    column="trade_direct"    />
         <result property="tradePrice"    column="trade_price"    />
-        <result property="tradeAmount"    column="trade_amount"    />
-        <result property="deliveryPrice"    column="delivery_price"    />
-        <result property="deliveryAmount"    column="delivery_amount"    />
+        <result property="stopProfit"    column="stop_profit"    />
+        <result property="stopLoss"    column="stop_loss"    />
         <result property="feeAmount"    column="fee_amount"    />
-        <result property="income"    column="income"    />
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
-        <result property="deliveryTime"    column="delivery_time"    />
+        <result property="completedTime"    column="completed_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
     </resultMap>
 
-    <sql id="selectTradeOrderVo">
-        select id, order_id, user_id, user_name, product_code, multiplier, margin, stop_loss, stop_profit, sheet_num, trade_direct, trade_price, trade_amount, delivery_price, delivery_amount, fee_amount, income, status, create_time, create_by, delivery_time, update_time, update_by from trade_order
+    <sql id="selectEntrustOrderVo">
+        select id, order_id, user_id, user_name, product_code, multiplier, margin, sheet_num, trade_direct, trade_price, stop_profit, stop_loss, fee_amount, status, create_time, create_by, completed_time, update_time, update_by from entrust_order
     </sql>
 
-    <select id="selectTradeOrderList" parameterType="com.ruoyi.client.domain.TradeOrder" resultMap="TradeOrderResult">
-        <include refid="selectTradeOrderVo"/>
+    <select id="selectEntrustOrderList" parameterType="com.ruoyi.client.domain.EntrustOrder" resultMap="EntrustOrderResult">
+        <include refid="selectEntrustOrderVo"/>
         <where>
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
@@ -45,13 +41,13 @@
         </where>
     </select>
 
-    <select id="selectTradeOrderById" parameterType="Long" resultMap="TradeOrderResult">
-        <include refid="selectTradeOrderVo"/>
+    <select id="selectEntrustOrderById" parameterType="Long" resultMap="EntrustOrderResult">
+        <include refid="selectEntrustOrderVo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertTradeOrder" parameterType="com.ruoyi.client.domain.TradeOrder" useGeneratedKeys="true" keyProperty="id">
-        insert into trade_order
+    <insert id="insertEntrustOrder" parameterType="com.ruoyi.client.domain.EntrustOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into entrust_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">order_id,</if>
             <if test="userId != null">user_id,</if>
@@ -59,20 +55,16 @@
             <if test="productCode != null and productCode != ''">product_code,</if>
             <if test="multiplier != null">multiplier,</if>
             <if test="margin != null">margin,</if>
-            <if test="stopLoss != null">stop_loss,</if>
-            <if test="stopProfit != null">stop_profit,</if>
             <if test="sheetNum != null">sheet_num,</if>
             <if test="tradeDirect != null">trade_direct,</if>
             <if test="tradePrice != null">trade_price,</if>
-            <if test="tradeAmount != null">trade_amount,</if>
-            <if test="deliveryPrice != null">delivery_price,</if>
-            <if test="deliveryAmount != null">delivery_amount,</if>
+            <if test="stopProfit != null">stop_profit,</if>
+            <if test="stopLoss != null">stop_loss,</if>
             <if test="feeAmount != null">fee_amount,</if>
-            <if test="income != null">income,</if>
             <if test="status != null">status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="deliveryTime != null">delivery_time,</if>
+            <if test="completedTime != null">completed_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
         </trim>
@@ -83,27 +75,23 @@
             <if test="productCode != null and productCode != ''">#{productCode},</if>
             <if test="multiplier != null">#{multiplier},</if>
             <if test="margin != null">#{margin},</if>
-            <if test="stopLoss != null">#{stopLoss},</if>
-            <if test="stopProfit != null">#{stopProfit},</if>
             <if test="sheetNum != null">#{sheetNum},</if>
             <if test="tradeDirect != null">#{tradeDirect},</if>
             <if test="tradePrice != null">#{tradePrice},</if>
-            <if test="tradeAmount != null">#{tradeAmount},</if>
-            <if test="deliveryPrice != null">#{deliveryPrice},</if>
-            <if test="deliveryAmount != null">#{deliveryAmount},</if>
+            <if test="stopProfit != null">#{stopProfit},</if>
+            <if test="stopLoss != null">#{stopLoss},</if>
             <if test="feeAmount != null">#{feeAmount},</if>
-            <if test="income != null">#{income},</if>
             <if test="status != null">#{status},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="deliveryTime != null">#{deliveryTime},</if>
+            <if test="completedTime != null">#{completedTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
         </trim>
     </insert>
 
-    <update id="updateTradeOrder" parameterType="com.ruoyi.client.domain.TradeOrder">
-        update trade_order
+    <update id="updateEntrustOrder" parameterType="com.ruoyi.client.domain.EntrustOrder">
+        update entrust_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
             <if test="userId != null">user_id = #{userId},</if>
@@ -111,32 +99,28 @@
             <if test="productCode != null and productCode != ''">product_code = #{productCode},</if>
             <if test="multiplier != null">multiplier = #{multiplier},</if>
             <if test="margin != null">margin = #{margin},</if>
-            <if test="stopLoss != null">stop_loss = #{stopLoss},</if>
-            <if test="stopProfit != null">stop_profit = #{stopProfit},</if>
             <if test="sheetNum != null">sheet_num = #{sheetNum},</if>
             <if test="tradeDirect != null">trade_direct = #{tradeDirect},</if>
             <if test="tradePrice != null">trade_price = #{tradePrice},</if>
-            <if test="tradeAmount != null">trade_amount = #{tradeAmount},</if>
-            <if test="deliveryPrice != null">delivery_price = #{deliveryPrice},</if>
-            <if test="deliveryAmount != null">delivery_amount = #{deliveryAmount},</if>
+            <if test="stopProfit != null">stop_profit = #{stopProfit},</if>
+            <if test="stopLoss != null">stop_loss = #{stopLoss},</if>
             <if test="feeAmount != null">fee_amount = #{feeAmount},</if>
-            <if test="income != null">income = #{income},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="deliveryTime != null">delivery_time = #{deliveryTime},</if>
+            <if test="completedTime != null">completed_time = #{completedTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteTradeOrderById" parameterType="Long">
-        delete from trade_order where id = #{id}
+    <delete id="deleteEntrustOrderById" parameterType="Long">
+        delete from entrust_order where id = #{id}
     </delete>
 
-    <delete id="deleteTradeOrderByIds" parameterType="String">
-        delete from trade_order where id in
+    <delete id="deleteEntrustOrderByIds" parameterType="String">
+        delete from entrust_order where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

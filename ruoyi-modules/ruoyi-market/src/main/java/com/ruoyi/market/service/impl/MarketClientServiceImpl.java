@@ -153,8 +153,9 @@ public class MarketClientServiceImpl implements IMarketClientService {
         BigDecimal exchangeAmount = req.getExchangePrice().multiply(req.getSheetNum()).multiply(productConfig.getEachSheetNum());
         log.info("购买总价值为:{}", exchangeAmount);
         ExchangeOrderCalculateVo exchangeOrderCalculateVo = new ExchangeOrderCalculateVo();
+        exchangeOrderCalculateVo.setExchangeAmount(exchangeAmount);
         exchangeOrderCalculateVo.setFeeAmount(exchangeAmount.multiply(productConfig.getFeeRate()).setScale(productConfig.getPriceUnit(), RoundingMode.HALF_UP));
-        exchangeOrderCalculateVo.setMargin(exchangeAmount.divide(req.getMultiplier()).setScale(productConfig.getPriceUnit(), RoundingMode.HALF_UP));
+        exchangeOrderCalculateVo.setMargin(exchangeAmount.divide(req.getMultiplier(), productConfig.getPriceUnit(), RoundingMode.HALF_UP));
         ClientUserWallet clientUserWalletReq = new ClientUserWallet();
         clientUserWalletReq.setUserId(SecurityContextHolder.getUserId());
         R<ClientUserWallet> response = remoteClientWalletService.getUserWallet(clientUserWalletReq);

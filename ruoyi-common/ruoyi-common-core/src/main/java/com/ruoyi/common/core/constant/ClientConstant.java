@@ -24,4 +24,10 @@ public class ClientConstant {
 
     public static final String REDUCE = "-";
 
+    public static final Long ENTRUST_PENDING = 0L;
+
+    public static final Long ENTRUST_SUCCESS = 1L;
+
+    public static final Long ENTRUST_CANCLE = 2L;
+
 }

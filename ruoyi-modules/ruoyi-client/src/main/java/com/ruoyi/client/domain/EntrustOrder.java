@@ -9,12 +9,12 @@ import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
- * 交易订单对象 trade_order
+ * 委托订单对象 entrust_order
  *
  * @author ruoyi
  * @date 2023-10-07
  */
-public class TradeOrder extends BaseEntity
+public class EntrustOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -45,14 +45,6 @@ public class TradeOrder extends BaseEntity
     @Excel(name = "保证金")
     private BigDecimal margin;
 
-    /** 止损点 */
-    @Excel(name = "止损点")
-    private BigDecimal stopLoss;
-
-    /** 止盈点 */
-    @Excel(name = "止盈点")
-    private BigDecimal stopProfit;
-
     /** 张数 */
     @Excel(name = "张数")
     private BigDecimal sheetNum;
@@ -61,38 +53,30 @@ public class TradeOrder extends BaseEntity
     @Excel(name = "交易方向")
     private String tradeDirect;
 
-    /** 买入价格 */
-    @Excel(name = "买入价格")
+    /** 交易价格 */
+    @Excel(name = "交易价格")
     private BigDecimal tradePrice;
 
-    /** 交易金额 */
-    @Excel(name = "交易金额")
-    private BigDecimal tradeAmount;
+    /** 止盈点 */
+    @Excel(name = "止盈点")
+    private BigDecimal stopProfit;
 
-    /** 卖出价格 */
-    @Excel(name = "卖出价格")
-    private BigDecimal deliveryPrice;
-
-    /** 交割金额 */
-    @Excel(name = "交割金额")
-    private BigDecimal deliveryAmount;
+    /** 止损点 */
+    @Excel(name = "止损点")
+    private BigDecimal stopLoss;
 
     /** 手续费 */
     @Excel(name = "手续费")
     private BigDecimal feeAmount;
 
-    /** 收益 */
-    @Excel(name = "收益")
-    private BigDecimal income;
-
-    /** 状态(已成交/已交割/强制平仓) */
-    @Excel(name = "状态(已成交/已交割/强制平仓)")
+    /** 状态(委托中/已成交，已取消) */
+    @Excel(name = "状态(委托中/已成交，已取消)")
     private Long status;
 
-    /** 交割时间 */
+    /** 完成时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "交割时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date deliveryTime;
+    @Excel(name = "完成时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date completedTime;
 
     public void setId(Long id)
     {
@@ -157,24 +141,6 @@ public class TradeOrder extends BaseEntity
     {
         return margin;
     }
-    public void setStopLoss(BigDecimal stopLoss)
-    {
-        this.stopLoss = stopLoss;
-    }
-
-    public BigDecimal getStopLoss()
-    {
-        return stopLoss;
-    }
-    public void setStopProfit(BigDecimal stopProfit)
-    {
-        this.stopProfit = stopProfit;
-    }
-
-    public BigDecimal getStopProfit()
-    {
-        return stopProfit;
-    }
     public void setSheetNum(BigDecimal sheetNum)
     {
         this.sheetNum = sheetNum;
@@ -202,32 +168,23 @@ public class TradeOrder extends BaseEntity
     {
         return tradePrice;
     }
-    public void setTradeAmount(BigDecimal tradeAmount)
+    public void setStopProfit(BigDecimal stopProfit)
     {
-        this.tradeAmount = tradeAmount;
+        this.stopProfit = stopProfit;
     }
 
-    public BigDecimal getTradeAmount()
+    public BigDecimal getStopProfit()
     {
-        return tradeAmount;
+        return stopProfit;
     }
-    public void setDeliveryPrice(BigDecimal deliveryPrice)
+    public void setStopLoss(BigDecimal stopLoss)
     {
-        this.deliveryPrice = deliveryPrice;
-    }
-
-    public BigDecimal getDeliveryPrice()
-    {
-        return deliveryPrice;
-    }
-    public void setDeliveryAmount(BigDecimal deliveryAmount)
-    {
-        this.deliveryAmount = deliveryAmount;
+        this.stopLoss = stopLoss;
     }
 
-    public BigDecimal getDeliveryAmount()
+    public BigDecimal getStopLoss()
     {
-        return deliveryAmount;
+        return stopLoss;
     }
     public void setFeeAmount(BigDecimal feeAmount)
     {
@@ -238,15 +195,6 @@ public class TradeOrder extends BaseEntity
     {
         return feeAmount;
     }
-    public void setIncome(BigDecimal income)
-    {
-        this.income = income;
-    }
-
-    public BigDecimal getIncome()
-    {
-        return income;
-    }
     public void setStatus(Long status)
     {
         this.status = status;
@@ -256,14 +204,14 @@ public class TradeOrder extends BaseEntity
     {
         return status;
     }
-    public void setDeliveryTime(Date deliveryTime)
+    public void setCompletedTime(Date completedTime)
     {
-        this.deliveryTime = deliveryTime;
+        this.completedTime = completedTime;
     }
 
-    public Date getDeliveryTime()
+    public Date getCompletedTime()
     {
-        return deliveryTime;
+        return completedTime;
     }
 
     @Override
@@ -276,20 +224,16 @@ public class TradeOrder extends BaseEntity
                 .append("productCode", getProductCode())
                 .append("multiplier", getMultiplier())
                 .append("margin", getMargin())
-                .append("stopLoss", getStopLoss())
-                .append("stopProfit", getStopProfit())
                 .append("sheetNum", getSheetNum())
                 .append("tradeDirect", getTradeDirect())
                 .append("tradePrice", getTradePrice())
-                .append("tradeAmount", getTradeAmount())
-                .append("deliveryPrice", getDeliveryPrice())
-                .append("deliveryAmount", getDeliveryAmount())
+                .append("stopProfit", getStopProfit())
+                .append("stopLoss", getStopLoss())
                 .append("feeAmount", getFeeAmount())
-                .append("income", getIncome())
                 .append("status", getStatus())
                 .append("createTime", getCreateTime())
                 .append("createBy", getCreateBy())
-                .append("deliveryTime", getDeliveryTime())
+                .append("completedTime", getCompletedTime())
                 .append("updateTime", getUpdateTime())
                 .append("updateBy", getUpdateBy())
                 .toString();
