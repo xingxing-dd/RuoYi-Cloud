@@ -6,17 +6,22 @@ import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.ruoyi.market.crawler.core.model.ProductKLineCache;
 import com.ruoyi.market.crawler.core.model.ProductPriceCache;
+import com.ruoyi.market.domain.ProductInfo;
 import com.ruoyi.market.service.IProductInfoService;
-import com.ruoyi.market.websocket.MessageSender;
+import com.ruoyi.market.websocket.PriceFluctuationsMessageSender;
 import com.ruoyi.market.websocket.message.WsPriceMessage;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.ruoyi.common.core.constant.MarketConstant.PRODUCT_PRICE_INFO_KEY;
 
 @Component("price")
-public class PriceMessageSender implements MessageSender {
+public class DefaultPriceMessageSender implements PriceFluctuationsMessageSender {
 
     @Resource
     private RedisService redisService;
@@ -50,7 +55,19 @@ public class PriceMessageSender implements MessageSender {
         message.setRange(productPriceCache.getRange());
         if (session.getTopic().equals(productCode)) {
             session.getClient().sendEvent("message", message);
+        } else {
+            sendIfRegisterCategory(session, productCode, message);
+        }
+    }
+
+    private void sendIfRegisterCategory(SocketIOSession session, String productCode, WsPriceMessage message) {
+        List<ProductInfo> productInfos = productInfoService.selectProductInfoByCategory(session.getTopic());
+        if (CollectionUtils.isEmpty(productInfos)) {
             return;
+        }
+        boolean isRegister = productInfos.stream().map(ProductInfo::getProductCode).collect(Collectors.toSet()).contains(productCode);
+        if (isRegister) {
+            session.getClient().sendEvent("message", message);
         }
     }
 
