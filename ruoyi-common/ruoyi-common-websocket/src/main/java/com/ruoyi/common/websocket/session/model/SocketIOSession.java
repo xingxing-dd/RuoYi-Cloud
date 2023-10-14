@@ -27,6 +27,11 @@ public class SocketIOSession {
     private long survivalTime = 60000L;
 
     /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
      * 会话类型
      */
     private String type;

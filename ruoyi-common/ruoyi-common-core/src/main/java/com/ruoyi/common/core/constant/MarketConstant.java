@@ -32,4 +32,8 @@ public class MarketConstant {
 
     public static final String BUY = "buy";
 
+
+
+    public static final String WS_PRICE_MESSAGE_QUEUE = "price";
+
 }

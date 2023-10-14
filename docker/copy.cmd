@@ -1,44 +1,32 @@
-#!/bin/sh
+@echo off
 
-# 复制项目的文件到对应docker路径，便于一键生成镜像。
-usage() {
-	echo "Usage: sh copy.sh"
-	exit 1
-}
-
-
-# copy sql
-echo "begin copy sql "
-cp ../sql/ry_20230223.sql ./mysql/db
-cp ../sql/ry_config_20220929.sql ./mysql/db
-
-# copy html
 echo "begin copy html "
-cp -r ../ruoyi-ui/dist/** ./nginx/html/dist
+del /Q /S ".\nginx\html\dist\"
+copy "..\ruoyi-ui\dist" ".\nginx\html\dist\"
 
+echo "begin copy ruoyi-gateway"
+del /Q /S ".\ruoyi\gateway\jar\"
+copy "..\ruoyi-gateway\target\ruoyi-gateway.jar" ".\ruoyi\gateway\jar\"
 
-# copy jar
-echo "begin copy ruoyi-gateway "
-cp ../ruoyi-gateway/target/ruoyi-gateway.jar ./ruoyi/gateway/jar
 
 echo "begin copy ruoyi-auth "
-cp ../ruoyi-auth/target/ruoyi-auth.jar ./ruoyi/auth/jar
-
-echo "begin copy ruoyi-visual "
-cp ../ruoyi-visual/ruoyi-monitor/target/ruoyi-visual-monitor.jar  ./ruoyi/visual/monitor/jar
+del /Q /S ".\ruoyi\auth\jar\"
+copy "..\ruoyi-auth\target\ruoyi-auth.jar" ".\ruoyi\auth\jar\"
 
 echo "begin copy ruoyi-modules-system "
-cp ../ruoyi-modules/ruoyi-system/target/ruoyi-modules-system.jar ./ruoyi/modules/system/jar
+del /Q /S ".\ruoyi\modules\system\jar\"
+copy "..\ruoyi-modules\ruoyi-system\target\ruoyi-modules-system.jar" ".\ruoyi\modules\system\jar\"
 
 echo "begin copy ruoyi-modules-file "
-cp ../ruoyi-modules/ruoyi-file/target/ruoyi-modules-file.jar ./ruoyi/modules/file/jar
-
-echo "begin copy ruoyi-modules-job "
-cp ../ruoyi-modules/ruoyi-job/target/ruoyi-modules-job.jar ./ruoyi/modules/job/jar
+del /Q /S ".\ruoyi\modules\file\jar\"
+copy "..\ruoyi-modules\ruoyi-file\target\ruoyi-modules-file.jar" ".\ruoyi\modules\file\jar\"
 
 echo "begin copy ruoyi-modules-gen "
-cp ../ruoyi-modules/ruoyi-gen/target/ruoyi-modules-gen.jar ./ruoyi/modules/gen/jar
+del /Q /S ".\ruoyi\modules\gen\jar\"
+copy "..\ruoyi-modules\ruoyi-gen\target\ruoyi-modules-gen.jar" ".\ruoyi\modules\gen\jar\"
 
 echo "begin copy ruoyi-modules-client "
-cp ../ruoyi-modules/ruoyi-client/target/ruoyi-modules-client.jar ./ruoyi/modules/client/jar
+del /Q /S ".\ruoyi\modules\client\jar\"
+copy "..\ruoyi-modules\ruoyi-client\target\ruoyi-modules-client.jar" ".\ruoyi\modules\client\jar\"
+
 

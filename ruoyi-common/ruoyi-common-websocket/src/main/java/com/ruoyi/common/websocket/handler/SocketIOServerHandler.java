@@ -6,15 +6,18 @@ import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ruoyi.common.core.constant.TokenConstants;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.websocket.message.RegisterMessage;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.sun.nio.sctp.MessageInfo;
+import io.netty.handler.codec.base64.Base64Decoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.annotation.Resource;
+import java.util.Base64;
 import java.util.HashMap;
 
 @Slf4j
@@ -47,6 +50,10 @@ public class SocketIOServerHandler {
         socketIOSession.setTopic(message.getProduct());
         socketIOSession.setInterval(message.getInterval());
         socketIOSession.setHeartbeatTime(System.currentTimeMillis());
+        if (StringUtils.isNotEmpty(message.getToken())) {
+            String token = new String(Base64.getDecoder().decode(message.getToken()));
+            log.info("截取:{}", token.substring(token.lastIndexOf("{"), token.lastIndexOf("}")));
+        }
         socketIOClient.sendEvent("message", "ok");
     }
 

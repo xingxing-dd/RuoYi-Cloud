@@ -4,13 +4,17 @@ import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.ruoyi.market.crawler.core.helper.ProductPriceHelper;
 import com.ruoyi.market.domain.ProductInfo;
+import com.ruoyi.market.utils.SpringContextHolder;
+import com.ruoyi.market.websocket.PriceFluctuationsMessageSender;
 import com.ruoyi.market.websocket.WebSocketMessageSender;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.core.ApplicationContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +45,9 @@ public class ProductPriceCrawlerJob {
 
     @Resource
     private WebSocketMessageSender webSocketMessageSender;
+
+    @Resource
+    private SpringContextHolder springContextHolder;
 
     @Scheduled(fixedDelay = 5000)
     public void crawler() throws Exception {
@@ -100,7 +107,12 @@ public class ProductPriceCrawlerJob {
             return;
         }
         for (Map.Entry<String, SocketIOSession> entry: sessionPool.getSessions().entrySet()) {
-            webSocketMessageSender.send(entry.getValue(), productCode);
+            PriceFluctuationsMessageSender messageSender = springContextHolder.getBean(entry.getValue().getType(), PriceFluctuationsMessageSender.class);
+            log.info("获取到message sender:{}", messageSender);
+            if (messageSender == null) {
+                continue;
+            }
+            messageSender.send(entry.getValue(), productCode);
         }
     }
 
