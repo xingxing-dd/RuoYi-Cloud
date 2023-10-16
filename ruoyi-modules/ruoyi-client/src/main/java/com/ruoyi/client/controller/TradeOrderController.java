@@ -4,16 +4,10 @@ import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.biz.TradeTransactionService;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -36,6 +30,9 @@ public class TradeOrderController extends BaseController
 {
     @Autowired
     private ITradeOrderService tradeOrderService;
+
+    @Autowired
+    private TradeTransactionService tradeTransactionService;
 
     /**
      * 查询交易订单列表
@@ -114,6 +111,13 @@ public class TradeOrderController extends BaseController
     public AjaxResult orderList(@RequestBody TradeOrder tradeOrder) {
         tradeOrder.setUserId(SecurityContextHolder.getUserId());
         return AjaxResult.success(tradeOrderService.selectTradeOrderList(tradeOrder));
+    }
+
+    @PostMapping("/orderPriceChange")
+    public AjaxResult orderPriceChange(@RequestParam("productCode") String productCode) {
+        tradeTransactionService.tradeOrderPriceChange(productCode);
+        tradeTransactionService.entrustOrderPriceChange(productCode);
+        return AjaxResult.success();
     }
 
 }

@@ -18,7 +18,7 @@ public class RegisterMessage implements Serializable {
 
     private String token;
 
-    private String product;
+    private String topic;
 
     private String interval = "1m";
 

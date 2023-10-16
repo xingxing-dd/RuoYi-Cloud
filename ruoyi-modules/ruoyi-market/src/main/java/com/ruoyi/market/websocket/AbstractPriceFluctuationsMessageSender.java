@@ -30,7 +30,7 @@ public abstract class AbstractPriceFluctuationsMessageSender<T> implements Price
         if (productPriceCache == null) {
             return;
         }
-        session.getClient().sendEvent(getMessageType(), buildMessage(productPrice, productPriceCache));
+        sendMessage(session, productPrice, productPriceCache);
     }
 
     /**
@@ -48,11 +48,11 @@ public abstract class AbstractPriceFluctuationsMessageSender<T> implements Price
     }
 
     /**
-     * 构建消息
+     * 发送消息
+     * @param session
      * @param productPrice
+     * @param productPriceCache
      */
-    protected abstract T buildMessage(ProductKLineCache productPrice, ProductPriceCache productPriceCache);
-
-    protected abstract String getMessageType();
+    protected abstract void sendMessage(SocketIOSession session, ProductKLineCache productPrice, ProductPriceCache productPriceCache);
 
 }

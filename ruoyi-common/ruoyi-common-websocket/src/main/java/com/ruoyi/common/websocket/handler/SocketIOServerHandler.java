@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.ruoyi.common.core.constant.TokenConstants;
+import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.websocket.message.RegisterMessage;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
@@ -47,13 +48,15 @@ public class SocketIOServerHandler {
         if (socketIOSession == null) {
             return;
         }
-        socketIOSession.setTopic(message.getProduct());
+        if (StringUtils.isNotEmpty(message.getToken())) {
+            String userId = JwtUtils.getUserId(message.getToken());
+            log.info("token转换userId：{}", userId);
+            socketIOSession.setUserId(Long.valueOf(userId));
+        }
+        socketIOSession.setType(message.getType());
+        socketIOSession.setTopic(message.getTopic());
         socketIOSession.setInterval(message.getInterval());
         socketIOSession.setHeartbeatTime(System.currentTimeMillis());
-        if (StringUtils.isNotEmpty(message.getToken())) {
-            String token = new String(Base64.getDecoder().decode(message.getToken()));
-            log.info("截取:{}", token.substring(token.lastIndexOf("{"), token.lastIndexOf("}")));
-        }
         socketIOClient.sendEvent("message", "ok");
     }
 

@@ -39,7 +39,7 @@ public class DefaultPriceMessageSender extends AbstractPriceFluctuationsMessageS
     }
 
     @Override
-    protected WsPriceMessage buildMessage(ProductKLineCache productPrice, ProductPriceCache productPriceCache) {
+    protected void sendMessage(SocketIOSession session, ProductKLineCache productPrice, ProductPriceCache productPriceCache) {
         WsPriceMessage message = new WsPriceMessage();
         message.setProductCode(productPriceCache.getProductCode());
         message.setCurrentPrice(productPriceCache.getCurrentPrice());
@@ -48,11 +48,8 @@ public class DefaultPriceMessageSender extends AbstractPriceFluctuationsMessageS
         message.setClose(productPrice.getClose());
         message.setLow(productPrice.getLow());
         message.setHigh(productPrice.getHigh());
-        return message;
+        message.setRange(productPriceCache.getRange());
+        session.getClient().sendEvent(WS_PRICE_MESSAGE_QUEUE, message);
     }
 
-    @Override
-    protected String getMessageType() {
-        return WS_PRICE_MESSAGE_QUEUE;
-    }
 }

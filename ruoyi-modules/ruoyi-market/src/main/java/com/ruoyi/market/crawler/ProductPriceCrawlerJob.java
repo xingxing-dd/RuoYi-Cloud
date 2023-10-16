@@ -1,5 +1,6 @@
 package com.ruoyi.market.crawler;
 
+import com.ruoyi.client.RemoteClientOrderService;
 import com.ruoyi.common.websocket.session.SocketIOSessionPool;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.ruoyi.market.crawler.core.helper.ProductPriceHelper;
@@ -48,6 +49,9 @@ public class ProductPriceCrawlerJob {
 
     @Resource
     private SpringContextHolder springContextHolder;
+
+    @Resource
+    private RemoteClientOrderService remoteClientOrderService;
 
     @Scheduled(fixedDelay = 5000)
     public void crawler() throws Exception {
@@ -106,6 +110,7 @@ public class ProductPriceCrawlerJob {
         if (!hasPriceChange || sessionPool.sessionCount() <= 0) {
             return;
         }
+        remoteClientOrderService.orderPriceChange(productCode);
         for (Map.Entry<String, SocketIOSession> entry: sessionPool.getSessions().entrySet()) {
             PriceFluctuationsMessageSender messageSender = springContextHolder.getBean(entry.getValue().getType(), PriceFluctuationsMessageSender.class);
             log.info("获取到message sender:{}", messageSender);

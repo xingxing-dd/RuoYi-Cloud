@@ -35,5 +35,6 @@ public class MarketConstant {
 
 
     public static final String WS_PRICE_MESSAGE_QUEUE = "price";
+    public static final String WS_ORDER_MESSAGE_QUEUE = "order";
 
 }

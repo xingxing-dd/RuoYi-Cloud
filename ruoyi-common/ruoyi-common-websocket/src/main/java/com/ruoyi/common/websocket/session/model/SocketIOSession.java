@@ -46,6 +46,8 @@ public class SocketIOSession {
      */
     private String interval;
 
+
+
     /**
      * 会话
      */
