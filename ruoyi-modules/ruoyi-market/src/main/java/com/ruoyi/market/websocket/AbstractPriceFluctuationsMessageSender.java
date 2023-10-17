@@ -9,6 +9,7 @@ import com.ruoyi.market.crawler.core.model.ProductPriceCache;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.ruoyi.common.core.constant.MarketConstant.PRODUCT_PRICE_INFO_KEY;
+import static com.ruoyi.common.core.constant.MarketConstant.REGISTER_INTERVAL_KEY;
 
 public abstract class AbstractPriceFluctuationsMessageSender<T> implements PriceFluctuationsMessageSender {
 
@@ -17,10 +18,10 @@ public abstract class AbstractPriceFluctuationsMessageSender<T> implements Price
 
     @Override
     public void send(SocketIOSession session, String productCode) {
-        if (StringUtils.isBlank(session.getTopic()) || StringUtils.isBlank(session.getInterval()) || !filterMessage(session, productCode)) {
+        if (StringUtils.isBlank(session.getType()) || !filterMessage(session, productCode)) {
             return;
         }
-        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, session.getInterval());
+        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, session.getParam(REGISTER_INTERVAL_KEY));
         ProductKLineCache productPrice = redisService.getLastObject(productPriceKey, ProductKLineCache.class);
         if (productPrice == null) {
             return;

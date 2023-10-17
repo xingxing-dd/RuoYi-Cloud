@@ -1,4 +1,4 @@
-package com.ruoyi.market.websocket.message;
+package com.ruoyi.market.websocket.message.price;
 
 import lombok.Data;
 import lombok.ToString;

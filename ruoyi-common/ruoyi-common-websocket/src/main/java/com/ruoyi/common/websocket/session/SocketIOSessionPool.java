@@ -30,14 +30,6 @@ public class SocketIOSessionPool {
         return sessions;
     }
 
-    public void subscribe(String uuid, String topic) {
-        if (sessions.containsKey(uuid)) {
-            return;
-        }
-        //subscribe msg
-        sessions.get(uuid).setTopic(topic);
-    }
-
     public void closeSession(String uuid) {
         if (!sessions.containsKey(uuid)) {
             return;

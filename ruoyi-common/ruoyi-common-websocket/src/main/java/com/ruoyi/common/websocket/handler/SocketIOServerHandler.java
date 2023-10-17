@@ -54,8 +54,7 @@ public class SocketIOServerHandler {
             socketIOSession.setUserId(Long.valueOf(userId));
         }
         socketIOSession.setType(message.getType());
-        socketIOSession.setTopic(message.getTopic());
-        socketIOSession.setInterval(message.getInterval());
+        socketIOSession.setParams(message.getParams());
         socketIOSession.setHeartbeatTime(System.currentTimeMillis());
         socketIOClient.sendEvent("message", "ok");
     }

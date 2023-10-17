@@ -4,6 +4,8 @@ import com.corundumstudio.socketio.SocketIOClient;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @Builder
 public class SocketIOSession {
@@ -37,16 +39,9 @@ public class SocketIOSession {
     private String type;
 
     /**
-     * 会话主题
+     * 参数
      */
-    private String topic;
-
-    /**
-     * 时间间隔
-     */
-    private String interval;
-
-
+    private Map<String, Object> params;
 
     /**
      * 会话
@@ -58,7 +53,7 @@ public class SocketIOSession {
      */
     public void destroy() {
         this.heartbeatTime = -1;
-        this.topic = null;
+        this.type = null;
         if (this.client.isChannelOpen()) {
             this.client.disconnect();
         }
@@ -72,4 +67,10 @@ public class SocketIOSession {
         return System.currentTimeMillis() - this.heartbeatTime > this.survivalTime;
     }
 
+    public <T> T getParam(String key) {
+        if (params == null) {
+            return null;
+        }
+        return (T) params.get(key);
+    }
 }

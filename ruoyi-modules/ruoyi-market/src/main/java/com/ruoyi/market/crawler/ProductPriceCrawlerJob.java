@@ -7,15 +7,12 @@ import com.ruoyi.market.crawler.core.helper.ProductPriceHelper;
 import com.ruoyi.market.domain.ProductInfo;
 import com.ruoyi.market.utils.SpringContextHolder;
 import com.ruoyi.market.websocket.PriceFluctuationsMessageSender;
-import com.ruoyi.market.websocket.WebSocketMessageSender;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.core.ApplicationContext;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +42,6 @@ public class ProductPriceCrawlerJob {
     private ProductPriceHelper productPriceHelper;
 
     @Resource
-    private WebSocketMessageSender webSocketMessageSender;
-
-    @Resource
     private SpringContextHolder springContextHolder;
 
     @Resource
@@ -68,7 +62,7 @@ public class ProductPriceCrawlerJob {
         } catch (Throwable e) {
             log.error("浏览器崩溃，重新构建驱动", e);
             if (webDriver != null) {
-                webDriver.close();
+                webDriver.quit();
             }
             webDriver = null;
             createWebDriver();
@@ -113,7 +107,6 @@ public class ProductPriceCrawlerJob {
         remoteClientOrderService.orderPriceChange(productCode);
         for (Map.Entry<String, SocketIOSession> entry: sessionPool.getSessions().entrySet()) {
             PriceFluctuationsMessageSender messageSender = springContextHolder.getBean(entry.getValue().getType(), PriceFluctuationsMessageSender.class);
-            log.info("获取到message sender:{}", messageSender);
             if (messageSender == null) {
                 continue;
             }

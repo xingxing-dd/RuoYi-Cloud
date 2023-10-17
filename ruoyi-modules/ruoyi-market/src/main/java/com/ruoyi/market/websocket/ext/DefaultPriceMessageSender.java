@@ -7,7 +7,7 @@ import com.ruoyi.market.crawler.core.model.ProductPriceCache;
 import com.ruoyi.market.domain.ProductInfo;
 import com.ruoyi.market.service.IProductInfoService;
 import com.ruoyi.market.websocket.AbstractPriceFluctuationsMessageSender;
-import com.ruoyi.market.websocket.message.WsPriceMessage;
+import com.ruoyi.market.websocket.message.price.WsPriceMessage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ruoyi.common.core.constant.MarketConstant.WS_PRICE_MESSAGE_QUEUE;
+import static com.ruoyi.common.core.constant.MarketConstant.*;
 
 @Component("price")
 public class DefaultPriceMessageSender extends AbstractPriceFluctuationsMessageSender<WsPriceMessage> {
@@ -25,10 +25,10 @@ public class DefaultPriceMessageSender extends AbstractPriceFluctuationsMessageS
 
     @Override
     protected boolean filterMessage(SocketIOSession session, String productCode) {
-        if (StringUtils.equals(session.getTopic(), productCode)) {
+        if (StringUtils.equals(session.getParam(REGISTER_PRODUCT_KEY), productCode)) {
             return true;
         }
-        List<ProductInfo> productInfos = productInfoService.selectProductInfoByCategory(session.getTopic());
+        List<ProductInfo> productInfos = productInfoService.selectProductInfoByCategory(session.getParam(REGISTER_PRODUCT_KEY));
         if (CollectionUtils.isEmpty(productInfos)) {
             return false;
         }

@@ -41,7 +41,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         log.info("产品{}价格发生波动，开始检查订单", productCode);
         String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
         JSONObject price = redisService.getCacheObject(productPriceCacheKey);
-        log.info("获取到当前最新价格：{}", price);
         TradeOrder tradeOrder = new TradeOrder();
         tradeOrder.setProductCode(productCode);
         tradeOrder.setStatus(0L);
@@ -50,7 +49,7 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         if (CollectionUtils.isEmpty(tradeOrders)) {
             return;
         }
-        tradeOrders.forEach(order -> processTradeOrder(tradeOrder, price.getBigDecimal("currentPrice")));
+        tradeOrders.forEach(order -> processTradeOrder(order, price.getBigDecimal("currentPrice")));
     }
 
     /**
@@ -74,7 +73,7 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         }
         updateOrder.setUpdateBy("system");
         updateOrder.setUpdateTime(new Date());
-        tradeOrderService.updateTradeOrder(tradeOrder);
+        tradeOrderService.updateTradeOrder(updateOrder);
     }
 
     @Override
@@ -82,7 +81,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         log.info("产品{}价格发生波动，开始检查订单", productCode);
         String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
         JSONObject price = redisService.getCacheObject(productPriceCacheKey);
-        log.info("获取到当前最新价格：{}", price);
         EntrustOrder entrustOrder = new EntrustOrder();
         entrustOrder.setProductCode(productCode);
         entrustOrder.setStatus(0L);

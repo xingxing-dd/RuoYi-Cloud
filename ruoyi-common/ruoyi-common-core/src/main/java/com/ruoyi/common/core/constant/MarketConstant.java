@@ -37,4 +37,10 @@ public class MarketConstant {
     public static final String WS_PRICE_MESSAGE_QUEUE = "price";
     public static final String WS_ORDER_MESSAGE_QUEUE = "order";
 
+    public static final String REGISTER_INTERVAL_KEY = "interval";
+
+    public static final String REGISTER_PRODUCT_KEY = "product";
+
+    public static final String REGISTER_ORDER_STATUS_KEY = "status";
+
 }

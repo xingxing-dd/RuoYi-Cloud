@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @Data
 @ToString
@@ -18,9 +19,7 @@ public class RegisterMessage implements Serializable {
 
     private String token;
 
-    private String topic;
-
-    private String interval = "1m";
+    private Map<String, Object> params;
 
     @JsonCreator
     public static RegisterMessage create(String json) throws JsonProcessingException {
