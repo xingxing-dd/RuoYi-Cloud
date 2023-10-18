@@ -14,24 +14,14 @@ import static com.ruoyi.common.core.constant.MarketConstant.REGISTER_INTERVAL_KE
 public abstract class AbstractPriceFluctuationsMessageSender<T> implements PriceFluctuationsMessageSender {
 
     @Autowired
-    private RedisService redisService;
+    protected RedisService redisService;
 
     @Override
     public void send(SocketIOSession session, String productCode) {
         if (StringUtils.isBlank(session.getType()) || !filterMessage(session, productCode)) {
             return;
         }
-        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, session.getParam(REGISTER_INTERVAL_KEY));
-        ProductKLineCache productPrice = redisService.getLastObject(productPriceKey, ProductKLineCache.class);
-        if (productPrice == null) {
-            return;
-        }
-        String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
-        ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
-        if (productPriceCache == null) {
-            return;
-        }
-        sendMessage(session, productPrice, productPriceCache);
+        sendMessage(session, productCode);
     }
 
     /**
@@ -51,9 +41,7 @@ public abstract class AbstractPriceFluctuationsMessageSender<T> implements Price
     /**
      * 发送消息
      * @param session
-     * @param productPrice
-     * @param productPriceCache
      */
-    protected abstract void sendMessage(SocketIOSession session, ProductKLineCache productPrice, ProductPriceCache productPriceCache);
+    protected abstract void sendMessage(SocketIOSession session, String productCpde);
 
 }

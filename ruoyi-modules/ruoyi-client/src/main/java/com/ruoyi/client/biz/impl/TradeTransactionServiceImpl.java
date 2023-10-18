@@ -69,8 +69,21 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         if (updateOrder.getIncome().add(tradeOrder.getMargin()).compareTo(BigDecimal.ZERO) <= 0) {
             updateOrder.setIncome(BigDecimal.ZERO.subtract(tradeOrder.getTradeAmount()));
             updateOrder.setStatus(2L);
+            updateOrder.setDeliveryAmount(BigDecimal.ZERO);
+            updateOrder.setDeliveryPrice(currentPrice);
             updateOrder.setRemark("强制平仓");
+        } else if (tradeOrder.getStopLoss() != null && tradeOrder.getStopLoss().compareTo(BigDecimal.ZERO) > 0 && currentPrice.compareTo(tradeOrder.getStopLoss()) <= 0) {
+            updateOrder.setStatus(1L);
+            updateOrder.setDeliveryAmount(BigDecimal.ZERO);
+            updateOrder.setDeliveryPrice(tradeOrder.getStopLoss());
+            updateOrder.setRemark("止损平仓");
+        } else if (tradeOrder.getStopProfit() != null && tradeOrder.getStopProfit().compareTo(BigDecimal.ZERO) > 0 && currentPrice.compareTo(tradeOrder.getStopProfit()) >= 0) {
+            updateOrder.setStatus(1L);
+            updateOrder.setDeliveryAmount(BigDecimal.ZERO);
+            updateOrder.setDeliveryPrice(tradeOrder.getStopProfit());
+            updateOrder.setRemark("止盈平仓");
         }
+        updateOrder.setDeliveryTime(new Date());
         updateOrder.setUpdateBy("system");
         updateOrder.setUpdateTime(new Date());
         tradeOrderService.updateTradeOrder(updateOrder);
@@ -101,10 +114,10 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
     }
 
     protected void processIfBuy(EntrustOrder entrustOrder, BigDecimal currentPrice) {
-        if (entrustOrder.getTradePrice().compareTo(currentPrice) > 0) {
+        if (entrustOrder.getTradePrice().compareTo(currentPrice) < 0) {
             return;
         }
-        log.info("委托订单{}即将交割", entrustOrder.getOrderId());
+        log.info("委托买入订单{}即将交割", entrustOrder.getOrderId());
         EntrustOrder updateOrder = new EntrustOrder();
         updateOrder.setId(entrustOrder.getId());
         updateOrder.setStatus(1L);
@@ -115,10 +128,10 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
     }
 
     protected void processIfSell(EntrustOrder entrustOrder, BigDecimal currentPrice) {
-        if (entrustOrder.getTradePrice().compareTo(currentPrice) < 0) {
+        if (entrustOrder.getTradePrice().compareTo(currentPrice) > 0) {
             return;
         }
-        log.info("委托订单{}即将交割", entrustOrder.getOrderId());
+        log.info("委托卖出订单{}即将交割", entrustOrder.getOrderId());
         EntrustOrder updateOrder = new EntrustOrder();
         updateOrder.setId(entrustOrder.getId());
         updateOrder.setStatus(1L);
@@ -132,6 +145,7 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         TradeOrder tradeOrder = new TradeOrder();
         BeanUtils.copyProperties(entrustOrder, tradeOrder);
         tradeOrder.setIncome(BigDecimal.ZERO);
+        tradeOrder.setTradeAmount(tradeOrder.getTradePrice().multiply(tradeOrder.getSheetNum()).setScale(2, RoundingMode.HALF_UP));
         tradeOrder.setStatus(0L);
         tradeOrder.setCreateBy("system");
         tradeOrder.setCreateTime(new Date());

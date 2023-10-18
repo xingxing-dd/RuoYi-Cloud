@@ -1,10 +1,17 @@
 package com.ruoyi.client.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.client.controller.resp.EntrustOrderResp;
 import com.ruoyi.common.core.context.SecurityContextHolder;
+import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.redis.service.RedisService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +31,8 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 
+import static com.ruoyi.common.core.constant.MarketConstant.PRODUCT_PRICE_INFO_KEY;
+
 /**
  * 委托订单Controller
  * 
@@ -36,6 +45,9 @@ public class EntrustOrderController extends BaseController
 {
     @Autowired
     private IEntrustOrderService entrustOrderService;
+
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 查询委托订单列表
@@ -114,7 +126,22 @@ public class EntrustOrderController extends BaseController
     @PostMapping("/orderList")
     public AjaxResult orderList(@RequestBody EntrustOrder entrustOrder) {
         entrustOrder.setUserId(SecurityContextHolder.getUserId());
-        return AjaxResult.success(entrustOrderService.selectEntrustOrderList(entrustOrder));
+        List<EntrustOrder> entrustOrders = entrustOrderService.selectEntrustOrderList(entrustOrder);
+        if (CollectionUtils.isEmpty(entrustOrders)) {
+            return AjaxResult.success(new ArrayList<>());
+        }
+        List<EntrustOrderResp> entrustOrderResps = new ArrayList<>();
+        for (EntrustOrder order: entrustOrders) {
+            EntrustOrderResp entrustOrderResp = new EntrustOrderResp();
+            BeanUtils.copyProperties(order, entrustOrderResp);
+            String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, entrustOrderResp.getProductCode(), DateUtils.dateTime());
+            JSONObject price = redisService.getCacheObject(productPriceCacheKey);
+            if (price != null && price.containsKey("currentPrice")) {
+                entrustOrderResp.setCurrentPrice(price.getBigDecimal("currentPrice"));
+            }
+            entrustOrderResps.add(entrustOrderResp);
+        }
+        return AjaxResult.success(entrustOrderResps);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.market.websocket.ext;
 
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.websocket.session.model.SocketIOSession;
 import com.ruoyi.market.crawler.core.model.ProductKLineCache;
@@ -39,7 +40,17 @@ public class DefaultPriceMessageSender extends AbstractPriceFluctuationsMessageS
     }
 
     @Override
-    protected void sendMessage(SocketIOSession session, ProductKLineCache productPrice, ProductPriceCache productPriceCache) {
+    protected void sendMessage(SocketIOSession session, String productCode) {
+        String productPriceKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, session.getParam(REGISTER_INTERVAL_KEY));
+        ProductKLineCache productPrice = redisService.getLastObject(productPriceKey, ProductKLineCache.class);
+        if (productPrice == null) {
+            return;
+        }
+        String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
+        ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
+        if (productPriceCache == null) {
+            return;
+        }
         WsPriceMessage message = new WsPriceMessage();
         message.setProductCode(productPriceCache.getProductCode());
         message.setCurrentPrice(productPriceCache.getCurrentPrice());

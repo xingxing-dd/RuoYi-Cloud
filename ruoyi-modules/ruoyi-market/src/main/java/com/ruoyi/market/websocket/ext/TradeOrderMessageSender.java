@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.ruoyi.common.core.constant.MarketConstant.REGISTER_ORDER_STATUS_KEY;
-import static com.ruoyi.common.core.constant.MarketConstant.WS_ORDER_MESSAGE_QUEUE;
+import static com.ruoyi.common.core.constant.MarketConstant.*;
 
 @Slf4j
 @Component(WS_ORDER_MESSAGE_QUEUE)
@@ -45,7 +44,7 @@ public class TradeOrderMessageSender extends AbstractPriceFluctuationsMessageSen
     }
 
     @Override
-    protected void sendMessage(SocketIOSession session, ProductKLineCache productPrice, ProductPriceCache productPriceCache) {
+    protected void sendMessage(SocketIOSession session,String productCode) {
         TradeOrder tradeOrder = new TradeOrder();
         tradeOrder.setUserId(session.getUserId());
         tradeOrder.setStatus(Long.valueOf(session.getParam(REGISTER_ORDER_STATUS_KEY)));
@@ -61,6 +60,11 @@ public class TradeOrderMessageSender extends AbstractPriceFluctuationsMessageSen
         BigDecimal totalMargin = BigDecimal.ZERO;
         List<TradeOrderDetail> tradeOrderDetails = new ArrayList<>();
         for (TradeOrder order: tradeOrders) {
+            String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
+            ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
+            if (productPriceCache == null) {
+                continue;
+            }
             TradeOrderDetail tradeOrderDetail = getTradeOrderDetail(productPriceCache, order);
             totalIncome = totalIncome.add(order.getIncome());
             totalMargin =  totalMargin.add(order.getMargin());
