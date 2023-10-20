@@ -4,14 +4,17 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.client.biz.TradeTransactionService;
 import com.ruoyi.client.domain.EntrustOrder;
 import com.ruoyi.client.domain.TradeOrder;
+import com.ruoyi.client.service.IClientUserWalletService;
 import com.ruoyi.client.service.IEntrustOrderService;
 import com.ruoyi.client.service.ITradeOrderService;
+import com.ruoyi.common.core.constant.ClientConstant;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.common.redis.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,8 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
     private final ITradeOrderService tradeOrderService;
 
     private final IEntrustOrderService entrustOrderService;
+
+    private final IClientUserWalletService clientUserWalletService;
 
     @Override
     public void tradeOrderPriceChange(String productCode) {
@@ -61,6 +66,7 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
     protected void processTradeOrder(TradeOrder tradeOrder, BigDecimal currentPrice) {
         TradeOrder updateOrder = new TradeOrder();
         updateOrder.setId(tradeOrder.getId());
+        updateOrder.setUserId(tradeOrder.getUserId());
         if (StringUtils.equals(BUY, tradeOrder.getTradeDirect())) {
             updateOrder.setIncome(currentPrice.subtract(tradeOrder.getTradePrice()).multiply(tradeOrder.getSheetNum()).setScale(6, RoundingMode.HALF_UP));
         } else {
@@ -83,10 +89,27 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
             updateOrder.setDeliveryPrice(tradeOrder.getStopProfit());
             updateOrder.setRemark("止盈平仓");
         }
+        if (tradeOrder.getStatus() != null && tradeOrder.getStatus() != 0L) {
+            tradeOrderDelivery(updateOrder);
+        }
         updateOrder.setDeliveryTime(new Date());
         updateOrder.setUpdateBy("system");
         updateOrder.setUpdateTime(new Date());
         tradeOrderService.updateTradeOrder(updateOrder);
+    }
+
+    private void tradeOrderDelivery(TradeOrder tradeOrder) {
+        if (tradeOrder.getIncome() == null || tradeOrder.getIncome().compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+        clientUserWalletService.balanceChange(
+                tradeOrder.getUserId(),
+                "system",
+                tradeOrder.getId(),
+                "USD",
+                tradeOrder.getIncome(),
+                ClientConstant.INCREASE
+        );
     }
 
     @Override

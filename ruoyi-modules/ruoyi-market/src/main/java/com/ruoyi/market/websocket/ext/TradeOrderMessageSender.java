@@ -60,7 +60,7 @@ public class TradeOrderMessageSender extends AbstractPriceFluctuationsMessageSen
         BigDecimal totalMargin = BigDecimal.ZERO;
         List<TradeOrderDetail> tradeOrderDetails = new ArrayList<>();
         for (TradeOrder order: tradeOrders) {
-            String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
+            String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, order.getProductCode(), DateUtils.dateTime());
             ProductPriceCache productPriceCache = redisService.getCacheObject(productPriceCacheKey);
             if (productPriceCache == null) {
                 continue;
