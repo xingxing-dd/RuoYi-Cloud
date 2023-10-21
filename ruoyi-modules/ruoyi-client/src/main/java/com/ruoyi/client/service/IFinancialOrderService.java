@@ -1,6 +1,8 @@
 package com.ruoyi.client.service;
 
 import java.util.List;
+
+import com.ruoyi.client.controller.resp.FinancialOrderResp;
 import com.ruoyi.client.domain.FinancialOrder;
 
 /**
@@ -58,4 +60,10 @@ public interface IFinancialOrderService
      * @return 结果
      */
     public int deleteFinancialOrderById(Long id);
+
+    /**
+     * 查询当前用户的
+     * @return
+     */
+    public FinancialOrderResp queryFinancialOrder();
 }

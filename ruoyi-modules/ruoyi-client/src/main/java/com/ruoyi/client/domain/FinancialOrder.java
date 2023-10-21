@@ -10,7 +10,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 余额宝订单对象 financial_order
- * 
+ *
  * @author ruoyi
  * @date 2023-10-20
  */
@@ -41,6 +41,14 @@ public class FinancialOrder extends BaseEntity
     @Excel(name = "年化利率")
     private BigDecimal interestRate;
 
+    /** 昨日收益 */
+    @Excel(name = "昨日收益")
+    private BigDecimal yesterdadyIncome;
+
+    /** 总收益 */
+    @Excel(name = "总收益")
+    private BigDecimal totalIncome;
+
     /** 扩展字段 */
     @Excel(name = "扩展字段")
     private String ext;
@@ -59,93 +67,111 @@ public class FinancialOrder extends BaseEntity
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateAt;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }
-    public void setUserName(String userName) 
+    public void setUserName(String userName)
     {
         this.userName = userName;
     }
 
-    public String getUserName() 
+    public String getUserName()
     {
         return userName;
     }
-    public void setProductCode(String productCode) 
+    public void setProductCode(String productCode)
     {
         this.productCode = productCode;
     }
 
-    public String getProductCode() 
+    public String getProductCode()
     {
         return productCode;
     }
-    public void setAmount(BigDecimal amount) 
+    public void setAmount(BigDecimal amount)
     {
         this.amount = amount;
     }
 
-    public BigDecimal getAmount() 
+    public BigDecimal getAmount()
     {
         return amount;
     }
-    public void setInterestRate(BigDecimal interestRate) 
+    public void setInterestRate(BigDecimal interestRate)
     {
         this.interestRate = interestRate;
     }
 
-    public BigDecimal getInterestRate() 
+    public BigDecimal getInterestRate()
     {
         return interestRate;
     }
-    public void setExt(String ext) 
+    public void setYesterdadyIncome(BigDecimal yesterdadyIncome)
+    {
+        this.yesterdadyIncome = yesterdadyIncome;
+    }
+
+    public BigDecimal getYesterdadyIncome()
+    {
+        return yesterdadyIncome;
+    }
+    public void setTotalIncome(BigDecimal totalIncome)
+    {
+        this.totalIncome = totalIncome;
+    }
+
+    public BigDecimal getTotalIncome()
+    {
+        return totalIncome;
+    }
+    public void setExt(String ext)
     {
         this.ext = ext;
     }
 
-    public String getExt() 
+    public String getExt()
     {
         return ext;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Long status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Long getStatus()
     {
         return status;
     }
-    public void setCreateAt(Date createAt) 
+    public void setCreateAt(Date createAt)
     {
         this.createAt = createAt;
     }
 
-    public Date getCreateAt() 
+    public Date getCreateAt()
     {
         return createAt;
     }
-    public void setUpdateAt(Date updateAt) 
+    public void setUpdateAt(Date updateAt)
     {
         this.updateAt = updateAt;
     }
 
-    public Date getUpdateAt() 
+    public Date getUpdateAt()
     {
         return updateAt;
     }
@@ -153,19 +179,21 @@ public class FinancialOrder extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("userId", getUserId())
-            .append("userName", getUserName())
-            .append("productCode", getProductCode())
-            .append("amount", getAmount())
-            .append("interestRate", getInterestRate())
-            .append("remark", getRemark())
-            .append("ext", getExt())
-            .append("status", getStatus())
-            .append("createAt", getCreateAt())
-            .append("createBy", getCreateBy())
-            .append("updateAt", getUpdateAt())
-            .append("updateBy", getUpdateBy())
-            .toString();
+                .append("id", getId())
+                .append("userId", getUserId())
+                .append("userName", getUserName())
+                .append("productCode", getProductCode())
+                .append("amount", getAmount())
+                .append("interestRate", getInterestRate())
+                .append("yesterdadyIncome", getYesterdadyIncome())
+                .append("totalIncome", getTotalIncome())
+                .append("remark", getRemark())
+                .append("ext", getExt())
+                .append("status", getStatus())
+                .append("createAt", getCreateAt())
+                .append("createBy", getCreateBy())
+                .append("updateAt", getUpdateAt())
+                .append("updateBy", getUpdateBy())
+                .toString();
     }
 }

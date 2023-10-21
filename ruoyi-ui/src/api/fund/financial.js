@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询余额宝订单列表
-export function listOrder(query) {
+export function listFinancial(query) {
   return request({
-    url: '/financial/order/list',
+    url: '/fund/financial/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询余额宝订单详细
-export function getOrder(id) {
+export function getFinancial(id) {
   return request({
-    url: '/financial/order/' + id,
+    url: '/fund/financial/' + id,
     method: 'get'
   })
 }
 
 // 新增余额宝订单
-export function addOrder(data) {
+export function addFinancial(data) {
   return request({
-    url: '/financial/order',
+    url: '/fund/financial',
     method: 'post',
     data: data
   })
 }
 
 // 修改余额宝订单
-export function updateOrder(data) {
+export function updateFinancial(data) {
   return request({
-    url: '/financial/order',
+    url: '/fund/financial',
     method: 'put',
     data: data
   })
 }
 
 // 删除余额宝订单
-export function delOrder(id) {
+export function delFinancial(id) {
   return request({
-    url: '/financial/order/' + id,
+    url: '/fund/financial/' + id,
     method: 'delete'
   })
 }

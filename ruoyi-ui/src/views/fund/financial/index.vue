@@ -25,6 +25,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.trade_order_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -39,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['financial:order:add']"
+          v-hasPermi="['fund:financial:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -50,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['financial:order:edit']"
+          v-hasPermi="['fund:financial:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['financial:order:remove']"
+          v-hasPermi="['fund:financial:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,22 +81,28 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['financial:order:export']"
+          v-hasPermi="['fund:financial:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="financialList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="产品编号" align="center" prop="productCode" />
       <el-table-column label="金额" align="center" prop="amount" />
       <el-table-column label="年化利率" align="center" prop="interestRate" />
+      <el-table-column label="昨日收益" align="center" prop="yesterdadyIncome" />
+      <el-table-column label="总收益" align="center" prop="totalIncome" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="扩展字段" align="center" prop="ext" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.trade_order_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createAt" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createAt, '{y}-{m}-{d}') }}</span>
@@ -104,14 +120,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['financial:order:edit']"
+            v-hasPermi="['fund:financial:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['financial:order:remove']"
+            v-hasPermi="['fund:financial:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -143,11 +159,26 @@
         <el-form-item label="年化利率" prop="interestRate">
           <el-input v-model="form.interestRate" placeholder="请输入年化利率" />
         </el-form-item>
+        <el-form-item label="昨日收益" prop="yesterdadyIncome">
+          <el-input v-model="form.yesterdadyIncome" placeholder="请输入昨日收益" />
+        </el-form-item>
+        <el-form-item label="总收益" prop="totalIncome">
+          <el-input v-model="form.totalIncome" placeholder="请输入总收益" />
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="扩展字段" prop="ext">
           <el-input v-model="form.ext" placeholder="请输入扩展字段" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in dict.type.trade_order_status"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -159,10 +190,11 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/financial/order";
+import { listFinancial, getFinancial, delFinancial, addFinancial, updateFinancial } from "@/api/fund/financial";
 
 export default {
-  name: "Order",
+  name: "Financial",
+  dicts: ['trade_order_status'],
   data() {
     return {
       // 遮罩层
@@ -178,7 +210,7 @@ export default {
       // 总条数
       total: 0,
       // 余额宝订单表格数据
-      orderList: [],
+      financialList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -206,8 +238,8 @@ export default {
     /** 查询余额宝订单列表 */
     getList() {
       this.loading = true;
-      listOrder(this.queryParams).then(response => {
-        this.orderList = response.rows;
+      listFinancial(this.queryParams).then(response => {
+        this.financialList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -226,6 +258,8 @@ export default {
         productCode: null,
         amount: null,
         interestRate: null,
+        yesterdadyIncome: null,
+        totalIncome: null,
         remark: null,
         ext: null,
         status: null,
@@ -262,7 +296,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getOrder(id).then(response => {
+      getFinancial(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改余额宝订单";
@@ -273,13 +307,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateOrder(this.form).then(response => {
+            updateFinancial(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addOrder(this.form).then(response => {
+            addFinancial(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -292,7 +326,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除余额宝订单编号为"' + ids + '"的数据项？').then(function() {
-        return delOrder(ids);
+        return delFinancial(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -300,9 +334,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('financial/order/export', {
+      this.download('fund/financial/export', {
         ...this.queryParams
-      }, `order_${new Date().getTime()}.xlsx`)
+      }, `financial_${new Date().getTime()}.xlsx`)
     }
   }
 };

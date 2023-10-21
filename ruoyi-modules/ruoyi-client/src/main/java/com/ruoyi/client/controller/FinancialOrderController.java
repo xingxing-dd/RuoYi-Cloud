@@ -29,7 +29,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * @date 2023-10-20
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/financial")
 public class FinancialOrderController extends BaseController
 {
     @Autowired
@@ -38,7 +38,7 @@ public class FinancialOrderController extends BaseController
     /**
      * 查询余额宝订单列表
      */
-    @RequiresPermissions("financial:order:list")
+    @RequiresPermissions("client:financial:list")
     @GetMapping("/list")
     public TableDataInfo list(FinancialOrder financialOrder)
     {
@@ -50,7 +50,7 @@ public class FinancialOrderController extends BaseController
     /**
      * 导出余额宝订单列表
      */
-    @RequiresPermissions("financial:order:export")
+    @RequiresPermissions("client:financial:export")
     @Log(title = "余额宝订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, FinancialOrder financialOrder)
@@ -63,7 +63,7 @@ public class FinancialOrderController extends BaseController
     /**
      * 获取余额宝订单详细信息
      */
-    @RequiresPermissions("financial:order:query")
+    @RequiresPermissions("client:financial:query")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -73,7 +73,7 @@ public class FinancialOrderController extends BaseController
     /**
      * 新增余额宝订单
      */
-    @RequiresPermissions("financial:order:add")
+    @RequiresPermissions("client:financial:add")
     @Log(title = "余额宝订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FinancialOrder financialOrder)
@@ -84,7 +84,7 @@ public class FinancialOrderController extends BaseController
     /**
      * 修改余额宝订单
      */
-    @RequiresPermissions("financial:order:edit")
+    @RequiresPermissions("client:financial:edit")
     @Log(title = "余额宝订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FinancialOrder financialOrder)
@@ -95,11 +95,17 @@ public class FinancialOrderController extends BaseController
     /**
      * 删除余额宝订单
      */
-    @RequiresPermissions("financial:order:remove")
+    @RequiresPermissions("client:financial:remove")
     @Log(title = "余额宝订单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(financialOrderService.deleteFinancialOrderByIds(ids));
     }
+
+    @PostMapping("/order")
+    public AjaxResult queryFinancialOrder() {
+        return AjaxResult.success(financialOrderService.queryFinancialOrder());
+    }
+
 }

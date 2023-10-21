@@ -102,4 +102,10 @@ public class FinancialInfoController extends BaseController
     {
         return toAjax(financialInfoService.deleteFinancialInfoByIds(ids));
     }
+
+    @PostMapping("/queryProduct")
+    public AjaxResult queryProduct(@RequestBody FinancialInfo financialInfo) {
+        return AjaxResult.success(financialInfoService.selectFinancialInfoList(financialInfo));
+    }
+
 }
