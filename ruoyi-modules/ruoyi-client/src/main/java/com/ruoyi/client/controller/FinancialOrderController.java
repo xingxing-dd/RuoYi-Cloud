@@ -108,4 +108,28 @@ public class FinancialOrderController extends BaseController
         return AjaxResult.success(financialOrderService.queryFinancialOrder());
     }
 
+    @PostMapping("/buyIn")
+    public AjaxResult buyIn(@RequestBody FinancialOrder financialOrder) {
+        try {
+            financialOrderService.buyIn(financialOrder);
+        } catch (IllegalArgumentException e) {
+            return AjaxResult.error(e.getMessage());
+        } catch (Exception e) {
+            return AjaxResult.error("unknown error");
+        }
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/sellOut")
+    public AjaxResult sellOut(@RequestBody FinancialOrder financialOrder) {
+        try {
+            financialOrderService.sellOut(financialOrder);
+        } catch (IllegalArgumentException e) {
+            return AjaxResult.error(e.getMessage());
+        } catch (Exception e) {
+            return AjaxResult.error("unknown error");
+        }
+        return AjaxResult.success();
+    }
+
 }

@@ -17,23 +17,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="产品编号" prop="productCode">
+      <el-form-item label="日期" prop="incomeDate">
         <el-input
-          v-model="queryParams.productCode"
-          placeholder="请输入产品编号"
+          v-model="queryParams.incomeDate"
+          placeholder="请输入日期"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_data_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -49,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['fund:financial:add']"
+          v-hasPermi="['client:income:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['fund:financial:edit']"
+          v-hasPermi="['client:income:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['fund:financial:remove']"
+          v-hasPermi="['client:income:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,29 +71,23 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['fund:financial:export']"
+          v-hasPermi="['client:income:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="financialList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="incomeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键id" align="center" prop="id" />
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="产品编号" align="center" prop="productCode" />
-      <el-table-column label="金额" align="center" prop="amount" />
-      <el-table-column label="年化利率" align="center" prop="interestRate" />
-      <el-table-column label="昨日收益" align="center" prop="yesterdayIncome" />
-      <el-table-column label="总收益" align="center" prop="totalIncome" />
+      <el-table-column label="收益类型" align="center" prop="incomeType" />
+      <el-table-column label="收益" align="center" prop="income" />
+      <el-table-column label="日期" align="center" prop="incomeDate" />
+      <el-table-column label="备用字段" align="center" prop="ext" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="扩展字段" align="center" prop="ext" />
-      <el-table-column label="状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_data_status" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="创建时间" align="center" prop="createAt" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createAt, '{y}-{m}-{d}') }}</span>
@@ -121,19 +105,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['fund:financial:edit']"
+            v-hasPermi="['client:income:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['fund:financial:remove']"
+            v-hasPermi="['client:income:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -142,7 +126,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改余额宝订单对话框 -->
+    <!-- 添加或修改用户收益对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户id" prop="userId">
@@ -151,44 +135,17 @@
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="产品编号" prop="productCode">
-          <el-input v-model="form.productCode" placeholder="请输入产品编号" />
+        <el-form-item label="收益" prop="income">
+          <el-input v-model="form.income" placeholder="请输入收益" />
         </el-form-item>
-        <el-form-item label="金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入金额" />
+        <el-form-item label="日期" prop="incomeDate">
+          <el-input v-model="form.incomeDate" placeholder="请输入日期" />
         </el-form-item>
-        <el-form-item label="年化利率" prop="interestRate">
-          <el-input v-model="form.interestRate" placeholder="请输入年化利率" />
-        </el-form-item>
-        <el-form-item label="昨日收益" prop="yesterdayIncome">
-          <el-input v-model="form.yesterdayIncome" placeholder="请输入昨日收益" />
-        </el-form-item>
-        <el-form-item label="总收益" prop="totalIncome">
-          <el-input v-model="form.totalIncome" placeholder="请输入总收益" />
+        <el-form-item label="备用字段" prop="ext">
+          <el-input v-model="form.ext" placeholder="请输入备用字段" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="扩展字段" prop="ext">
-          <el-input v-model="form.ext" placeholder="请输入扩展字段" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择状态">
-            <el-option
-              v-for="dict in dict.type.sys_data_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createAt">
-          <el-date-picker clearable
-                          v-model="form.createAt"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择创建时间">
-          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,11 +157,10 @@
 </template>
 
 <script>
-import { listFinancial, getFinancial, delFinancial, addFinancial, updateFinancial } from "@/api/fund/financial";
+import { listIncome, getIncome, delIncome, addIncome, updateIncome } from "@/api/client/income";
 
 export default {
-  name: "Financial",
-  dicts: ['sys_data_status'],
+  name: "Income",
   data() {
     return {
       // 遮罩层
@@ -219,8 +175,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 余额宝订单表格数据
-      financialList: [],
+      // 用户收益表格数据
+      incomeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -231,7 +187,8 @@ export default {
         pageSize: 10,
         userId: null,
         userName: null,
-        productCode: null,
+        incomeType: null,
+        incomeDate: null,
         status: null,
       },
       // 表单参数
@@ -245,11 +202,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询余额宝订单列表 */
+    /** 查询用户收益列表 */
     getList() {
       this.loading = true;
-      listFinancial(this.queryParams).then(response => {
-        this.financialList = response.rows;
+      listIncome(this.queryParams).then(response => {
+        this.incomeList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -265,13 +222,11 @@ export default {
         id: null,
         userId: null,
         userName: null,
-        productCode: null,
-        amount: null,
-        interestRate: null,
-        yesterdayIncome: null,
-        totalIncome: null,
-        remark: null,
+        incomeType: null,
+        income: null,
+        incomeDate: null,
         ext: null,
+        remark: null,
         status: null,
         createAt: null,
         createBy: null,
@@ -300,16 +255,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加余额宝订单";
+      this.title = "添加用户收益";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getFinancial(id).then(response => {
+      getIncome(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改余额宝订单";
+        this.title = "修改用户收益";
       });
     },
     /** 提交按钮 */
@@ -317,13 +272,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateFinancial(this.form).then(response => {
+            updateIncome(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addFinancial(this.form).then(response => {
+            addIncome(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -335,8 +290,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除余额宝订单编号为"' + ids + '"的数据项？').then(function() {
-        return delFinancial(ids);
+      this.$modal.confirm('是否确认删除用户收益编号为"' + ids + '"的数据项？').then(function() {
+        return delIncome(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -344,9 +299,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('fund/financial/export', {
+      this.download('client/income/export', {
         ...this.queryParams
-      }, `financial_${new Date().getTime()}.xlsx`)
+      }, `income_${new Date().getTime()}.xlsx`)
     }
   }
 };

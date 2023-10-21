@@ -14,11 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="password"    column="password"    />
         <result property="status"    column="status"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="inviteCode"    column="invite_code"    />
         <result property="createBy"    column="create_by"    />
     </resultMap>
 
     <sql id="selectClientUserVo">
-        select user_id, user_name, nick_name, email, phonenumber, avatar, password, status, del_flag, create_by from client_user
+        select user_id, user_name, nick_name, email, phonenumber, avatar, password, status, invite_code, del_flag, create_by from client_user
     </sql>
 
     <select id="selectClientUserList" parameterType="com.ruoyi.client.domain.ClientUser" resultMap="ClientUserResult">
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertClientUser" parameterType="com.ruoyi.client.domain.ClientUser" useGeneratedKeys="true" keyProperty="userId">
         insert into client_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
             <if test="userName != null">user_name,</if>
             <if test="nickName != null">nick_name,</if>
             <if test="email != null">email,</if>
@@ -50,9 +52,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="password != null">password,</if>
             <if test="status != null">status,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="inviteCode != null">invite_code,</if>
             <if test="createBy != null">create_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="userName != null">#{userName},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="email != null">#{email},</if>
@@ -61,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="password != null">#{password},</if>
             <if test="status != null">#{status},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="inviteCode != null">#{inviteCode},</if>
             <if test="createBy != null">#{createBy},</if>
          </trim>
     </insert>
@@ -68,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateClientUser" parameterType="com.ruoyi.client.domain.ClientUser">
         update client_user
         <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="userName != null">user_name = #{userName},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="email != null">email = #{email},</if>
@@ -76,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="password != null">password = #{password},</if>
             <if test="status != null">status = #{status},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="inviteCode != null">#{inviteCode},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
         </trim>
         where user_id = #{userId}

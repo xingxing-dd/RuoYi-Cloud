@@ -12,7 +12,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 余额宝订单对象 financial_order
  *
  * @author ruoyi
- * @date 2023-10-20
+ * @date 2023-10-21
  */
 public class FinancialOrder extends BaseEntity
 {
@@ -43,7 +43,7 @@ public class FinancialOrder extends BaseEntity
 
     /** 昨日收益 */
     @Excel(name = "昨日收益")
-    private BigDecimal yesterdadyIncome;
+    private BigDecimal yesterdayIncome;
 
     /** 总收益 */
     @Excel(name = "总收益")
@@ -121,14 +121,14 @@ public class FinancialOrder extends BaseEntity
     {
         return interestRate;
     }
-    public void setYesterdadyIncome(BigDecimal yesterdadyIncome)
+    public void setYesterdayIncome(BigDecimal yesterdayIncome)
     {
-        this.yesterdadyIncome = yesterdadyIncome;
+        this.yesterdayIncome = yesterdayIncome;
     }
 
-    public BigDecimal getYesterdadyIncome()
+    public BigDecimal getYesterdayIncome()
     {
-        return yesterdadyIncome;
+        return yesterdayIncome;
     }
     public void setTotalIncome(BigDecimal totalIncome)
     {
@@ -185,7 +185,7 @@ public class FinancialOrder extends BaseEntity
                 .append("productCode", getProductCode())
                 .append("amount", getAmount())
                 .append("interestRate", getInterestRate())
-                .append("yesterdadyIncome", getYesterdadyIncome())
+                .append("yesterdayIncome", getYesterdayIncome())
                 .append("totalIncome", getTotalIncome())
                 .append("remark", getRemark())
                 .append("ext", getExt())

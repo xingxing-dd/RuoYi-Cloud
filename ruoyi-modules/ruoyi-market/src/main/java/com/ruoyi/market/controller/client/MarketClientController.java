@@ -8,6 +8,7 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.market.crawler.core.model.ProductKLineCache;
 import com.ruoyi.market.crawler.core.model.ProductPriceCache;
+import com.ruoyi.market.domain.FinancialInfo;
 import com.ruoyi.market.domain.ProductCategory;
 import com.ruoyi.market.domain.ProductInfo;
 import com.ruoyi.market.domain.req.ExchangeOrderCalculateReq;
@@ -15,6 +16,7 @@ import com.ruoyi.market.domain.req.KLineQueryReq;
 import com.ruoyi.market.domain.req.ProductQueryReq;
 import com.ruoyi.market.domain.vo.ProductInfoVo;
 import com.ruoyi.market.domain.vo.ProductPriceVo;
+import com.ruoyi.market.service.IFinancialInfoService;
 import com.ruoyi.market.service.IMarketClientService;
 import com.ruoyi.market.service.IProductCategoryService;
 import com.ruoyi.market.service.IProductInfoService;
@@ -35,6 +37,8 @@ import static com.ruoyi.common.core.constant.MarketConstant.VALID;
 public class MarketClientController {
 
     private final IMarketClientService marketClientService;
+
+    private final IFinancialInfoService financialInfoService;
 
     @PostMapping("/categories")
     public AjaxResult categories() {
@@ -85,6 +89,15 @@ public class MarketClientController {
     @PostMapping("/exchange/calculate")
     public AjaxResult calculate(@RequestBody ExchangeOrderCalculateReq req) {
         return AjaxResult.success(marketClientService.calculate(req));
+    }
+
+    @PostMapping("/financial/queryProduct")
+    public AjaxResult queryProduct(@RequestBody FinancialInfo financialInfo) {
+        List<FinancialInfo> financialInfos = financialInfoService.selectFinancialInfoList(financialInfo);
+        if (CollectionUtils.isEmpty(financialInfos)) {
+            return AjaxResult.success();
+        }
+        return AjaxResult.success(financialInfos.get(0));
     }
 
 }

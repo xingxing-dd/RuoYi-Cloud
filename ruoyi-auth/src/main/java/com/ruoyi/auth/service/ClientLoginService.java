@@ -60,7 +60,7 @@ public class ClientLoginService {
         return userInfo;
     }
 
-    public void register(String username, String password) {
+    public void register(String username, String password, String phonenumber, Long inviteCode) {
         if (StringUtils.isAnyBlank(username, password))
         {
             throw new ServiceException("username/password is not blank");
@@ -69,6 +69,8 @@ public class ClientLoginService {
         ClientUser clientUser = new ClientUser();
         clientUser.setUserName(username);
         clientUser.setNickName(username);
+        clientUser.setPhonenumber(phonenumber);
+        clientUser.setInviteCode(inviteCode);
         clientUser.setPassword(SecurityUtils.encryptPassword(password));
         R<Boolean> registerResult = remoteClientUserService.registerUserInfo(clientUser, SecurityConstants.INNER);
         if (R.FAIL == registerResult.getCode())

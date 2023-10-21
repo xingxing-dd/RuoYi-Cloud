@@ -108,6 +108,7 @@
         </template>
       </el-table-column>
       <el-table-column label="密码" align="center" prop="password" />
+      <el-table-column label="邀请码" align="center" prop="inviteCode" />
       <el-table-column label="账户状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.client_user_status" :value="scope.row.status"/>
@@ -134,7 +135,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

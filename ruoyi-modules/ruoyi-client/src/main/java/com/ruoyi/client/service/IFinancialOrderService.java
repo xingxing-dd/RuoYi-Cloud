@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.client.controller.resp.FinancialOrderResp;
 import com.ruoyi.client.domain.FinancialOrder;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 余额宝订单Service接口
@@ -66,4 +67,17 @@ public interface IFinancialOrderService
      * @return
      */
     public FinancialOrderResp queryFinancialOrder();
+
+    /**
+     * 买入
+     * @param financialOrder
+     */
+    public void  buyIn(FinancialOrder financialOrder);
+
+    /**
+     * 卖出
+     * @param financialOrder
+     */
+    public void  sellOut(FinancialOrder financialOrder);
+
 }

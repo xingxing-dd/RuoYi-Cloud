@@ -1,12 +1,16 @@
 package com.ruoyi.client.service.impl;
 
+import com.ruoyi.client.controller.resp.InviteRegisterResp;
 import com.ruoyi.client.domain.ClientUser;
 import com.ruoyi.client.mapper.ClientUserMapper;
 import com.ruoyi.client.service.IClientUserService;
+import com.ruoyi.client.utils.QrCodeUtils;
+import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.exception.base.BaseException;
 import com.ruoyi.common.core.utils.ExceptionUtil;
 import com.ruoyi.common.redis.service.RedisService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,6 +31,9 @@ public class ClientUserServiceImpl implements IClientUserService
 
     @Resource
     private RedisService redisService;
+
+    @Value("${website.register.url:http://xingxingdd.info/register?inviteCode=%s}")
+    private String registerUrl;
 
     /**
      * 查询账户信息
@@ -117,9 +124,10 @@ public class ClientUserServiceImpl implements IClientUserService
         if (userSequence == null) {
             userSequence = 1;
         }
+        redisService.setCacheObject("ruoyi-client:user:sequence", userSequence + 1);
         String userId = String.format("1%06d", userSequence);
         clientUser.setUserId(Long.valueOf(userId));
-        clientUser.setEmail(clientUser.getEmail());
+        clientUser.setEmail(clientUser.getUserName());
         clientUser.setStatus(0L);
         clientUser.setDelFlag(0L);
         clientUser.setCreateBy(clientUser.getUserName());
@@ -127,5 +135,14 @@ public class ClientUserServiceImpl implements IClientUserService
         clientUser.setCreateTime(new Date());
         clientUser.setUpdateTime(new Date());
         return clientUserMapper.insertClientUser(clientUser) == 1;
+    }
+
+    @Override
+    public InviteRegisterResp generateInviteUrl() {
+        String url = String.format(registerUrl, SecurityContextHolder.getUserId());
+        InviteRegisterResp inviteRegisterResp = new InviteRegisterResp();
+        inviteRegisterResp.setInviteUrl(url);
+        inviteRegisterResp.setInviteQrcode(QrCodeUtils.createCode(url));
+        return inviteRegisterResp;
     }
 }

@@ -11,7 +11,7 @@
         <result property="productCode"    column="product_code"    />
         <result property="amount"    column="amount"    />
         <result property="interestRate"    column="interest_rate"    />
-        <result property="yesterdadyIncome"    column="yesterdady_income"    />
+        <result property="yesterdayIncome"    column="yesterday_income"    />
         <result property="totalIncome"    column="total_income"    />
         <result property="remark"    column="remark"    />
         <result property="ext"    column="ext"    />
@@ -23,7 +23,7 @@
     </resultMap>
 
     <sql id="selectFinancialOrderVo">
-        select id, user_id, user_name, product_code, amount, interest_rate, yesterdady_income, total_income, remark, ext, status, create_at, create_by, update_at, update_by from financial_order
+        select id, user_id, user_name, product_code, amount, interest_rate, yesterday_income, total_income, remark, ext, status, create_at, create_by, update_at, update_by from financial_order
     </sql>
 
     <select id="selectFinancialOrderList" parameterType="com.ruoyi.client.domain.FinancialOrder" resultMap="FinancialOrderResult">
@@ -49,7 +49,7 @@
             <if test="productCode != null">product_code,</if>
             <if test="amount != null">amount,</if>
             <if test="interestRate != null">interest_rate,</if>
-            <if test="yesterdadyIncome != null">yesterdady_income,</if>
+            <if test="yesterdayIncome != null">yesterday_income,</if>
             <if test="totalIncome != null">total_income,</if>
             <if test="remark != null">remark,</if>
             <if test="ext != null">ext,</if>
@@ -65,7 +65,7 @@
             <if test="productCode != null">#{productCode},</if>
             <if test="amount != null">#{amount},</if>
             <if test="interestRate != null">#{interestRate},</if>
-            <if test="yesterdadyIncome != null">#{yesterdadyIncome},</if>
+            <if test="yesterdayIncome != null">#{yesterdayIncome},</if>
             <if test="totalIncome != null">#{totalIncome},</if>
             <if test="remark != null">#{remark},</if>
             <if test="ext != null">#{ext},</if>
@@ -85,7 +85,7 @@
             <if test="productCode != null">product_code = #{productCode},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="interestRate != null">interest_rate = #{interestRate},</if>
-            <if test="yesterdadyIncome != null">yesterdady_income = #{yesterdadyIncome},</if>
+            <if test="yesterdayIncome != null">yesterday_income = #{yesterdayIncome},</if>
             <if test="totalIncome != null">total_income = #{totalIncome},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="ext != null">ext = #{ext},</if>

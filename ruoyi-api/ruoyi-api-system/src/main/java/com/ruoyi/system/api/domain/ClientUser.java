@@ -49,6 +49,8 @@ public class ClientUser extends BaseEntity
     /** 删除标识 */
     private Long delFlag;
 
+    private Long inviteCode;
+
     public void setUserId(Long userId) 
     {
         this.userId = userId;
@@ -129,6 +131,14 @@ public class ClientUser extends BaseEntity
     public Long getDelFlag() 
     {
         return delFlag;
+    }
+
+    public Long getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(Long inviteCode) {
+        this.inviteCode = inviteCode;
     }
 
     @Override

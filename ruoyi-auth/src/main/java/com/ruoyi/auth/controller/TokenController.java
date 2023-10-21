@@ -84,7 +84,7 @@ public class TokenController
     {
         // 用户注册
         if (StringUtils.equals(from, "client")) {
-            clientLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+            clientLoginService.register(registerBody.getUsername(), registerBody.getPassword(), registerBody.getPhonenumber(), registerBody.getInviteCode());
         } else {
             sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
         }

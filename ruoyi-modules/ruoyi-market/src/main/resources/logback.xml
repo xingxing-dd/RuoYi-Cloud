@@ -13,18 +13,28 @@
     </appender>
 
     <!-- 系统日志输出 -->
-    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--<appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/info.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
+        &lt;!&ndash; 循环政策：基于时间创建日志文件 &ndash;&gt;
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
+            &lt;!&ndash; 日志文件名格式 &ndash;&gt;
             <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
+            &lt;!&ndash; 日志最大的历史 60天 &ndash;&gt;
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>${log.pattern}</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            &lt;!&ndash; 过滤的级别 &ndash;&gt;
+            <level>INFO</level>
+            &lt;!&ndash; 匹配时的操作：接收（记录） &ndash;&gt;
+            <onMatch>ACCEPT</onMatch>
+            &lt;!&ndash; 不匹配时的操作：拒绝（不记录） &ndash;&gt;
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>-->
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
             <level>INFO</level>
@@ -33,6 +43,15 @@
             <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.path}/info.log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <maxFileSize>20MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
     </appender>
 
     <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">

@@ -1,5 +1,6 @@
 package com.ruoyi.client.service;
 
+import com.ruoyi.client.controller.resp.InviteRegisterResp;
 import com.ruoyi.client.domain.ClientUser;
 
 import java.util.List;
@@ -68,4 +69,10 @@ public interface IClientUserService
      * @return
      */
     public boolean register(ClientUser clientUser);
+
+    /**
+     * 生成邀请数据
+     * @return
+     */
+    public InviteRegisterResp generateInviteUrl();
 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.ClientIncomeMapper">
+    
+    <resultMap type="com.ruoyi.client.domain.ClientIncome" id="ClientIncomeResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="incomeType"    column="income_type"    />
+        <result property="income"    column="income"    />
+        <result property="incomeDate"    column="income_date"    />
+        <result property="ext"    column="ext"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createAt"    column="create_at"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateAt"    column="update_at"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectClientIncomeVo">
+        select id, user_id, user_name, income_type, income, income_date, ext, remark, status, create_at, create_by, update_at, update_by from client_income
+    </sql>
+
+    <select id="selectClientIncomeList" parameterType="com.ruoyi.client.domain.ClientIncome" resultMap="ClientIncomeResult">
+        <include refid="selectClientIncomeVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="incomeType != null "> and income_type = #{incomeType}</if>
+            <if test="incomeDate != null  and incomeDate != ''"> and income_date = #{incomeDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectClientIncomeById" parameterType="Long" resultMap="ClientIncomeResult">
+        <include refid="selectClientIncomeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertClientIncome" parameterType="com.ruoyi.client.domain.ClientIncome" useGeneratedKeys="true" keyProperty="id">
+        insert into client_income
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="incomeType != null">income_type,</if>
+            <if test="income != null">income,</if>
+            <if test="incomeDate != null">income_date,</if>
+            <if test="ext != null">ext,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="createAt != null">create_at,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateAt != null">update_at,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="incomeType != null">#{incomeType},</if>
+            <if test="income != null">#{income},</if>
+            <if test="incomeDate != null">#{incomeDate},</if>
+            <if test="ext != null">#{ext},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createAt != null">#{createAt},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateAt != null">#{updateAt},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClientIncome" parameterType="com.ruoyi.client.domain.ClientIncome">
+        update client_income
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="incomeType != null">income_type = #{incomeType},</if>
+            <if test="income != null">income = #{income},</if>
+            <if test="incomeDate != null">income_date = #{incomeDate},</if>
+            <if test="ext != null">ext = #{ext},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createAt != null">create_at = #{createAt},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateAt != null">update_at = #{updateAt},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClientIncomeById" parameterType="Long">
+        delete from client_income where id = #{id}
+    </delete>
+
+    <delete id="deleteClientIncomeByIds" parameterType="String">
+        delete from client_income where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

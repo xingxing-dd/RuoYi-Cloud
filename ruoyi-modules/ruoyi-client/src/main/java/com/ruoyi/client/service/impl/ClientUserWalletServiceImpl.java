@@ -138,6 +138,9 @@ public class ClientUserWalletServiceImpl implements IClientUserWalletService
     public void balanceChange(Long userId, String operator, Long bizOrderId, String currency, BigDecimal amount, String direct) {
         ClientUserWallet clientUserWallet = getUserWallet(userId, currency);
         log.info("获取到用户钱包信息:{}", clientUserWallet);
+        if (ClientConstant.REDUCE.equals(direct) && clientUserWallet.getTotalAmount().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Balance not enough");
+        }
         clientUserWalletMapper.updateWalletBalanceById(clientUserWallet.getId(), amount, direct, operator);
         ClientUserWalletFlow clientUserWalletFlow = new ClientUserWalletFlow();
         clientUserWalletFlow.setWalletId(clientUserWallet.getId());

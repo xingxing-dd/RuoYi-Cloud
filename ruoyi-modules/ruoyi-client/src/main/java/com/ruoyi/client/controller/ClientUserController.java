@@ -10,7 +10,6 @@ import com.ruoyi.client.service.IClientUserWalletService;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.exception.base.BaseException;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.annotation.InnerAuth;
 import com.ruoyi.system.api.model.LoginUser;
@@ -172,6 +171,11 @@ public class ClientUserController extends BaseController
             return R.fail("Unknown exception");
         }
         return R.ok(true);
+    }
+
+    @PostMapping("/generateInviteUrl")
+    public AjaxResult generateInviteUrl() {
+        return AjaxResult.success(clientUserService.generateInviteUrl());
     }
 
 }
