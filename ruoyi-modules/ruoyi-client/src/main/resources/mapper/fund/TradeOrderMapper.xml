@@ -38,6 +38,7 @@
     <select id="selectTradeOrderList" parameterType="com.ruoyi.client.domain.TradeOrder" resultMap="TradeOrderResult">
         <include refid="selectTradeOrderVo"/>
         <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="productCode != null  and productCode != ''"> and product_code = #{productCode}</if>

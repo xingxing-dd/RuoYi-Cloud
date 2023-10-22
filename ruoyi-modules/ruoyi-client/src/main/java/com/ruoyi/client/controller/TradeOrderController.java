@@ -109,7 +109,9 @@ public class TradeOrderController extends BaseController
 
     @PostMapping("/orderList")
     public AjaxResult orderList(@RequestBody TradeOrder tradeOrder) {
-        tradeOrder.setUserId(SecurityContextHolder.getUserId());
+        if (tradeOrder.getUserId() == null) {
+            tradeOrder.setUserId(SecurityContextHolder.getUserId());
+        }
         return AjaxResult.success(tradeOrderService.selectTradeOrderList(tradeOrder));
     }
 
