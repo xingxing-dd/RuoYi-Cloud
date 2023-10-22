@@ -72,6 +72,7 @@ public class ClientLoginService {
         clientUser.setPhonenumber(phonenumber);
         clientUser.setInviteCode(inviteCode);
         clientUser.setPassword(SecurityUtils.encryptPassword(password));
+        logger.info("注册用户信息:{}", clientUser);
         R<Boolean> registerResult = remoteClientUserService.registerUserInfo(clientUser, SecurityConstants.INNER);
         if (R.FAIL == registerResult.getCode())
         {

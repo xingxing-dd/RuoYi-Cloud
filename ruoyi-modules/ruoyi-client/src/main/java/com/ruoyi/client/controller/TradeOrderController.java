@@ -120,4 +120,9 @@ public class TradeOrderController extends BaseController
         return AjaxResult.success();
     }
 
+    @PostMapping("/sellOut")
+    public AjaxResult sellOut(@RequestBody TradeOrder tradeOrder) {
+        return AjaxResult.success(tradeOrderService.sellOut(tradeOrder));
+    }
+
 }

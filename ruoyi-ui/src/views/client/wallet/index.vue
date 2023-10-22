@@ -89,8 +89,9 @@
 
     <el-table v-loading="loading" :data="walletList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
+<!--      <el-table-column label="主键" align="center" prop="id" />-->
       <el-table-column label="用户id" align="center" prop="userId" />
+      <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="总金额" align="center" prop="totalAmount" />
       <el-table-column label="币种" align="center" prop="currency" />
       <el-table-column label="状态" align="center" prop="status">

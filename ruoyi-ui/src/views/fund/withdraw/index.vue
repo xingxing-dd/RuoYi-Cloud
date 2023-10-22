@@ -97,7 +97,7 @@
 
     <el-table v-loading="loading" :data="withdrawList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+<!--      <el-table-column label="编号" align="center" prop="id" />-->
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="提现金额" align="center" prop="amount" />
@@ -129,7 +129,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

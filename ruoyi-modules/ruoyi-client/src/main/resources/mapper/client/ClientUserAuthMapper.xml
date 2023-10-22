@@ -26,7 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectClientUserAuthList" parameterType="com.ruoyi.client.domain.ClientUserAuth" resultMap="ClientUserAuthResult">
         <include refid="selectClientUserAuthVo"/>
-        <where>  
+        <where>
+            <if test="userId != null"> and user_id = #{userId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>

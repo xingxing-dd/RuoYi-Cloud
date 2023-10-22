@@ -99,7 +99,7 @@
 
     <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+<!--      <el-table-column label="编号" align="center" prop="id" />-->
       <el-table-column label="账户名" align="center" prop="accountName" />
       <el-table-column label="账号" align="center" prop="accountNo" />
       <el-table-column label="币种" align="center" prop="accountCurrency" />
@@ -271,6 +271,7 @@ export default {
     /** 查询充值帐号列表 */
     getList() {
       this.loading = true;
+      this.queryParams.accountUsage = "withdraw";
       listAccount(this.queryParams).then(response => {
         this.accountList = response.rows;
         this.total = response.total;

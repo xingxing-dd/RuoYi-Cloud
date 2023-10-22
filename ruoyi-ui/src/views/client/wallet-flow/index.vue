@@ -115,7 +115,7 @@
 
     <el-table v-loading="loading" :data="walletFlowList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
+<!--      <el-table-column label="主键id" align="center" prop="id" />-->
       <el-table-column label="钱包id" align="center" prop="walletId" />
       <el-table-column label="用户号" align="center" prop="userId" />
       <el-table-column label="订单号" align="center" prop="bizOrderId" />

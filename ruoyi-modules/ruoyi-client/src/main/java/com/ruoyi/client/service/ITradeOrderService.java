@@ -64,4 +64,11 @@ public interface ITradeOrderService
      * @param tradeOrder
      */
     public boolean submit(TradeOrder tradeOrder);
+
+    /**
+     * 平仓
+     * @param tradeOrder
+     * @return
+     */
+    public boolean sellOut(TradeOrder tradeOrder);
 }

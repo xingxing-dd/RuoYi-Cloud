@@ -28,6 +28,12 @@ public class ClientConstant {
 
     public static final Long ENTRUST_SUCCESS = 1L;
 
-    public static final Long ENTRUST_CANCLE = 2L;
+    public static final Long ENTRUST_CANCEL = 2L;
+
+    public static final Long POSITION_PENDING = 0L;
+
+    public static final Long POSITION_CLOSED = 1L;
+
+    public static final Long LIQUIDATION = 2L;
 
 }

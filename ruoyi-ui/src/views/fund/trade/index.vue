@@ -97,7 +97,7 @@
 
     <el-table v-loading="loading" :data="tradeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="订单编号" align="center" prop="id" />
+<!--      <el-table-column label="订单编号" align="center" prop="id" />-->
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />

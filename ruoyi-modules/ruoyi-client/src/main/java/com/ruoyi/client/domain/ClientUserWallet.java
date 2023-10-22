@@ -24,6 +24,9 @@ public class ClientUserWallet extends BaseEntity
     @Excel(name = "用户id")
     private Long userId;
 
+    @Excel(name = "用户名")
+    private String userName;
+
     /** 总金额 */
     @Excel(name = "总金额")
     private BigDecimal totalAmount;
@@ -92,6 +95,14 @@ public class ClientUserWallet extends BaseEntity
     public Long getDelFlag() 
     {
         return delFlag;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override

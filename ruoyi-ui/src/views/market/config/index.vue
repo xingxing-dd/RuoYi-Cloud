@@ -63,7 +63,7 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
+<!--      <el-table-column label="主键id" align="center" prop="id" />-->
       <el-table-column label="产品编码" align="center" prop="productCode" />
       <el-table-column label="交易费率" align="center" prop="feeRate" />
       <el-table-column label="点差率" align="center" prop="spreadRate" />

@@ -1,5 +1,7 @@
 package com.ruoyi.client.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import com.ruoyi.common.core.constant.ClientConstant;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.uuid.UUID;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.market.api.RemoteProductInfoService;
@@ -25,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static com.ruoyi.common.core.constant.MarketConstant.PRODUCT_PRICE_INFO_KEY;
+import static com.ruoyi.common.core.constant.MarketConstant.*;
 
 /**
  * 交易订单Service业务层处理
@@ -148,6 +151,40 @@ public class TradeOrderServiceImpl implements ITradeOrderService
         tradeOrder.setMargin(response.getData().getMargin());
         tradeOrder.setFeeAmount(response.getData().getFeeAmount());
         generateOrder(tradeOrder);
+        return true;
+    }
+
+    @Override
+    public boolean sellOut(TradeOrder tradeOrder) {
+        TradeOrder existOrder = tradeOrderMapper.selectTradeOrderById(tradeOrder.getId());
+        if (existOrder == null) {
+            throw new IllegalArgumentException("Order is not exist");
+        }
+        if (!ClientConstant.POSITION_PENDING.equals(existOrder.getStatus())) {
+            throw new IllegalArgumentException("Order status is not correct");
+        }
+        String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, existOrder.getProductCode(), DateUtils.dateTime());
+        JSONObject price = redisService.getCacheObject(productPriceCacheKey);
+        BigDecimal currentPrice = price.getBigDecimal("currentPrice");
+        TradeOrder updateOrder = new TradeOrder();
+        if (StringUtils.equals(BUY, tradeOrder.getTradeDirect())) {
+            updateOrder.setIncome(currentPrice.subtract(existOrder.getTradePrice()).multiply(existOrder.getSheetNum()).setScale(6, RoundingMode.HALF_UP));
+        } else {
+            updateOrder.setIncome(existOrder.getTradePrice().subtract(currentPrice).multiply(existOrder.getSheetNum()).setScale(6, RoundingMode.HALF_UP));
+        }
+        updateOrder.setStatus(1L);
+        updateOrder.setDeliveryAmount(currentPrice.multiply(existOrder.getSheetNum()).setScale(6, RoundingMode.HALF_UP));
+        updateOrder.setDeliveryPrice(currentPrice);
+        updateOrder.setRemark("止盈平仓");
+        updateTradeOrder(updateOrder);
+        clientUserWalletService.balanceChange(
+                existOrder.getUserId(),
+                "system",
+                updateOrder.getId(),
+                "USD",
+                updateOrder.getIncome(),
+                ClientConstant.INCREASE
+        );
         return true;
     }
 

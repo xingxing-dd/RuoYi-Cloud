@@ -4,6 +4,8 @@ import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.client.domain.ClientUser;
+import com.ruoyi.client.service.IClientUserService;
 import com.ruoyi.common.core.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +39,9 @@ public class ClientUserWalletController extends BaseController
     @Autowired
     private IClientUserWalletService clientUserWalletService;
 
+    @Autowired
+    private IClientUserService clientUserService;
+
     /**
      * 查询用户资产列表
      */
@@ -46,6 +51,13 @@ public class ClientUserWalletController extends BaseController
     {
         startPage();
         List<ClientUserWallet> list = clientUserWalletService.selectClientUserWalletList(clientUserWallet);
+        for (ClientUserWallet wallet: list) {
+            ClientUser clientUser = clientUserService.selectClientUserByUserId(wallet.getUserId());
+            if (clientUser == null) {
+                continue;
+            }
+            wallet.setUserName(clientUser.getUserName());
+        }
         return getDataTable(list);
     }
 

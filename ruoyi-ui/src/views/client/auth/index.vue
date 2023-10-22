@@ -20,7 +20,7 @@
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
-            v-for="dict in dict.type.client_data_status"
+            v-for="dict in dict.type.client_auth_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -83,13 +83,21 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="证件正面" align="center" prop="credentialFront" />
-      <el-table-column label="证件反面" align="center" prop="credentialBackground" />
+      <el-table-column label="证件正面" align="center" prop="credentialFront" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.credentialFront" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="证件反面" align="center" prop="credentialBackground" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.credentialBackground" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="证件号" align="center" prop="credentialNo" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.client_data_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.client_auth_status" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -114,7 +122,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -133,10 +141,10 @@
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item label="证件正面" prop="credentialFront">
-          <el-input v-model="form.credentialFront" placeholder="请输入证件正面" />
+          <image-upload v-model="form.credentialFront"/>
         </el-form-item>
         <el-form-item label="证件反面" prop="credentialBackground">
-          <el-input v-model="form.credentialBackground" placeholder="请输入证件反面" />
+          <image-upload v-model="form.credentialBackground"/>
         </el-form-item>
         <el-form-item label="真实姓名" prop="realName">
           <el-input v-model="form.realName" placeholder="请输入真实姓名" />
@@ -147,7 +155,7 @@
         <el-form-item label="状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
-              v-for="dict in dict.type.client_data_status"
+              v-for="dict in dict.type.client_auth_status"
               :key="dict.value"
               :label="dict.label"
               :value="parseInt(dict.value)"
@@ -171,7 +179,7 @@ import { listAuth, getAuth, delAuth, addAuth, updateAuth } from "@/api/client/au
 
 export default {
   name: "Auth",
-  dicts: ['client_data_status'],
+  dicts: ['client_auth_status'],
   data() {
     return {
       // 遮罩层

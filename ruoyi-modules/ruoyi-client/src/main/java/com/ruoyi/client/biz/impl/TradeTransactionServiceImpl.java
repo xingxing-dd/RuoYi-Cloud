@@ -43,7 +43,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
 
     @Override
     public void tradeOrderPriceChange(String productCode) {
-        log.info("产品{}价格发生波动，开始检查订单", productCode);
         String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
         JSONObject price = redisService.getCacheObject(productPriceCacheKey);
         TradeOrder tradeOrder = new TradeOrder();
@@ -114,7 +113,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
 
     @Override
     public void entrustOrderPriceChange(String productCode) {
-        log.info("产品{}价格发生波动，开始检查订单", productCode);
         String productPriceCacheKey = String.format(PRODUCT_PRICE_INFO_KEY, productCode, DateUtils.dateTime());
         JSONObject price = redisService.getCacheObject(productPriceCacheKey);
         EntrustOrder entrustOrder = new EntrustOrder();
@@ -140,7 +138,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         if (entrustOrder.getTradePrice().compareTo(currentPrice) < 0) {
             return;
         }
-        log.info("委托买入订单{}即将交割", entrustOrder.getOrderId());
         EntrustOrder updateOrder = new EntrustOrder();
         updateOrder.setId(entrustOrder.getId());
         updateOrder.setStatus(1L);
@@ -154,7 +151,6 @@ public class TradeTransactionServiceImpl implements TradeTransactionService {
         if (entrustOrder.getTradePrice().compareTo(currentPrice) > 0) {
             return;
         }
-        log.info("委托卖出订单{}即将交割", entrustOrder.getOrderId());
         EntrustOrder updateOrder = new EntrustOrder();
         updateOrder.setId(entrustOrder.getId());
         updateOrder.setStatus(1L);

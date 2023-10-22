@@ -107,7 +107,7 @@
 
     <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+<!--      <el-table-column label="编号" align="center" prop="id" />-->
       <el-table-column label="所属用户" align="center" prop="userId" />
       <el-table-column label="所属用户名" align="center" prop="userName" />
       <el-table-column label="账户名" align="center" prop="accountName" />
@@ -292,6 +292,7 @@ export default {
     /** 查询账号管理列表 */
     getList() {
       this.loading = true;
+      this.queryParams.accountUsage = "recharge";
       listAccount(this.queryParams).then(response => {
         this.accountList = response.rows;
         this.total = response.total;

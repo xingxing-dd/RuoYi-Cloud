@@ -89,7 +89,7 @@
 
     <el-table v-loading="loading" :data="financialList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
+<!--      <el-table-column label="主键id" align="center" prop="id" />-->
       <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="产品编号" align="center" prop="productCode" />
